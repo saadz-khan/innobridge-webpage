@@ -1,0 +1,17 @@
+.DS_Store
+node_modules/
+dist/
+coverage/
+.env
+.env.local
+.env.*.local
+*.log
+*.pdf
+*.pages
+*.key
+*.tsbuildinfo
+One-pagers/
+Primary Logos/
+frontend/public/brand/
+backend/storage/*.jsonl
+frontend/.vite/
