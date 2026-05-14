@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
-import { ArrowRight, CheckCircle2, LoaderCircle } from "lucide-react";
-import { Button } from "./Button";
+import { CheckCircle2, LoaderCircle } from "lucide-react";
 
 type DemoFormState = {
   firstName: string;
@@ -88,68 +87,138 @@ export function DemoForm() {
 
   return (
     <form className="demo-form" id="demo-form" onSubmit={handleSubmit}>
-      <div className="form-grid">
-        <label>
-          <span>First name</span>
-          <input name="firstName" autoComplete="given-name" value={form.firstName} onChange={handleChange} required />
-        </label>
-        <label>
-          <span>Last name</span>
-          <input name="lastName" autoComplete="family-name" value={form.lastName} onChange={handleChange} required />
-        </label>
-        <label className="form-grid__wide">
-          <span>Firm name</span>
-          <input name="firmName" autoComplete="organization" value={form.firmName} onChange={handleChange} required />
-        </label>
-        <label>
-          <span>Work email</span>
-          <input name="email" type="email" autoComplete="email" value={form.email} onChange={handleChange} required />
-        </label>
-        <label>
-          <span>Phone</span>
-          <input name="phone" type="tel" autoComplete="tel" value={form.phone} onChange={handleChange} />
-        </label>
-        <label>
-          <span>Role</span>
-          <select name="role" value={form.role} onChange={handleChange}>
-            <option value="">Select role</option>
-            <option value="Lawyer">Lawyer</option>
-            <option value="Conveyancer">Conveyancer</option>
-            <option value="Paralegal">Paralegal</option>
-            <option value="Firm owner">Firm owner</option>
-            <option value="Operations leader">Operations leader</option>
-          </select>
-        </label>
-        <label>
-          <span>Monthly matter volume</span>
-          <select name="caseload" value={form.caseload} onChange={handleChange}>
-            <option value="">Select volume</option>
-            <option value="1-20">1-20</option>
-            <option value="21-50">21-50</option>
-            <option value="51-100">51-100</option>
-            <option value="100+">100+</option>
-          </select>
-        </label>
-        <label className="form-grid__wide">
-          <span>What should the demo focus on?</span>
-          <textarea name="message" rows={4} value={form.message} onChange={handleChange} />
-        </label>
+      <div className="form-title">Legal Workflow Fit Assessment</div>
+      <div className="form-sub">A solutions expert will personally show you how SmartConveyance fits your firm.</div>
+
+      <div className="form-row">
+        <div className="form-group">
+          <label className="form-label" htmlFor="firstName">First name</label>
+          <input
+            className="form-input"
+            id="firstName"
+            name="firstName"
+            autoComplete="given-name"
+            placeholder="Jane"
+            value={form.firstName}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label className="form-label" htmlFor="lastName">Last name</label>
+          <input
+            className="form-input"
+            id="lastName"
+            name="lastName"
+            autoComplete="family-name"
+            placeholder="Smith"
+            value={form.lastName}
+            onChange={handleChange}
+            required
+          />
+        </div>
       </div>
 
-      <label className="consent-row">
-        <input name="consent" type="checkbox" checked={form.consent} onChange={handleChange} required />
-        <span>I agree to be contacted by Innobridge about SmartConveyance.</span>
+      <div className="form-group">
+        <label className="form-label" htmlFor="firmName">Firm name</label>
+        <input
+          className="form-input"
+          id="firmName"
+          name="firmName"
+          autoComplete="organization"
+          placeholder="Smith & Associates LLP"
+          value={form.firmName}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div className="form-row">
+        <div className="form-group">
+          <label className="form-label" htmlFor="email">Work email</label>
+          <input
+            className="form-input"
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            placeholder="jane@smithlaw.ca"
+            value={form.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label className="form-label" htmlFor="phone">Phone</label>
+          <input
+            className="form-input"
+            id="phone"
+            name="phone"
+            type="tel"
+            autoComplete="tel"
+            placeholder="+1 (604) 000-0000"
+            value={form.phone}
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+
+      <div className="form-row">
+        <div className="form-group">
+          <label className="form-label" htmlFor="role">Your role</label>
+          <select className="form-select" id="role" name="role" value={form.role} onChange={handleChange}>
+            <option value="">Select role</option>
+            <option value="Lawyer / Partner">Lawyer / Partner</option>
+            <option value="Conveyancer">Conveyancer</option>
+            <option value="Legal Assistant">Legal Assistant</option>
+            <option value="Paralegal">Paralegal</option>
+            <option value="Firm Owner / Administrator">Firm Owner / Administrator</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label className="form-label" htmlFor="caseload">Monthly matter volume</label>
+          <select className="form-select" id="caseload" name="caseload" value={form.caseload} onChange={handleChange}>
+            <option value="">Select volume</option>
+            <option value="1-10">1-10</option>
+            <option value="11-30">11-30</option>
+            <option value="31-60">31-60</option>
+            <option value="61-100">61-100</option>
+            <option value="100+">100+</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="form-group">
+        <label className="form-label" htmlFor="message">
+          What should the demo focus on? <span>(optional)</span>
+        </label>
+        <textarea
+          className="form-textarea"
+          id="message"
+          name="message"
+          placeholder="e.g. LTSA filing workflow, document generation, team collaboration..."
+          value={form.message}
+          onChange={handleChange}
+        />
+      </div>
+
+      <label className="form-check">
+        <input id="consent" name="consent" type="checkbox" checked={form.consent} onChange={handleChange} required />
+        <span>
+          I agree to be contacted by Innobridge about SmartConveyance. We respect your privacy and will never share your
+          information.
+        </span>
       </label>
 
       <div className="form-footer">
-        <Button
+        <button
+          className="btn btn--primary form-submit"
           type="submit"
-          variant="primary"
           disabled={isSubmitting || !isComplete}
-          icon={isSubmitting ? <LoaderCircle className="spin" size={17} /> : <ArrowRight size={17} />}
         >
+          {isSubmitting ? <LoaderCircle className="spin" size={17} /> : null}
           Book your demo today
-        </Button>
+        </button>
         <div className={`form-status form-status--${submitState.status}`} aria-live="polite">
           {submitState.status === "success" ? <CheckCircle2 size={18} /> : null}
           <span>{submitState.message}</span>
