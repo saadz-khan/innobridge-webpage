@@ -8,6 +8,7 @@ export function SupportSection() {
     <section className="section section--support" id="support" aria-labelledby="support-title">
       <div className="container">
         <SectionHeader
+          id="support-title"
           eyebrow="360-degree support"
           title="Real support, whenever you need it."
           description="Innobridge supports legal professionals with practical training, live walkthroughs, and embedded guidance that keeps work moving."

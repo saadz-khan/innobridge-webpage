@@ -8,6 +8,7 @@ export function ComparisonSection() {
     <section className="section section--comparison" id="comparison" aria-labelledby="comparison-title">
       <div className="container">
         <SectionHeader
+          id="comparison-title"
           eyebrow="SmartConveyance vs others"
           title="Designed to reduce friction, not add another system to manage."
           description="The difference is not a longer feature list. It is how naturally the platform fits conveyancing work."

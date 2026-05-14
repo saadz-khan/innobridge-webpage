@@ -7,6 +7,7 @@ export function RoiSection() {
     <section className="section section--roi" id="roi" aria-labelledby="roi-title">
       <div className="container roi-layout">
         <SectionHeader
+          id="roi-title"
           eyebrow="Growth-ready infrastructure"
           title="Enterprise-Grade Efficiency Without Enterprise-Level Cost."
           description="SmartConveyance is designed to make operational gains visible without asking firms to accept enterprise complexity."

@@ -13,6 +13,7 @@ export function ProblemSection() {
     <section className="section section--problem" id="problem" aria-labelledby="problem-title">
       <div className="container two-column">
         <SectionHeader
+          id="problem-title"
           eyebrow="The cost of fragmented legal tech"
           title="Eliminate the Context Tax."
           description="Every minute spent re-keying data, switching between disconnected tools, or managing siloed information is time lost to technical friction."

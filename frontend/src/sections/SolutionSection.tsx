@@ -7,6 +7,7 @@ export function SolutionSection() {
     <section className="section section--solution" id="solution" aria-labelledby="solution-title">
       <div className="container">
         <SectionHeader
+          id="solution-title"
           eyebrow="Software with Legal DNA"
           title="Built with Legal DNA."
           description="Innobridge bridges legal expertise and elite systems design to create a native conveyancing platform that fits real legal work."

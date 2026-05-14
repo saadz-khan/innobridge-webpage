@@ -4,7 +4,9 @@ import {
   Bot,
   BrainCircuit,
   BriefcaseBusiness,
+  Building2,
   CheckCircle2,
+  ClipboardCheck,
   Clock3,
   DatabaseZap,
   FileCheck2,
@@ -13,9 +15,11 @@ import {
   Gavel,
   Handshake,
   Headphones,
+  LockKeyhole,
   Network,
   PanelTop,
   Phone,
+  Scale,
   ShieldCheck,
   Sparkles,
   UploadCloud,
@@ -30,6 +34,44 @@ export const navigationLinks = [
   { label: "Features", href: "#features" },
   { label: "ROI", href: "#roi" },
   { label: "Support", href: "#support" }
+];
+
+export const heroProofPoints = [
+  {
+    value: "Legal-first",
+    label: "Conveyancing operating layer"
+  },
+  {
+    value: "One record",
+    label: "Documents, filing, collaboration"
+  },
+  {
+    value: "360-degree",
+    label: "Onboarding, training, and support"
+  }
+];
+
+export const professionalStandards = [
+  {
+    title: "Law-firm grade control",
+    description: "Role-aware workflows, review checkpoints, and consistent matter state give partners and conveyancers confidence at scale.",
+    icon: Scale
+  },
+  {
+    title: "Clear operational visibility",
+    description: "See what is ready, what is blocked, and what needs counsel attention without hunting through disconnected tools.",
+    icon: ClipboardCheck
+  },
+  {
+    title: "Trustworthy data discipline",
+    description: "Client, property, title, lender, and filing data remain connected so document work is driven from one reliable source.",
+    icon: LockKeyhole
+  },
+  {
+    title: "Built for growing firms",
+    description: "A modern platform posture for solo practices, busy conveyancing desks, and multi-user teams increasing file volume.",
+    icon: Building2
+  }
 ];
 
 export const ecosystemSignals = [

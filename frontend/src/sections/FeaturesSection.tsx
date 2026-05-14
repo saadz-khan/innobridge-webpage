@@ -7,6 +7,7 @@ export function FeaturesSection() {
     <section className="section section--features" id="features" aria-labelledby="features-title">
       <div className="container">
         <SectionHeader
+          id="features-title"
           eyebrow="Outcome-based modules"
           title="Conveyancing workflows, not feature clutter."
           description="SmartConveyance focuses on the work firms actually need to move matters forward with speed, clarity, and control."

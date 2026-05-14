@@ -8,6 +8,7 @@ export function OperatingModelSection() {
     <section className="section section--operating-model" id="operating-model" aria-labelledby="operating-model-title">
       <div className="container operating-model">
         <SectionHeader
+          id="operating-model-title"
           eyebrow="Legal operating layer"
           title="A calmer command centre for high-volume conveyancing."
           description="The product experience should feel familiar to a conveyancing team, but disciplined enough for a law firm that cares about control, consistency, and professional risk."

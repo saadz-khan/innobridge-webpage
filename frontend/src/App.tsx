@@ -7,6 +7,7 @@ import { Hero } from "./sections/Hero";
 import { EcosystemSection } from "./sections/EcosystemSection";
 import { OperatingModelSection } from "./sections/OperatingModelSection";
 import { ProblemSection } from "./sections/ProblemSection";
+import { ProfessionalStandardSection } from "./sections/ProfessionalStandardSection";
 import { RoiSection } from "./sections/RoiSection";
 import { SolutionSection } from "./sections/SolutionSection";
 import { SupportSection } from "./sections/SupportSection";
@@ -21,6 +22,7 @@ export function App() {
         <ProblemSection />
         <SolutionSection />
         <OperatingModelSection />
+        <ProfessionalStandardSection />
         <FeaturesSection />
         <ComparisonSection />
         <RoiSection />

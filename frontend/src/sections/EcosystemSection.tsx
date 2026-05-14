@@ -8,6 +8,7 @@ export function EcosystemSection() {
     <section className="section section--ecosystem" id="ecosystem" aria-labelledby="ecosystem-title">
       <div className="container">
         <SectionHeader
+          id="ecosystem-title"
           eyebrow="Conveyancing ecosystem"
           title="Built around the systems and services your firm already recognizes."
           description="SmartConveyance is designed around BC conveyancing realities: electronic filing, title insurance, lender instructions, and the day-to-day operating rhythm of legal teams."

@@ -2,6 +2,7 @@ import { ArrowRight, CirclePlay, ShieldCheck } from "lucide-react";
 import { Button } from "../components/Button";
 import { ProductVisual } from "../components/ProductVisual";
 import { Reveal } from "../components/Reveal";
+import { heroProofPoints } from "../data/siteContent";
 
 export function Hero() {
   return (
@@ -23,6 +24,15 @@ export function Hero() {
                 See how it works
               </Button>
             </div>
+          </Reveal>
+
+          <Reveal className="hero-proof-grid" delay={90}>
+            {heroProofPoints.map((point) => (
+              <div className="hero-proof" key={point.value}>
+                <strong>{point.value}</strong>
+                <span>{point.label}</span>
+              </div>
+            ))}
           </Reveal>
 
           <Reveal className="trust-row" delay={120}>
