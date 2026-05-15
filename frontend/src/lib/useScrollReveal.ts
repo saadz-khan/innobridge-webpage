@@ -7,14 +7,14 @@ export function useScrollReveal<TElement extends HTMLElement>() {
     const element = ref.current;
 
     if (!element || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      element?.classList.add("is-visible");
+      element?.classList.add("visible", "is-visible");
       return;
     }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry?.isIntersecting) {
-          element.classList.add("is-visible");
+          element.classList.add("visible", "is-visible");
           observer.unobserve(element);
         }
       },

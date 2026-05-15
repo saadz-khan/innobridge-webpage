@@ -1,20 +1,20 @@
-import type { ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { useScrollReveal } from "../lib/useScrollReveal";
 
-type RevealProps = {
+type RevealProps = ComponentPropsWithoutRef<"div"> & {
   children: ReactNode;
-  className?: string;
   delay?: number;
 };
 
-export function Reveal({ children, className = "", delay = 0 }: RevealProps) {
+export function Reveal({ children, className = "", delay = 0, style, ...props }: RevealProps) {
   const ref = useScrollReveal<HTMLDivElement>();
 
   return (
     <div
+      {...props}
       ref={ref}
       className={`reveal ${className}`}
-      style={{ transitionDelay: `${delay}ms` }}
+      style={{ ...style, transitionDelay: `${delay}ms` }}
     >
       {children}
     </div>

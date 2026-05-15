@@ -1,537 +1,846 @@
 import { useEffect, useState } from "react";
+import type { FormEvent } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
-  Bot,
+  BadgeCheck,
+  BarChart3,
+  BookOpen,
   CheckCircle2,
   CirclePlay,
   Clock3,
-  Code2,
-  Database,
-  DatabaseZap,
-  FileCheck2,
+  DollarSign,
   FileText,
-  FolderKanban,
-  Layers,
-  Mail,
+  FolderOpen,
+  LineChart,
+  ListChecks,
+  LockKeyhole,
+  Menu,
   MessageCircle,
-  MonitorCog,
-  Network,
   PenLine,
   Phone,
+  RefreshCw,
+  Scale,
   ShieldCheck,
   Sparkles,
-  Star,
-  UploadCloud,
+  TrendingUp,
   UsersRound,
+  Workflow,
   X
 } from "lucide-react";
-import { DemoForm } from "../components/DemoForm";
 import { Reveal } from "../components/Reveal";
 
-type IconItem = {
+type IconCard = {
   title: string;
   description: string;
   icon: LucideIcon;
+  tone?: "blue" | "green" | "dark";
 };
 
-type DetailRow = {
-  key: string;
-  value: string;
-  icon: LucideIcon;
+type ProductStage = {
+  title: string;
+  tabCopy: string;
+  headerCopy: string;
+  status: string;
+};
+
+type FaqItem = {
+  question: string;
+  answer: string;
 };
 
 const navLinks = [
-  { label: "Problem", href: "#problem" },
-  { label: "How It Works", href: "#how" },
+  { label: "Pain points", href: "#problem" },
+  { label: "Product", href: "#product" },
   { label: "Features", href: "#features" },
   { label: "Pricing", href: "#pricing" },
   { label: "Support", href: "#support" }
 ];
 
-const problemCards: IconItem[] = [
+const proofPills: IconCard[] = [
   {
-    title: "Re-keyed data",
-    description: "The same client, property, and lender facts typed into 3 different systems - by hand, every single matter.",
-    icon: FileText
+    title: "Legal-first design",
+    description: "Built with legal professionals",
+    icon: Scale
   },
   {
-    title: "Disconnected tools",
-    description: "Six tabs open - LTSA portal, lender email, tax cert PDF, calendar, CMS, spreadsheet. Nothing speaks to anything else.",
-    icon: MonitorCog
-  },
-  {
-    title: "Information silos",
-    description: "No one knows the true matter status without asking someone else. Visibility costs time. And time costs money.",
-    icon: Database
-  }
-];
-
-const steps: Array<{
-  number: string;
-  title: string;
-  description: string;
-  alternate?: boolean;
-  details: DetailRow[];
-}> = [
-  {
-    number: "01",
-    title: "Matter Intake",
-    description: "AI imports contract, tax certificate, and lender instructions. Data is structured and matched automatically.",
-    details: [
-      { key: "Contract PDF", value: "Imported", icon: UploadCloud },
-      { key: "Tax cert", value: "Matched", icon: UploadCloud },
-      { key: "Lender", value: "Synced", icon: UploadCloud }
-    ]
-  },
-  {
-    number: "02",
-    title: "Review & Collaborate",
-    description: "One matter record keeps the team aligned. Exceptions surface to counsel automatically - no hunting required.",
-    details: [
-      { key: "Buyer", value: "Verified", icon: CheckCircle2 },
-      { key: "Adjustments", value: "Calculated", icon: CheckCircle2 },
-      { key: "Counsel", value: "2 items flagged", icon: Clock3 }
-    ]
-  },
-  {
-    number: "03",
-    title: "Generate & File",
-    description: "One-click document generation. Closing package prepared. LTSA filing ready to submit - all from the same record.",
-    alternate: true,
-    details: [
-      { key: "Documents", value: "Queued", icon: FileText },
-      { key: "LTSA filing", value: "Ready", icon: ArrowRight },
-      { key: "Completion", value: "June 18", icon: CheckCircle2 }
-    ]
-  }
-];
-
-const featureItems: IconItem[] = [
-  {
-    title: "Built for BC from day one",
-    description: "myLTSA-ready workflows and FCT-aware conveyancing are native to the platform - not bolted on after the fact.",
-    icon: Layers
-  },
-  {
-    title: "AI that earns its keep",
-    description: "High-confidence import from PDFs, contracts, and tax certs means your team reviews, not retypes. Adjustments calculated automatically.",
+    title: "AI-assisted workflow",
+    description: "From intake to filing",
     icon: Sparkles
   },
   {
-    title: "Law-firm grade control",
-    description: "Role-aware workflows, legal review checkpoints, and consistent matter state give partners and conveyancers confidence at scale.",
-    icon: ShieldCheck
-  },
-  {
-    title: "Grows with your firm",
-    description: "Solo practice, busy conveyancing desk, or multi-user team - same platform, no migration, no complexity ceiling.",
-    icon: UsersRound
+    title: "360° support",
+    description: "Phone, Zoom, guides, training",
+    icon: MessageCircle
   }
 ];
 
-const legalLayer = [
-  { title: "Authoritative matter record", status: "One source", color: "blue" },
-  { title: "Legal review checkpoints", status: "Counsel-visible", color: "green" },
-  { title: "Completion-ready workflow", status: "Filing tied", color: "charcoal" },
-  { title: "Audit trail & activity log", status: "Full history", color: "gold" }
+const metrics = [
+  {
+    value: "$150+",
+    label: "Potential savings per matter through reduced admin time."
+  },
+  {
+    value: "~1.5h",
+    label: "Estimated staff time per file after workflow automation."
+  },
+  {
+    value: "10:1",
+    label: "Revenue-to-cost capacity narrative for growth-minded firms."
+  },
+  {
+    value: "360°",
+    label: "Support across onboarding, training, and daily use."
+  }
 ];
 
-const modules: IconItem[] = [
+const painCards: IconCard[] = [
   {
-    title: "LTSA Intelligent Filing",
-    description: "Move from prepared matter data to filing-ready work with fewer handoffs and zero duplicate entry.",
-    icon: FileCheck2
+    title: "AI-empowered features",
+    description:
+      "Deep automation supports accurate conveyancing, reduces manual errors, minimizes re-keying, and helps generate case-specific files from a cleaner matter record.",
+    icon: Sparkles
   },
   {
-    title: "Frictionless Document Generation",
-    description: "Generate consistent, complete closing documents from one authoritative matter record. One click.",
-    icon: DatabaseZap
+    title: "Make complex conveyancing simple",
+    description:
+      "A calm, legal-first interface keeps the work easy to learn, easy to use, and tailored to the way conveyancing practitioners actually operate.",
+    icon: LineChart,
+    tone: "green"
   },
   {
-    title: "AI-Driven Data Import",
-    description: "Import and structure transaction data from PDFs, contracts, and tax certs with high accuracy. Teams spend less time copying and checking.",
-    icon: Bot
+    title: "Streamlined workflow",
+    description:
+      "All-in-one forms and one-click generation simplify the process from intake to filing so the file moves forward without tool switching.",
+    icon: FolderOpen,
+    tone: "dark"
+  }
+];
+
+const productStages: ProductStage[] = [
+  {
+    title: "Create New Case",
+    tabCopy: "Only case-relevant fields appear, keeping setup simple and focused.",
+    headerCopy: "Case-type logic keeps setup focused.",
+    status: "Focused setup"
   },
   {
-    title: "Real-Time Collaboration",
-    description: "Keep lawyers, conveyancers, and support staff aligned around live matter status - without email chains or status check-ins.",
-    icon: UsersRound
+    title: "Auto Data Import",
+    tabCopy: "Contracts, reports, tax certificates, and lender details populate the matter record.",
+    headerCopy: "Extract, match, and populate fields with review confidence.",
+    status: "AI assisted"
   },
   {
-    title: "Workflow Optimization",
-    description: "Repeatable steps become guided progress. More files move cleanly through the system with fewer blockers.",
-    icon: FolderKanban
+    title: "Review & Adjust",
+    tabCopy: "Review key details and adjust only the items that need attention.",
+    headerCopy: "Focus attention where judgment is needed.",
+    status: "Counsel visible"
   },
   {
-    title: "360-Degree Support",
-    description: "Expert help, embedded guidance, and practical onboarding. Email, phone, Zoom, webinars, FAQ, and 1-on-1 training included.",
+    title: "Generate & File",
+    tabCopy: "Generate only the files needed by the case, then move into integrations.",
+    headerCopy: "Files, title search, insurance ordering, and web filing support.",
+    status: "Filing ready"
+  }
+];
+
+const featureCards: IconCard[] = [
+  {
+    title: "Purchase and sale files",
+    description:
+      "Support for residential and commercial matters, with workflows that stay relevant to the selected file type.",
+    icon: CheckCircle2
+  },
+  {
+    title: "Smart templates",
+    description:
+      "Customizable firm templates and consistent document generation from one authoritative matter record.",
+    icon: PenLine,
+    tone: "green"
+  },
+  {
+    title: "Case progress tracking",
+    description:
+      "Track matter state, review checkpoints, status updates, and audit activity without asking around.",
+    icon: BarChart3,
+    tone: "dark"
+  },
+  {
+    title: "AI data import",
+    description:
+      "Populate matter fields from contracts, commission reports, certificates, and other source files.",
+    icon: FileText
+  },
+  {
+    title: "Third-party workflow",
+    description:
+      "Support for title search, insurance ordering, and filing workflows tied back to the same matter.",
+    icon: Workflow,
+    tone: "green"
+  },
+  {
+    title: "Law-firm control",
+    description:
+      "Role-aware workflow, audit trails, legal review points, and consistent file state support firm confidence.",
+    icon: ShieldCheck,
+    tone: "dark"
+  }
+];
+
+const outcomes: IconCard[] = [
+  { icon: DollarSign, title: "Save $150+ per case", description: "Reduce the cost of repeat administrative work." },
+  { icon: Clock3, title: "Save hours per case", description: "Free time from manual entry and status chasing.", tone: "green" },
+  { icon: RefreshCw, title: "Workflow consistency", description: "Use repeatable steps for every matter." },
+  { icon: BadgeCheck, title: "Precision conveyancing", description: "Review matters with cleaner information.", tone: "green" },
+  { icon: TrendingUp, title: "Productivity", description: "Increase case capacity without adding complexity." },
+  { icon: UsersRound, title: "Confidence", description: "Give lawyers and conveyancers a shared state of truth.", tone: "green" },
+  { icon: ListChecks, title: "In-control", description: "See what is done, what is flagged, and what is next." },
+  { icon: LockKeyhole, title: "Security", description: "Support legal workflows with structured controls.", tone: "green" }
+];
+
+const supportSteps: Array<IconCard & { linkCopy: string; linkHref?: string }> = [
+  {
+    title: "Discovery Call",
+    description: "and map AI-driven solutions to your workflow.",
+    linkCopy: "Book a demo",
+    linkHref: "#demo",
     icon: Phone
+  },
+  {
+    title: "Quick onboarding",
+    description: "with a fast-track path built for your team.",
+    linkCopy: "Start setup",
+    linkHref: "#demo",
+    icon: ArrowRight,
+    tone: "green"
+  },
+  {
+    title: "Seamless training",
+    description: "Use embedded guides and visit the",
+    linkCopy: "support section",
+    linkHref: "#supportDetails",
+    icon: BookOpen,
+    tone: "dark"
+  },
+  {
+    title: "Conveyancing",
+    description: "Automation, AI features, third-party integrations, and",
+    linkCopy: "360° support",
+    linkHref: "#supportDetails",
+    icon: LineChart
   }
 ];
 
-const smartRows = [
-  "Affordable flat-rate pricing - $79/matter",
-  "Easy to learn - up and running same day",
-  "Eliminates manual data entry",
-  "One-click file generation",
-  "AI data import with high accuracy",
-  "LTSA + FCT native integration",
-  "360-degree support: email, phone, Zoom, guides",
-  "No contract. No hidden fees."
-];
-
-const otherRows = [
-  "Expensive per-case pricing and hidden fees",
-  "Steep learning curve, weeks of onboarding",
-  "Manual workflows with heavy re-keying",
-  "Multi-click, multi-system file generation",
-  "Limited or no AI automation",
-  "LTSA and FCT as afterthoughts or add-ons",
-  "Ticket-based support with long wait times",
-  "Long contracts, locked-in pricing"
+const pricingPlans = [
+  {
+    name: "Free Trial",
+    description: "Validate the workflow with your team before committing to volume usage.",
+    price: "$0",
+    suffix: " / trial",
+    cta: "Start trial",
+    buttonClass: "btn-subtle",
+    features: ["Guided walkthrough", "Sample matter setup", "Workflow fit assessment", "No long-term commitment"]
+  },
+  {
+    name: "Basic",
+    description: "Pay per matter with core features included for residential and commercial workflows.",
+    price: "$79",
+    suffix: " / case",
+    cta: "Book your demo",
+    buttonClass: "btn-primary",
+    badge: "Most focused",
+    features: ["Purchase and sale files", "AI data import", "One-click file generation", "LTSA workflow support", "360° support included"]
+  },
+  {
+    name: "Premium",
+    description: "For firms that need deeper configuration, templates, training, and rollout support.",
+    price: "Custom",
+    suffix: "",
+    cta: "Talk to sales",
+    buttonClass: "btn-dark",
+    features: ["Advanced workflow setup", "Custom firm templates", "Team training plan", "Implementation support", "Priority onboarding"]
+  }
 ];
 
 const testimonials = [
   {
     quote:
-      "SmartConveyance focuses on what's truly essential. Training new staff was straightforward - a multi-month process now takes only days. Its simplicity and well-designed features made it incredibly easy to learn and use, allowing us to stay on track without disruption.",
+      "SmartConveyance focuses on what is truly essential. Training new staff was straightforward, and the workflow is easy to learn without disrupting the team.",
     name: "Jeremy",
     role: "Lawyer",
-    initial: "J",
-    tone: "blue"
+    initial: "J"
   },
   {
     quote:
-      "With SmartConveyance, tasks that used to take me hours are now done in minutes. Its smart data entry, auto-completion, and document generation streamline my work so I can be far more productive. Efficient by design.",
+      "Tasks that used to take hours are now done in minutes. Smart data entry, auto-completion, and document generation have streamlined my work.",
     name: "Amber",
     role: "Paralegal",
-    initial: "A",
-    tone: "green"
+    initial: "A"
   },
   {
     quote:
-      "Adopting SmartConveyance has been transformative for our practice. We can now manage more cases with the same team, giving lawyers more time to focus on clients and growth. It truly empowers the firm to scale with confidence.",
+      "Adopting SmartConveyance has been transformative. We can manage more cases with the same team and give lawyers more time to focus on clients.",
     name: "Richard",
     role: "Firm Owner",
-    initial: "R",
-    tone: "gold"
+    initial: "R"
   }
 ];
 
-const pricingBenefits = [
+const values: IconCard[] = [
   {
-    title: "Faster matter completion",
-    description: "Matter data, documents, and filing steps move through one guided operating layer."
+    title: "Innovation",
+    description: "Fusing systems design with research-backed AI to keep legal teams ahead of the curve.",
+    icon: Sparkles
   },
   {
-    title: "Lower admin burden",
-    description: "Reduce the work of re-keying, chasing status, and reconciling data across tools."
-  },
-  {
-    title: "Increased case capacity",
-    description: "Help the same team handle more files by removing repeatable technical friction."
-  },
-  {
-    title: "More predictable workflows",
-    description: "Clear checkpoints give firms better visibility from file opening to completion."
-  }
-];
-
-const pricingFeatures = [
-  "Purchase and sales - residential & commercial",
-  "LTSA web filing integration",
-  "AI data import (contracts, tax certs, commissions)",
-  "One-click smart file generation",
-  "Simplified financial form completion",
-  "Customizable firm templates",
-  "Case progress tracking & audit trail",
-  "360-degree support: email, phone, Zoom, guides"
-];
-
-const supportCards: Array<IconItem & { tone: string }> = [
-  {
-    title: "Onboarding in minutes",
-    description: "Start with a practical setup path for real conveyancing work. No multi-week migration cycle.",
-    icon: Sparkles,
-    tone: "blue"
-  },
-  {
-    title: "Training in hours",
-    description: "Focused walkthroughs help staff become productive quickly. Embedded how-to guidance is built right in.",
-    icon: PenLine,
+    title: "Simplicity",
+    description: "Believing that in legal tech, simple is the ultimate sophistication.",
+    icon: CheckCircle2,
     tone: "green"
   },
   {
-    title: "Conveyancing same day",
-    description: "Go from platform access to working files without a long migration cycle. Same day, every firm.",
-    icon: Code2,
-    tone: "charcoal"
+    title: "Productivity",
+    description: "Removing technical bottlenecks so the same team can increase case capacity.",
+    icon: LineChart
   },
   {
-    title: "Ongoing 1-on-1 support",
-    description: "Email, phone, Zoom, webinars, FAQ, embedded guides, and 1-on-1 expert training - whenever you need it.",
-    icon: MessageCircle,
-    tone: "orange"
+    title: "Quality",
+    description: "Delivering reliable workflows through native architecture built for the legal landscape.",
+    icon: ShieldCheck,
+    tone: "green"
   }
 ];
 
-const demoPerks = [
-  "Onboarding in minutes",
-  "Start conveyancing the same day",
-  "No contract - pay per matter",
-  "Personalized 15-minute walkthrough",
-  "360-degree support from day one"
-];
-
-const faqs = [
+const faqs: FaqItem[] = [
   {
     question: "Do you offer onboarding support?",
     answer:
-      "Yes. Our project teams will be by your side to help navigate the change and successfully engage all stakeholders. We understand that adopting new software means adopting a new way of working."
+      "Yes. Our project teams help firms navigate change, engage stakeholders, and adopt the workflow confidently."
   },
   {
     question: "Which provinces currently support SmartConveyance?",
     answer:
-      "SmartConveyance fully supports conveyancing workflows in British Columbia, with additional provinces coming soon. Our LTSA and FCT integrations are BC-native."
+      "SmartConveyance currently focuses on British Columbia conveyancing workflows, with additional provinces planned."
   },
   {
-    question: "Is SmartConveyance for both residential and commercial?",
+    question: "Is it for both residential and commercial matters?",
     answer:
-      "Yes, SmartConveyance supports both residential and commercial conveyancing at the same flat-rate pricing per matter."
+      "Yes. The workflow supports residential and commercial conveyancing with matter-specific setup and generated files."
   },
   {
-    question: "What tools and platforms integrate with SmartConveyance?",
+    question: "What tools does it integrate with?",
     answer:
-      "Our system connects natively with myLTSA for title searches and electronic filing, and with FCT for title insurance - providing a unified workflow from one platform."
-  },
-  {
-    question: "How does SmartConveyance protect my data?",
-    answer:
-      "SmartConveyance runs on AWS infrastructure with SOC 2, PCI DSS Level 1, and ISO 27001 compliance. Core application data is stored and processed on Canadian servers."
-  },
-  {
-    question: "What is your cancellation and refund policy?",
-    answer:
-      "Your pay-per-use subscription may be cancelled by written request at any time. Cancellations still incur costs for services used. Refunds are considered on a case-by-case basis - contact support@innobridge.ca."
-  },
-  {
-    question: "What forms of payment are accepted?",
-    answer: "We currently accept credit and debit cards. No long-term payment commitments required."
+      "The product narrative includes myLTSA workflow support and FCT-aware conveyancing, plus third-party automation for title search, insurance ordering, and web filing."
   },
   {
     question: "Can I import data from my previous system?",
     answer:
-      "If you're interested in migrating data from a previous system, contact support@innobridge.ca. We'll work with you to assess your needs and migration options."
+      "Contact support@innobridge.ca to assess migration needs and available import options for your firm."
   }
 ];
 
+function Brand({ variant = "color" }: { variant?: "color" | "light" }) {
+  const logoSrc =
+    variant === "light" ? "/brand/smartconveyance-primary-light.png" : "/brand/smartconveyance-primary-dark.png";
+
+  return (
+    <span className="brand">
+      <img
+        className="brand-logo"
+        src={logoSrc}
+        alt="SmartConveyance by Innobridge"
+        decoding="async"
+      />
+    </span>
+  );
+}
+
 function SiteNav() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 18);
 
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <nav id="nav" className={scrolled ? "scrolled" : ""} aria-label="Primary navigation">
-      <a className="skip-link" href="#main">
+    <>
+      <a href="#main" className="skip-link">
         Skip to content
       </a>
-      <div className="nav-inner">
-        <a href="#top" className="nav-logo" aria-label="SmartConveyance by Innobridge home">
-          <img src="/brand/smartconveyance-primary-light.png" alt="SmartConveyance by Innobridge" decoding="async" />
-        </a>
-        <div className="nav-links">
-          {navLinks.map((link) => (
-            <a href={link.href} key={link.href}>
-              {link.label}
+      <nav className={`nav${scrolled ? " scrolled" : ""}`} id="nav" aria-label="Primary navigation">
+        <div className="nav-inner">
+          <a href="#top" aria-label="SmartConveyance by Innobridge home">
+            <Brand variant={scrolled ? "color" : "light"} />
+          </a>
+          <div className={`nav-links${menuOpen ? " open" : ""}`} id="navLinks">
+            {navLinks.map((link) => (
+              <a href={link.href} key={link.href} onClick={() => setMenuOpen(false)}>
+                {link.label}
+              </a>
+            ))}
+          </div>
+          <div className="nav-actions">
+            <a className="signin" href="https://smartconveyance.innobridge.ca/">
+              Sign in
             </a>
-          ))}
+            <a className="btn btn-primary" href="#demo">
+              Book a Demo
+            </a>
+            <button
+              className="nav-toggle"
+              type="button"
+              aria-label={menuOpen ? "Close navigation" : "Open navigation"}
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((current) => !current)}
+            >
+              {menuOpen ? <X className="icon" aria-hidden="true" /> : <Menu className="icon" aria-hidden="true" />}
+            </button>
+          </div>
         </div>
-        <div className="nav-cta">
-          <a href="https://smartconveyance.innobridge.ca/" className="nav-signin">
-            Sign in
-          </a>
-          <a href="#demo" className="btn btn--primary nav-demo-btn">
-            Book a Demo
-          </a>
+      </nav>
+    </>
+  );
+}
+
+function CardIcon({ icon: Icon, tone }: { icon: LucideIcon; tone?: IconCard["tone"] }) {
+  return (
+    <div className={`card-icon${tone === "green" ? " green" : ""}${tone === "dark" ? " dark" : ""}`}>
+      <Icon className="icon" aria-hidden="true" />
+    </div>
+  );
+}
+
+function HeroPortalPreview() {
+  const caseRows = [
+    ["Buyer", "Jordan Lee and Priya Sharma"],
+    ["Seller", "M. Henderson Holdings Ltd."],
+    ["Completion", "June 18, 2026"],
+    ["Lender", "Royal Bank of Canada"]
+  ];
+
+  const progressRows = [
+    ["✓", "Intake created", "Case-relevant fields shown", "Done"],
+    ["✓", "Data imported", "Contract, tax certificate, lender", "Done"],
+    ["3", "Counsel review", "Two flagged values need approval", "Now"],
+    ["4", "Generate and file", "Completion package and LTSA", "Next"]
+  ];
+
+  const docRows = [
+    ["Statement of Adjustments", "Ready"],
+    ["Form A Transfer", "Ready"],
+    ["Buyer Report Letter", "Queued"],
+    ["LTSA Filing Package", "Ready"]
+  ];
+
+  return (
+    <div className="hero-visual" aria-label="SmartConveyance portal preview">
+      <div className="portal-frame">
+        <div className="portal-topbar">
+          <div className="window-dots" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+          <div className="url-pill">smartconveyance.innobridge.ca / matter / SC-4821</div>
+          <span className="status-pill">Live matter</span>
+        </div>
+        <div className="portal-app">
+          <aside className="portal-sidebar">
+            <div className="portal-logo">
+              <img
+                className="portal-logo-img"
+                src="/brand/smartconveyance-primary-dark.png"
+                alt="SmartConveyance"
+                decoding="async"
+              />
+            </div>
+            <nav className="portal-nav" aria-label="Portal preview navigation">
+              {["Overview", "Parties", "Property", "Documents", "LTSA Filing", "Audit Trail"].map((item, index) => (
+                <a className={index === 0 ? "active" : undefined} href="#product" key={item}>
+                  <span />
+                  {item}
+                </a>
+              ))}
+            </nav>
+            <div className="portal-sidebar-card">
+              <strong>AI import complete</strong>
+              <span>Contract, commission report, and tax certificate matched into the file.</span>
+            </div>
+          </aside>
+          <div className="portal-main">
+            <div className="portal-head">
+              <div className="portal-title">
+                <small>Residential Purchase</small>
+                <strong>2518 Alder Street, Vancouver</strong>
+              </div>
+              <span className="status-pill">Ready for review</span>
+            </div>
+            <div className="portal-grid">
+              <div className="portal-card">
+                <h4>
+                  Case details <span>Updated now</span>
+                </h4>
+                <div className="case-rows">
+                  {caseRows.map(([label, value]) => (
+                    <div className="case-row" key={label}>
+                      <span>{label}</span>
+                      <strong>{value}</strong>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="portal-card ai-panel">
+                <h4>
+                  AI confidence <span>4 sources</span>
+                </h4>
+                <div className="ai-lines">
+                  {[96, 92, 88, 94].map((value) => (
+                    <div className="ai-line" key={value}>
+                      <div className="ai-bar">
+                        <i style={{ width: `${value}%` }} />
+                      </div>
+                      <span>{value}%</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="portal-action">
+                  <div className="portal-button">Review fields</div>
+                  <div className="portal-button secondary">Import report</div>
+                </div>
+              </div>
+
+              <div className="portal-card">
+                <h4>
+                  Workflow status <span>Intake to filing</span>
+                </h4>
+                <div className="progress-list">
+                  {progressRows.map(([step, title, copy, state]) => (
+                    <div className="progress-item" key={title}>
+                      <div className="progress-check">{step}</div>
+                      <div className="progress-copy">
+                        <strong>{title}</strong>
+                        <span>{copy}</span>
+                      </div>
+                      <em>{state}</em>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="portal-card">
+                <h4>
+                  Generated files <span>One click</span>
+                </h4>
+                <div className="doc-list">
+                  {docRows.map(([label, state]) => (
+                    <div className="doc-row" key={label}>
+                      {label} <span>{state}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </nav>
+      <div className="float-card one">
+        <div className="float-card-icon">AI</div>
+        <div>
+          <strong>Case data extracted</strong>
+          <span>No duplicate entry required</span>
+        </div>
+      </div>
+      <div className="float-card two">
+        <div className="float-card-icon">✓</div>
+        <div>
+          <strong>LTSA workflow ready</strong>
+          <span>Filing data organized</span>
+        </div>
+      </div>
+    </div>
   );
 }
 
 function HeroSection() {
   return (
-    <section id="hero" aria-labelledby="hero-title">
-      <div className="hero-bg" />
-      <div className="hero-inner hero-layout">
-        <div className="hero-copy">
-          <div className="hero-tag hero-enter hero-enter-1">SMARTCONVEYANCE BY INNOBRIDGE</div>
-          <h1 id="hero-title" className="hero-headline hero-enter hero-enter-2">
-            Technology that Speaks
-            <br />
-            <em>Legal.</em>
+    <section className="hero" id="top" aria-labelledby="heroTitle">
+      <div className="container hero-grid">
+        <Reveal className="hero-copy">
+          <div className="hero-kicker">
+            <i />
+            SmartConveyance by Innobridge
+          </div>
+          <h1 id="heroTitle">
+            <span className="title-word">Technology</span>{" "}
+            <span className="title-word">that</span>{" "}
+            <span className="title-word">Speaks</span>{" "}
+            <span>Legal.</span>
           </h1>
-          <p className="hero-sub hero-enter hero-enter-3">
-            We design software solutions that adapt to your workflow. SmartConveyance helps law firms streamline real estate conveyancing, minimize errors, and boost productivity.
+          <p className="hero-sub">
+            Software that adapts to your workflow. SmartConveyance helps law firms streamline real estate conveyancing,
+            reduce manual errors, and move from intake to filing with confidence.
           </p>
-          <div className="hero-cta hero-enter hero-enter-4">
-            <a href="#demo" className="btn btn--primary">
-              <FileText size={16} />
+          <div className="hero-cta">
+            <a className="btn btn-primary" href="#demo">
               Book a Demo
+              <ArrowRight className="icon" aria-hidden="true" />
             </a>
-            <a href="#how" className="btn btn--ghost">
-              See workflow
-              <CirclePlay size={16} />
+            <a className="btn btn-ghost" href="#product">
+              See how it works
+              <CirclePlay className="icon" aria-hidden="true" />
             </a>
           </div>
-          <div className="hero-trust hero-enter hero-enter-5">
-            <div className="trust-item">
-              <span className="trust-dot" />
-              Legal-first design and built with legal professionals
-            </div>
-            <div className="trust-item">
-              <span className="trust-dot" />
-              AI-assisted workflow from intake to filing
-            </div>
-            <div className="trust-item">
-              <span className="trust-dot" />
-              360º-support for smooth transition and personalized help
-            </div>
-          </div>
-        </div>
+          <div className="hero-proof" aria-label="Product strengths">
+            {proofPills.map((pill) => {
+              const Icon = pill.icon;
 
-        <div className="hero-visual hero-enter hero-enter-6" aria-label="SmartConveyance portal preview">
-          <div className="portal-callout portal-callout--status" aria-hidden="true">
-            <span className="portal-callout__icon portal-callout__icon--green">
-              <CheckCircle2 size={16} />
-            </span>
-            <span>
-              <strong>Case status</strong>
-              <em>Ready for review</em>
-            </span>
+              return (
+                <div className="proof-pill" key={pill.title}>
+                  <Icon className="icon" aria-hidden="true" />
+                  <div>
+                    <span>{pill.title}</span>
+                    <em>{pill.description}</em>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-          <div className="portal-frame">
-            <div className="portal-bar">
-              <div className="portal-dots" aria-hidden="true">
-                <span className="portal-dot" />
-                <span className="portal-dot" />
-                <span className="portal-dot" />
-              </div>
-              <div className="portal-url">smartconveyance.innobridge.ca / case / 9230375</div>
-            </div>
-            <div className="portal-shot-wrap">
-              <img
-                className="portal-shot"
-                src="/portal/smartconveyance-portal-preview.png"
-                alt="SmartConveyance portal showing purchase case details, property information, buyer and seller navigation, and completion dates."
-                fetchPriority="high"
-              />
-            </div>
-            <div className="portal-caption">
-              <span>
-                <strong>Real portal preview:</strong> matter details, status, dates, and workflow tabs in one place.
-              </span>
-              <span className="portal-live-pill">In progress</span>
-            </div>
-          </div>
-          <div className="portal-callout portal-callout--filing" aria-hidden="true">
-            <span className="portal-callout__icon">
-              <FileCheck2 size={16} />
-            </span>
-            <span>
-              <strong>LTSA workflow</strong>
-              <em>Filing data organized</em>
-            </span>
-          </div>
-        </div>
+        </Reveal>
+
+        <Reveal>
+          <HeroPortalPreview />
+        </Reveal>
       </div>
     </section>
+  );
+}
+
+function MetricStrip() {
+  return (
+    <div className="metric-strip">
+      <Reveal className="container metric-inner">
+        {metrics.map((metric) => (
+          <div className="metric" key={metric.value}>
+            <strong>{metric.value}</strong>
+            <span>{metric.label}</span>
+          </div>
+        ))}
+      </Reveal>
+    </div>
   );
 }
 
 function ProblemSection() {
   return (
-    <section id="problem" className="section" aria-labelledby="problem-title">
-      <div className="container">
-        <Reveal className="problem-intro">
-          <div className="eyebrow">The Cost of Fragmented Legal Tech</div>
-          <h2 id="problem-title">You're paying a Context Tax every day.</h2>
+    <section className="section" id="problem" aria-labelledby="problemTitle">
+      <div className="container problem-layout">
+        <Reveal className="sticky-note">
+          <div className="eyebrow">The pain point</div>
+          <h2 id="problemTitle">Faster conveyancing. Fewer errors.</h2>
           <p className="lead">
-            Every minute spent re-keying data, switching between disconnected tools, or chasing matter status is time your
-            firm will never bill back.
+            The real problem is not a lack of software. It is fragmented work: re-keying, switching tools, and checking
+            the same file across multiple places.
           </p>
+          <div className="tax-card">
+            <strong>Context Tax</strong>
+            <span>The invisible cost of disconnected legal work.</span>
+          </div>
         </Reveal>
 
         <div className="problem-cards">
-          {problemCards.map((card, index) => {
-            const Icon = card.icon;
-
-            return (
-              <Reveal className="problem-card" delay={index * 100} key={card.title}>
-                <div className="problem-icon">
-                  <Icon size={20} />
-                </div>
+          {painCards.map((card, index) => (
+            <Reveal className="pain-card" delay={index * 80} key={card.title}>
+              <CardIcon icon={card.icon} tone={card.tone} />
+              <div>
                 <h3>{card.title}</h3>
                 <p>{card.description}</p>
-              </Reveal>
-            );
-          })}
+              </div>
+            </Reveal>
+          ))}
+          <Reveal className="bridge-card">
+            <div>
+              <h3>The Innobridge Bridge</h3>
+              <p>
+                One legal operating layer that turns matter data into documents, review checkpoints, collaboration, and
+                filing-ready workflows.
+              </p>
+            </div>
+            <a className="btn btn-primary" href="#product">
+              Explore product
+            </a>
+          </Reveal>
         </div>
-
-        <Reveal className="problem-bridge">
-          <div className="eyebrow eyebrow--light">The Innobridge Bridge</div>
-          <h3>One legal operating layer. Intake through filing.</h3>
-          <p>
-            SmartConveyance replaces the stack with <strong>one authoritative matter record</strong> that drives documents,
-            collaboration, and LTSA filing - without switching tools or retyping data.
-          </p>
-        </Reveal>
       </div>
     </section>
   );
 }
 
-function HowSection() {
+function StageOne() {
+  const fields = [
+    ["Matter type", "Purchase"],
+    ["Property class", "Residential"],
+    ["Property address", "2518 Alder Street, Vancouver BC", "wide"],
+    ["Completion date", "June 18, 2026"],
+    ["Required workflow", "Buyer side, lender file"]
+  ];
+
   return (
-    <section id="how" className="section" aria-labelledby="how-title">
+    <div className="screen-grid">
+      {fields.map(([label, value, className]) => (
+        <div className={`field-card${className ? ` ${className}` : ""}`} key={label}>
+          <label>{label}</label>
+          <strong>{value}</strong>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function StageTwo() {
+  const rows = [
+    ["PDF", "Contract of Purchase and Sale", "Buyer, seller, property, dates", "96%"],
+    ["TAX", "Tax Certificate", "Roll number and adjustments", "92%"],
+    ["LDR", "Lender Instructions", "Mortgage and insurance details", "89%"],
+    ["COM", "Commission Report", "Brokerage details and calculations", "94%"]
+  ];
+
+  return (
+    <div className="import-stack">
+      {rows.map(([fileType, title, copy, confidence]) => (
+        <div className="import-row" key={title}>
+          <div className="file-icon">{fileType}</div>
+          <div>
+            <strong>{title}</strong>
+            <span>{copy}</span>
+          </div>
+          <div className="confidence">{confidence}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function StageThree() {
+  const rows = [
+    ["Buyer names", "Verified", "ok"],
+    ["Tax adjustment", "Needs review", "flag"],
+    ["Lender reference", "Verified", "ok"],
+    ["Possession terms", "Counsel check", "flag"]
+  ];
+
+  return (
+    <div className="review-list">
+      {rows.map(([title, state, className]) => (
+        <div className="review-card" key={title}>
+          <strong>{title}</strong>
+          <span className={className}>{state}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function StageFour() {
+  const rows = [
+    ["Generate closing package", "Only case-required files are selected."],
+    ["Title search integration", "Start from the same matter record."],
+    ["Insurance ordering", "Reusable matter data reduces re-entry."],
+    ["Web filing", "Prepared data moves into the filing workflow."]
+  ];
+
+  return (
+    <div className="automation-grid">
+      {rows.map(([title, copy]) => (
+        <div className="automation-card" key={title}>
+          <strong>{title}</strong>
+          <span>{copy}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function StageContent({ index }: { index: number }) {
+  const titles = ["New Matter Setup", "Import Sources", "Review Queue", "Automation Center"];
+  const pills = ["Residential Purchase", "4 files matched", "2 items flagged", "One-click package"];
+  const content = [<StageOne key="stage-one" />, <StageTwo key="stage-two" />, <StageThree key="stage-three" />, <StageFour key="stage-four" />];
+
+  return (
+    <div className="screen-preview">
+      <div className="mini-dashboard">
+        <div className="mini-toolbar">
+          <strong>{titles[index]}</strong>
+          <span>{pills[index]}</span>
+        </div>
+        {content[index]}
+      </div>
+    </div>
+  );
+}
+
+function ProductSection() {
+  const [activeStage, setActiveStage] = useState(0);
+
+  return (
+    <section className="section section-tight" id="product" aria-labelledby="productTitle">
       <div className="container">
-        <Reveal className="how-intro">
-          <div className="eyebrow">How It Works</div>
-          <h2 id="how-title">Three steps. One record. Done.</h2>
+        <Reveal className="section-head center">
+          <div className="eyebrow">The product</div>
+          <h2 id="productTitle">AI-assisted intake-to-filing.</h2>
           <p className="lead">
-            A clear, guided flow from intake to completion - designed for how BC conveyancing teams actually work.
+            A guided product flow that starts with a new case, imports the relevant data, surfaces review moments, and
+            generates the right files for the matter.
           </p>
         </Reveal>
-
-        <div className="steps">
-          {steps.map((step, index) => (
-            <Reveal className="step" delay={index * 100} key={step.number}>
-              <div className={step.alternate ? "step-num step-num--alt" : "step-num"}>{step.number}</div>
-              <h3>{step.title}</h3>
-              <p className="step-copy">{step.description}</p>
-              <div className="step-detail">
-                {step.details.map((detail) => {
-                  const Icon = detail.icon;
-
-                  return (
-                    <div className="step-detail-row" key={detail.key}>
-                      <Icon className="step-detail-icon" size={16} />
-                      <span className="step-detail-key">{detail.key}</span>
-                      <span className="step-detail-val">{detail.value}</span>
-                    </div>
-                  );
-                })}
+        <Reveal className="product-shell">
+          <div className="tab-list" role="tablist" aria-label="Product workflow">
+            {productStages.map((stage, index) => (
+              <button
+                className="product-tab"
+                type="button"
+                role="tab"
+                aria-selected={activeStage === index}
+                aria-controls={`stage${index + 1}`}
+                id={`tab${index + 1}`}
+                key={stage.title}
+                onClick={() => setActiveStage(index)}
+              >
+                <span className="tab-num">{index + 1}</span>
+                <span>
+                  <strong>{stage.title}</strong>
+                  <span>{stage.tabCopy}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+          <div className="product-stage">
+            {productStages.map((stage, index) => (
+              <div
+                className={`stage-panel${activeStage === index ? " active" : ""}`}
+                id={`stage${index + 1}`}
+                role="tabpanel"
+                aria-labelledby={`tab${index + 1}`}
+                key={stage.title}
+              >
+                <div className="stage-head">
+                  <div>
+                    <strong>{index === 3 ? "More Automation" : stage.title}</strong>
+                    <span>{stage.headerCopy}</span>
+                  </div>
+                  <span className="status-pill">{stage.status}</span>
+                </div>
+                <StageContent index={index} />
               </div>
-            </Reveal>
-          ))}
-        </div>
+            ))}
+          </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -539,153 +848,25 @@ function HowSection() {
 
 function FeaturesSection() {
   return (
-    <section id="features" className="section" aria-labelledby="features-title">
+    <section className="section" id="features" aria-labelledby="featuresTitle">
       <div className="container">
-        <div className="features-top">
-          <Reveal className="features-text">
-            <div className="eyebrow">Software with Legal DNA</div>
-            <h2 id="features-title">Built for conveyancers, not adapted for them.</h2>
-            <p className="lead">
-              Innobridge bridges legal expertise and elite systems design to create a platform that fits real conveyancing
-              work from day one.
-            </p>
-            <div className="feature-list">
-              {featureItems.map((feature) => {
-                const Icon = feature.icon;
-
-                return (
-                  <div className="feature-item" key={feature.title}>
-                    <div className="feature-icon">
-                      <Icon size={18} />
-                    </div>
-                    <div>
-                      <h4>{feature.title}</h4>
-                      <p>{feature.description}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </Reveal>
-
-          <Reveal className="feature-side-panel" delay={180}>
-            <div className="legal-layer-card">
-              <div className="eyebrow">Legal Operating Layer</div>
-              <div className="legal-layer-list">
-                {legalLayer.map((item) => (
-                  <div className="legal-layer-row" key={item.title}>
-                    <span className={`legal-layer-dot legal-layer-dot--${item.color}`} />
-                    <span>{item.title}</span>
-                    <strong>{item.status}</strong>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="rigor-card">
-              <div>Simple on the surface. Rigorous underneath.</div>
-              <p>
-                SmartConveyance gives conveyancers a clean operating surface while keeping legal structure, data
-                relationships, and review moments intact across every matter.
-              </p>
-            </div>
-          </Reveal>
-        </div>
-
-        <div className="module-wrap">
-          <div className="eyebrow module-eyebrow">Outcome-Based Modules</div>
-          <div className="module-grid">
-            {modules.map((module, index) => {
-              const Icon = module.icon;
-
-              return (
-                <Reveal className="module-card" delay={(index % 3) * 100} key={module.title}>
-                  <div className="module-card-icon">
-                    <Icon size={16} />
-                  </div>
-                  <h4>{module.title}</h4>
-                  <p>{module.description}</p>
-                </Reveal>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ComparisonSection() {
-  return (
-    <section id="compare" className="section" aria-labelledby="compare-title">
-      <div className="container">
-        <Reveal className="compare-intro">
-          <div className="eyebrow">SmartConveyance vs Others</div>
-          <h2 id="compare-title">Designed to reduce friction, not add another system to manage.</h2>
-          <p>The difference is not a longer feature list. It is how naturally the platform fits conveyancing work.</p>
+        <Reveal className="section-head">
+          <div className="eyebrow">Feature list</div>
+          <h2 id="featuresTitle">Specialized tools for conveyancing practitioners.</h2>
+          <p className="lead">
+            From easy data entry and auto-calculations to title searches, file generation, templates, and productivity
+            reporting, the essentials are covered in one workflow.
+          </p>
         </Reveal>
-
-        <div className="compare-grid">
-          <Reveal className="compare-col compare-col--ours">
-            <div className="compare-header compare-header--ours">
-              <CheckCircle2 size={16} />
-              SmartConveyance
-            </div>
-            <div className="compare-body">
-              {smartRows.map((row) => (
-                <div className="compare-row" key={row}>
-                  <CheckCircle2 className="compare-check check-yes" size={18} />
-                  {row}
-                </div>
-              ))}
-            </div>
-          </Reveal>
-
-          <Reveal className="compare-col" delay={100}>
-            <div className="compare-header compare-header--theirs">
-              <X size={16} />
-              Other Legal Tech
-            </div>
-            <div className="compare-body">
-              {otherRows.map((row) => (
-                <div className="compare-row" key={row}>
-                  <X className="compare-check check-no" size={18} />
-                  {row}
-                </div>
-              ))}
-            </div>
-          </Reveal>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function TestimonialsSection() {
-  return (
-    <section id="testimonials" className="section" aria-labelledby="testimonials-title">
-      <div className="container">
-        <Reveal className="testimonials-intro">
-          <div className="eyebrow eyebrow--light">What Legal Teams Say</div>
-          <h2 id="testimonials-title">Trusted by conveyancing professionals.</h2>
-          <p>Real feedback from lawyers, paralegals, and firm owners using SmartConveyance today.</p>
-        </Reveal>
-
-        <div className="testimonials-grid">
-          {testimonials.map((testimonial, index) => (
-            <Reveal className="testimonial-card" delay={index * 100} key={testimonial.name}>
-              <div className="stars" aria-label="Five star rating">
-                {Array.from({ length: 5 }, (_, starIndex) => (
-                  <Star className="star" size={13} key={starIndex} />
-                ))}
+        <div className="features-grid">
+          {featureCards.map((card, index) => (
+            <Reveal className="feature-card" delay={(index % 3) * 80} key={card.title}>
+              <div className="feature-top">
+                <CardIcon icon={card.icon} tone={card.tone} />
+                <span className="feature-index">{String(index + 1).padStart(2, "0")}</span>
               </div>
-              <p className="testimonial-quote">{testimonial.quote}</p>
-              <div className="testimonial-author">
-                <div className={`author-avatar author-avatar--${testimonial.tone}`}>{testimonial.initial}</div>
-                <div>
-                  <div className="author-name">{testimonial.name}</div>
-                  <div className="author-role">{testimonial.role}</div>
-                </div>
-              </div>
+              <h3>{card.title}</h3>
+              <p>{card.description}</p>
             </Reveal>
           ))}
         </div>
@@ -694,62 +875,29 @@ function TestimonialsSection() {
   );
 }
 
-function PricingSection() {
+function OutcomesSection() {
   return (
-    <section id="pricing" className="section" aria-labelledby="pricing-title">
+    <section className="section section-dark" id="outcomes" aria-labelledby="outcomesTitle">
       <div className="container">
-        <div className="pricing-wrap">
-          <Reveal className="pricing-text">
-            <div className="eyebrow">Pricing</div>
-            <h2 id="pricing-title">Enterprise-grade efficiency. Without enterprise-level cost.</h2>
-            <p className="lead">
-              SmartConveyance makes operational gains visible without asking firms to accept enterprise complexity or
-              enterprise pricing.
-            </p>
-            <div className="pricing-benefits">
-              {pricingBenefits.map((benefit) => (
-                <div className="pricing-benefit" key={benefit.title}>
-                  <div className="pricing-benefit-icon">
-                    <CheckCircle2 size={12} />
-                  </div>
-                  <div className="pricing-benefit-text">
-                    <strong>{benefit.title}</strong>
-                    <span>{benefit.description}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Reveal>
+        <Reveal className="section-head center">
+          <div className="eyebrow eyebrow-light">Impact</div>
+          <h2 id="outcomesTitle">Digital conveyancing, re-engineered.</h2>
+          <p className="lead">A calmer operating layer that creates measurable operational outcomes for legal teams.</p>
+        </Reveal>
+        <div className="outcome-grid">
+          {outcomes.map((outcome, index) => {
+            const Icon = outcome.icon;
 
-          <Reveal className="pricing-card" delay={120}>
-            <div className="pricing-card-header">
-              <div className="pricing-card-label">Pay-per-matter - No contract</div>
-              <div className="pricing-amount">
-                <div className="pricing-dollar">$</div>
-                <div className="pricing-num">79</div>
-                <div className="pricing-per">/ matter</div>
+            return (
+            <Reveal className={`outcome-card${outcome.tone === "green" ? " outcome-card--green" : ""}`} delay={(index % 4) * 70} key={outcome.title}>
+              <div className="card-icon">
+                <Icon className="icon" aria-hidden="true" />
               </div>
-              <div className="pricing-sub">All core features included. No hidden fees.</div>
-            </div>
-            <div className="pricing-card-body">
-              <div className="pricing-features">
-                {pricingFeatures.map((feature) => (
-                  <div className="pricing-feature" key={feature}>
-                    <CheckCircle2 size={16} />
-                    {feature}
-                  </div>
-                ))}
-              </div>
-              <hr className="pricing-divider" />
-              <a href="#demo" className="btn btn--primary form-submit">
-                Book your demo today
-              </a>
-              <div className="no-contract">
-                <ShieldCheck size={14} />
-                No contract - Cancel anytime - Credit & debit accepted
-              </div>
-            </div>
-          </Reveal>
+              <strong>{outcome.title}</strong>
+              <span>{outcome.description}</span>
+            </Reveal>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -758,119 +906,348 @@ function PricingSection() {
 
 function SupportSection() {
   return (
-    <section id="support" className="section" aria-labelledby="support-title">
-      <div className="container">
-        <Reveal className="support-intro">
-          <div className="eyebrow">360-Degree Support</div>
-          <h2 id="support-title">Real support, whenever you need it.</h2>
-          <p>
-            Innobridge supports legal professionals with practical training, live walkthroughs, and embedded guidance that
-            keeps work moving.
-          </p>
-        </Reveal>
-        <div className="support-grid">
-          {supportCards.map((card, index) => {
-            const Icon = card.icon;
+    <section className="section" id="support" aria-labelledby="supportTitle">
+      <div className="container onboarding-wrap">
+        <Reveal className="flow-board" aria-label="Onboarding flow">
+          {supportSteps.map((step, index) => {
+            const Icon = step.icon;
 
             return (
-              <Reveal className="support-card" delay={index * 100} key={card.title}>
-                <div className={`support-icon si-${card.tone}`}>
-                  <Icon size={22} />
+              <div className="flow-card" key={step.title}>
+                <CardIcon icon={Icon} tone={step.tone} />
+                <div>
+                  <strong>{step.title}</strong>
+                  <span>
+                    {index === 0 || index === 1 ? (
+                      <>
+                        <a href={step.linkHref}>{step.linkCopy}</a> {step.description}
+                      </>
+                    ) : index === 2 ? (
+                      <>
+                        {step.description} <a href={step.linkHref}>{step.linkCopy}</a> for help.
+                      </>
+                    ) : (
+                      <>
+                        {step.description} <a href={step.linkHref}>{step.linkCopy}</a>.
+                      </>
+                    )}
+                  </span>
                 </div>
-                <h4>{card.title}</h4>
-                <p>{card.description}</p>
-              </Reveal>
+              </div>
+            );
+          })}
+          <div className="flow-arrow arrow-1" />
+          <div className="flow-arrow arrow-2" />
+          <div className="flow-arrow arrow-3" />
+        </Reveal>
+
+        <Reveal className="support-panel" id="supportDetails">
+          <div className="eyebrow eyebrow-light">Onboarding and training</div>
+          <h2 id="supportTitle">Sign up, and start conveyancing today.</h2>
+          <p className="lead">
+            Accessible support is available through phone, email, Zoom, embedded guides, and one-on-one training from
+            onboarding to daily management.
+          </p>
+          <div className="support-list">
+            {["Phone and email support", "Live Zoom walkthroughs", "Embedded how-to guidance", "One-on-one onboarding and training"].map((item) => (
+              <div key={item}>
+                <i />
+                {item}
+              </div>
+            ))}
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function PricingSection() {
+  return (
+    <section className="section" id="pricing" aria-labelledby="pricingTitle">
+      <div className="container">
+        <Reveal className="section-head center">
+          <div className="eyebrow">Pricing plan</div>
+          <h2 id="pricingTitle">Enterprise-grade efficiency without enterprise-level cost.</h2>
+          <p className="lead">Simple pricing that makes operational gains visible without long-term lock-in.</p>
+        </Reveal>
+        <div className="pricing-grid">
+          {pricingPlans.map((plan, index) => (
+            <Reveal className={`price-card${plan.badge ? " featured" : ""}`} delay={index * 80} key={plan.name}>
+              {plan.badge ? <span className="price-badge">{plan.badge}</span> : null}
+              <h3>{plan.name}</h3>
+              <p>{plan.description}</p>
+              <div className="price">
+                <strong>{plan.price}</strong>
+                {plan.suffix ? <span>{plan.suffix}</span> : null}
+              </div>
+              <ul className="price-list">
+                {plan.features.map((feature) => (
+                  <li key={feature}>{feature}</li>
+                ))}
+              </ul>
+              <a className={`btn ${plan.buttonClass}`} href="#demo">
+                {plan.cta}
+              </a>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function RoiSection() {
+  return (
+    <section className="section section-dark" id="roi" aria-labelledby="roiTitle">
+      <div className="container roi-layout">
+        <Reveal>
+          <div className="eyebrow eyebrow-light">ROI</div>
+          <h2 id="roiTitle">Growth-ready infrastructure for serious firms.</h2>
+          <p className="lead">
+            Your tech stack should accelerate the practice instead of throttling it. SmartConveyance is positioned around
+            immediate ROI and increased billable capacity.
+          </p>
+        </Reveal>
+        <Reveal className="roi-card">
+          <div className="roi-stat">
+            <strong>10:1</strong>
+            <span>revenue-to-cost capacity narrative</span>
+          </div>
+          <div className="comparison">
+            <div className="bar-row">
+              <strong>
+                <span>Manual staff time per file</span>
+                <span>4 to 6 hours</span>
+              </strong>
+              <div className="bar-track">
+                <div className="bar-fill manual" />
+              </div>
+            </div>
+            <div className="bar-row">
+              <strong>
+                <span>With SmartConveyance</span>
+                <span>~1.5 hours</span>
+              </strong>
+              <div className="bar-track">
+                <div className="bar-fill innobridge" />
+              </div>
+            </div>
+          </div>
+          <div className="savings-box">
+            <strong>$81,000+ projected annual savings</strong>
+            <span>Illustrative annual savings for a mid-sized firm, based on the website plan narrative.</span>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function TestimonialsSection() {
+  return (
+    <section className="section" id="testimonials" aria-labelledby="testimonialsTitle">
+      <div className="container">
+        <Reveal className="section-head center">
+          <div className="eyebrow">Testimonials</div>
+          <h2 id="testimonialsTitle">Trusted by conveyancing professionals.</h2>
+          <p className="lead">
+            A serious product page needs proof that speaks in the language of lawyers, paralegals, and firm owners.
+          </p>
+        </Reveal>
+        <div className="testimonial-grid">
+          {testimonials.map((testimonial, index) => (
+            <Reveal className="quote-card" delay={index * 80} key={testimonial.name}>
+              <div className="stars" aria-label="Five star rating">
+                ★★★★★
+              </div>
+              <blockquote>{testimonial.quote}</blockquote>
+              <div className="author">
+                <div className="avatar">{testimonial.initial}</div>
+                <div>
+                  <strong>{testimonial.name}</strong>
+                  <span>{testimonial.role}</span>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function StorySection() {
+  return (
+    <section className="section" id="story" aria-labelledby="storyTitle">
+      <div className="container story-wrap">
+        <Reveal className="story-card">
+          <img
+            className="story-logo"
+            src="/brand/innobridge-primary-light.png"
+            alt="Innobridge"
+            decoding="async"
+          />
+          <div className="eyebrow eyebrow-light">Our story</div>
+          <h2 id="storyTitle">Legal DNA, engineered into the product.</h2>
+          <p>
+            Innobridge was launched in Alberta in 2022 to build a bridge between legal processes and digital solutions.
+            The platform is designed around how law actually works, not around generic software habits.
+          </p>
+          <div className="story-facts" aria-label="Company highlights">
+            <span><strong>2022</strong> Alberta launch</span>
+            <span><strong>Legal-first</strong> process design</span>
+          </div>
+        </Reveal>
+        <div className="values-grid">
+          {values.map((value, index) => {
+            const Icon = value.icon;
+
+            return (
+            <Reveal className={`value-card${value.tone === "green" ? " value-card--green" : ""}`} delay={(index % 2) * 80} key={value.title}>
+              <div className="value-card-icon">
+                <Icon className="icon" aria-hidden="true" />
+              </div>
+              <strong>{value.title}</strong>
+              <span>{value.description}</span>
+            </Reveal>
             );
           })}
         </div>
-        <Reveal className="support-contacts">
-          <a className="support-contact" href="tel:+18882669010">
-            <div className="sc-icon sc-icon--blue">
-              <Phone size={16} />
-            </div>
-            <div>
-              <div className="sc-label">Phone</div>
-              <div className="sc-value">+1 (888) 266-9010</div>
-            </div>
-          </a>
-          <a className="support-contact" href="mailto:support@innobridge.ca">
-            <div className="sc-icon sc-icon--green">
-              <Mail size={16} />
-            </div>
-            <div>
-              <div className="sc-label">Email</div>
-              <div className="sc-value">support@innobridge.ca</div>
-            </div>
-          </a>
-        </Reveal>
       </div>
     </section>
   );
 }
 
 function DemoSection() {
-  return (
-    <section id="demo" className="section" aria-labelledby="demo-title">
-      <div className="container">
-        <div className="demo-inner">
-          <Reveal className="demo-text">
-            <div className="eyebrow eyebrow--light">Ready for Instant Velocity?</div>
-            <h2 id="demo-title">Start today with a platform built around how conveyancing actually works.</h2>
-            <p>
-              SmartConveyance gives legal teams a calmer, faster operating layer for matter data, document generation,
-              collaboration, and filing.
-            </p>
-            <div className="demo-perks">
-              {demoPerks.map((perk) => (
-                <div className="demo-perk" key={perk}>
-                  <CheckCircle2 size={18} />
-                  {perk}
-                </div>
-              ))}
-            </div>
-          </Reveal>
+  const [submitted, setSubmitted] = useState(false);
 
-          <Reveal delay={100}>
-            <DemoForm />
-          </Reveal>
-        </div>
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSubmitted(true);
+  };
+
+  return (
+    <section className="section" id="demo" aria-labelledby="demoTitle">
+      <div className="container demo-grid">
+        <Reveal>
+          <div className="eyebrow">Book a demo</div>
+          <h2 id="demoTitle">Start with a legal workflow fit assessment.</h2>
+          <p className="lead">
+            A solutions expert can show how SmartConveyance fits your file types, team structure, and current conveyancing
+            process.
+          </p>
+          <div className="demo-benefits">
+            {["Personalized 15-minute walkthrough", "No contract, pay per matter", "Same-day onboarding path", "360° support from day one"].map((benefit) => (
+              <div key={benefit}>
+                <i />
+                {benefit}
+              </div>
+            ))}
+          </div>
+        </Reveal>
+        <Reveal className="demo-card">
+          <form className="demo-form" id="demoForm" onSubmit={handleSubmit}>
+            <div className="form-row">
+              <div className="field">
+                <label htmlFor="firstName">First name</label>
+                <input id="firstName" name="firstName" autoComplete="given-name" required placeholder="Jane" />
+              </div>
+              <div className="field">
+                <label htmlFor="lastName">Last name</label>
+                <input id="lastName" name="lastName" autoComplete="family-name" required placeholder="Smith" />
+              </div>
+            </div>
+            <div className="form-row">
+              <div className="field">
+                <label htmlFor="firm">Firm name</label>
+                <input id="firm" name="firm" required placeholder="Smith & Associates LLP" />
+              </div>
+              <div className="field">
+                <label htmlFor="email">Work email</label>
+                <input id="email" name="email" autoComplete="email" required type="email" placeholder="jane@firm.ca" />
+              </div>
+            </div>
+            <div className="form-row">
+              <div className="field">
+                <label htmlFor="role">Your role</label>
+                <select id="role" name="role">
+                  <option value="">Select role</option>
+                  <option>Lawyer / Partner</option>
+                  <option>Conveyancer</option>
+                  <option>Legal Assistant</option>
+                  <option>Paralegal</option>
+                  <option>Firm Owner / Administrator</option>
+                </select>
+              </div>
+              <div className="field">
+                <label htmlFor="volume">Monthly matter volume</label>
+                <select id="volume" name="volume">
+                  <option value="">Select volume</option>
+                  <option>1-10</option>
+                  <option>11-30</option>
+                  <option>31-60</option>
+                  <option>61-100</option>
+                  <option>100+</option>
+                </select>
+              </div>
+            </div>
+            <div className="field">
+              <label htmlFor="message">What should the demo focus on?</label>
+              <textarea id="message" name="message" placeholder="LTSA workflow, document generation, team collaboration..." />
+            </div>
+            <label className="checkbox">
+              <input type="checkbox" required />{" "}
+              <span>
+                I agree to be contacted by Innobridge about SmartConveyance. We respect your privacy and will never share
+                your information.
+              </span>
+            </label>
+            <button className="btn btn-primary" type="submit">
+              Book your demo today
+            </button>
+            <div className={`form-note${submitted ? " show" : ""}`} id="formNote" aria-live="polite">
+              Thanks. This front-end prototype captured the request locally. Connect this form to your CRM or email service
+              before production.
+            </div>
+          </form>
+        </Reveal>
       </div>
     </section>
   );
 }
 
 function FaqSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section id="faq" className="section section--sm" aria-labelledby="faq-title">
-      <div className="container">
-        <Reveal className="faq-intro">
+    <section className="section section-tight" id="faq" aria-labelledby="faqTitle">
+      <div className="container faq-wrap">
+        <Reveal>
           <div className="eyebrow">FAQ</div>
-          <h2 id="faq-title">Common questions.</h2>
+          <h2 id="faqTitle">Common questions.</h2>
+          <p className="lead">Clear answers reduce friction and help buyers understand fit before they book.</p>
         </Reveal>
-        <div className="faq-grid">
+        <Reveal className="faq-list">
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
 
             return (
-              <div className={`faq-item ${isOpen ? "open" : ""}`} key={faq.question}>
+              <div className={`faq-item${isOpen ? " open" : ""}`} key={faq.question}>
                 <button
-                  className="faq-question"
+                  className="faq-q"
                   type="button"
                   aria-expanded={isOpen}
-                  onClick={() => setOpenIndex(isOpen ? null : index)}
+                  onClick={() => setOpenIndex(isOpen ? -1 : index)}
                 >
                   {faq.question}
-                  <span className="faq-toggle" aria-hidden="true">
-                    <X size={18} />
-                  </span>
+                  <span>+</span>
                 </button>
-                <div className="faq-answer">{faq.answer}</div>
+                <div className="faq-a">{faq.answer}</div>
               </div>
             );
           })}
-        </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -878,43 +1255,49 @@ function FaqSection() {
 
 function SiteFooter() {
   return (
-    <footer>
+    <footer className="footer">
       <div className="container">
-        <div className="footer-inner">
-          <div className="footer-brand">
-            <a href="#top" className="footer-logo" aria-label="SmartConveyance by Innobridge home">
-              <img src="/brand/smartconveyance-primary-light.png" alt="SmartConveyance by Innobridge" decoding="async" />
+        <div className="footer-grid">
+          <div>
+            <a href="#top" aria-label="SmartConveyance by Innobridge home">
+              <Brand variant="light" />
             </a>
-            <p>Technology that Speaks Legal. Built for BC conveyancing teams by Innobridge.</p>
+            <p>Technology that Speaks Legal. Built for conveyancing teams that need clarity, speed, and control.</p>
+            <div className="support-footer-box">
+              <strong>360° support</strong>
+              <span>
+                Phone, email, Zoom, embedded guides, webinars, and one-on-one expert training from onboarding to daily
+                management.
+              </span>
+            </div>
           </div>
-          <div className="footer-col">
-            <h5>Product</h5>
-            <a href="#problem">The Problem</a>
-            <a href="#how">How It Works</a>
+          <div>
+            <h4>Product</h4>
+            <a href="#problem">Pain points</a>
+            <a href="#product">Workflow</a>
             <a href="#features">Features</a>
-            <a href="#compare">Comparison</a>
+            <a href="#outcomes">Outcomes</a>
           </div>
-          <div className="footer-col">
-            <h5>Company</h5>
+          <div>
+            <h4>Company</h4>
             <a href="#pricing">Pricing</a>
             <a href="#support">Support</a>
+            <a href="#story">Our story</a>
             <a href="#demo">Book a Demo</a>
-            <a href="https://smartconveyance.innobridge.ca/">Sign In</a>
           </div>
-          <div className="footer-col">
-            <h5>Legal</h5>
-            <a href="https://smartconveyance.innobridge.ca/files/PrivacyPolicy.pdf">Privacy Policy</a>
-            <a href="https://smartconveyance.innobridge.ca/files/TermsOfUse.pdf">Terms of Use</a>
+          <div>
+            <h4>Contact</h4>
             <a href="mailto:support@innobridge.ca">support@innobridge.ca</a>
             <a href="tel:+18882669010">+1 (888) 266-9010</a>
+            <a href="https://smartconveyance.innobridge.ca/">Sign in</a>
           </div>
         </div>
         <div className="footer-bottom">
-          <p>&copy; 2026 Innobridge Consulting Inc. All rights reserved. - 500 - 4th Avenue SW Suite 2500, Calgary, AB</p>
-          <div className="footer-legal">
+          <span>© 2026 Innobridge Consulting Inc. All rights reserved.</span>
+          <span>
             <a href="https://smartconveyance.innobridge.ca/files/PrivacyPolicy.pdf">Privacy</a>
             <a href="https://smartconveyance.innobridge.ca/files/TermsOfUse.pdf">Terms</a>
-          </div>
+          </span>
         </div>
       </div>
     </footer>
@@ -927,13 +1310,16 @@ export function SmartConveyanceLanding() {
       <SiteNav />
       <main id="main">
         <HeroSection />
+        <MetricStrip />
         <ProblemSection />
-        <HowSection />
+        <ProductSection />
         <FeaturesSection />
-        <ComparisonSection />
-        <TestimonialsSection />
-        <PricingSection />
+        <OutcomesSection />
         <SupportSection />
+        <PricingSection />
+        <RoiSection />
+        <TestimonialsSection />
+        <StorySection />
         <DemoSection />
         <FaqSection />
       </main>
