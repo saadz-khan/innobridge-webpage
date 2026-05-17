@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, FocusEvent, FormEvent } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -35,6 +35,19 @@ type IconCard = {
   description: string;
   icon: LucideIcon;
   tone?: "blue" | "green" | "dark";
+};
+
+type CountMetric = {
+  end: number;
+  finalLabel: string;
+  prefix?: string;
+  rangeEnd?: number;
+  suffix?: string;
+};
+
+type RoiBubble = IconCard & {
+  metric: CountMetric;
+  value: string;
 };
 
 type ProductStage = {
@@ -202,6 +215,150 @@ function mapServerErrors(errors: DemoErrorResponse["errors"]): DemoFormErrors {
 
     return mappedErrors;
   }, {});
+}
+
+const countNumberFormatter = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
+
+const premiumSurfaceSelector = [
+  ".feature-card",
+  ".outcome-card",
+  ".price-card",
+  ".quote-card",
+  ".value-card",
+  ".demo-card",
+  ".faq-item",
+  ".roi-bubble",
+  ".time-compare-block",
+  ".fin-table-card"
+].join(", ");
+
+function usePremiumPointerGlow() {
+  useEffect(() => {
+    const canUsePointerGlow = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+    if (!canUsePointerGlow) {
+      return;
+    }
+
+    const updateSurfaceGlow = (event: PointerEvent) => {
+      const element = event.target instanceof Element ? event.target : null;
+      const surface = element?.closest<HTMLElement>(premiumSurfaceSelector);
+
+      if (!surface) {
+        return;
+      }
+
+      const rect = surface.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width) * 100;
+      const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+      surface.style.setProperty("--glow-x", `${x.toFixed(1)}%`);
+      surface.style.setProperty("--glow-y", `${y.toFixed(1)}%`);
+      surface.dataset.glowActive = "true";
+    };
+
+    const clearSurfaceGlow = (event: PointerEvent) => {
+      const element = event.target instanceof Element ? event.target : null;
+      const surface = element?.closest<HTMLElement>(premiumSurfaceSelector);
+      const relatedNode = event.relatedTarget instanceof Node ? event.relatedTarget : null;
+
+      if (!surface || (relatedNode && surface.contains(relatedNode))) {
+        return;
+      }
+
+      delete surface.dataset.glowActive;
+    };
+
+    document.addEventListener("pointermove", updateSurfaceGlow, { passive: true });
+    document.addEventListener("pointerout", clearSurfaceGlow, { passive: true });
+
+    return () => {
+      document.removeEventListener("pointermove", updateSurfaceGlow);
+      document.removeEventListener("pointerout", clearSurfaceGlow);
+    };
+  }, []);
+}
+
+function formatCountNumber(value: number) {
+  return countNumberFormatter.format(value);
+}
+
+function AnimatedMetric({ end, finalLabel, prefix = "", rangeEnd, suffix = "" }: CountMetric) {
+  const ref = useRef<HTMLSpanElement | null>(null);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const element = ref.current;
+
+    if (!element) {
+      return;
+    }
+
+    const animationTarget = element.closest(".roi-bubble") ?? element;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setProgress(1);
+      return;
+    }
+
+    let animationFrame = 0;
+    let startTime = 0;
+    let observer: IntersectionObserver | undefined;
+    const duration = 1450;
+
+    const animate = (timestamp: number) => {
+      if (!startTime) {
+        startTime = timestamp;
+      }
+
+      const linearProgress = Math.min((timestamp - startTime) / duration, 1);
+      const easedProgress = 1 - Math.pow(1 - linearProgress, 3);
+
+      setProgress(easedProgress);
+
+      if (linearProgress < 1) {
+        animationFrame = window.requestAnimationFrame(animate);
+      }
+    };
+
+    const startAnimation = () => {
+      if (!animationFrame) {
+        animationFrame = window.requestAnimationFrame(animate);
+      }
+    };
+
+    if ("IntersectionObserver" in window) {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry?.isIntersecting) {
+            startAnimation();
+            observer?.disconnect();
+          }
+        },
+        { rootMargin: "0px 0px -16% 0px", threshold: 0.35 }
+      );
+      observer.observe(animationTarget);
+    } else {
+      startAnimation();
+    }
+
+    return () => {
+      observer?.disconnect();
+      window.cancelAnimationFrame(animationFrame);
+    };
+  }, []);
+
+  const primaryValue = Math.round(end * progress);
+  const secondaryValue = typeof rangeEnd === "number" ? Math.round(rangeEnd * progress) : undefined;
+  const label = `${prefix}${formatCountNumber(primaryValue)}${
+    typeof secondaryValue === "number" ? `-${formatCountNumber(secondaryValue)}` : ""
+  }${suffix}`;
+
+  return (
+    <span ref={ref} className="roi-count" aria-label={finalLabel}>
+      {label}
+    </span>
+  );
 }
 
 const navLinks = [
@@ -408,9 +565,10 @@ const pricingPlans = [
   }
 ];
 
-const roiBubbles: Array<IconCard & { value: string }> = [
+const roiBubbles: RoiBubble[] = [
   {
     value: "$65-351",
+    metric: { end: 65, finalLabel: "$65-351", prefix: "$", rangeEnd: 351 },
     title: "per case",
     description: "Save $65-351/case using SmartConveyance compared to others.",
     icon: DollarSign,
@@ -418,12 +576,14 @@ const roiBubbles: Array<IconCard & { value: string }> = [
   },
   {
     value: "$105,300",
+    metric: { end: 105300, finalLabel: "$105,300", prefix: "$" },
     title: "per year",
     description: "Save up to $105,300/year for a typical firm processing 300+ cases per year.",
     icon: BarChart3
   },
   {
     value: "4h",
+    metric: { end: 4, finalLabel: "4h", suffix: "h" },
     title: "per case",
     description: "Save up to 4 hours/case operation time, freeing legal professionals for higher-value work.",
     icon: Clock3
@@ -1385,8 +1545,10 @@ function PricingSection() {
         <div className="pricing-grid">
           {pricingPlans.map((plan, index) => (
             <Reveal className={`price-card${plan.badge ? " featured" : ""}`} delay={index * 80} key={plan.name}>
-              {plan.badge ? <span className="price-badge">{plan.badge}</span> : null}
-              <h3>{plan.name}</h3>
+              <div className="price-card-top">
+                <h3>{plan.name}</h3>
+                {plan.badge ? <span className="price-badge">{plan.badge}</span> : null}
+              </div>
               <p>{plan.description}</p>
               <div className="price">
                 <strong>{plan.price}</strong>
@@ -1416,14 +1578,25 @@ function RoiSection() {
     <section className="section section-dark roi-decision-section" id="roi" aria-labelledby="roiTitle">
       <div className="container">
         <Reveal className="section-head center roi-decision-head">
-          <div className="eyebrow eyebrow-light">Return on Investment</div>
+          <div className="eyebrow eyebrow-light">Financial Impact</div>
           <h2 id="roiTitle">The numbers that move decisions.</h2>
+          <p className="lead">
+            From time saved per file to annualized firm savings - a clear, side-by-side operating comparison built for
+            partners, administrators, and decision-makers.
+          </p>
         </Reveal>
 
         <Reveal className="time-compare-block">
+          <div className="compare-top">
+            <div className="compare-eyebrow">
+              <span className="compare-dot" />
+              Staff time per file
+            </div>
+            <div className="compare-pill">~75% less time per case</div>
+          </div>
           <div className="time-bars">
             <div className="time-bar-row">
-              <div className="time-bar-name">Legacy Digital Conveyancing</div>
+              <div className="time-bar-name">Legacy Manual Process</div>
               <div className="time-bar-track">
                 <div className="time-bar-fill bar-legacy" />
               </div>
@@ -1445,7 +1618,7 @@ function RoiSection() {
               <thead>
                 <tr>
                   <th>Metric (Per Case)</th>
-                  <th className="col-legacy">Legacy Digital Conveyancing</th>
+                  <th className="col-legacy">Legacy Manual Process</th>
                   <th className="col-smart">
                     <span className="fin-head-smart">
                       <span className="fin-check">✓</span>
@@ -1464,18 +1637,18 @@ function RoiSection() {
                   <th scope="row">
                     Labour Cost <small>at $45 / hr</small>
                   </th>
-                  <td className="col-legacy">$90-225</td>
-                  <td className="col-smart">$45.00</td>
+                  <td className="col-legacy">$180-270</td>
+                  <td className="col-smart">$67.50</td>
                 </tr>
                 <tr>
-                  <th scope="row">Software Fees</th>
-                  <td className="col-legacy">$99-$250 + contract and hidden fees</td>
-                  <td className="col-smart">$79.00 no contract, no hidden fees</td>
+                  <th scope="row">Software / Filing Fees</th>
+                  <td className="col-legacy">$150-400</td>
+                  <td className="col-smart">$79.00</td>
                 </tr>
                 <tr className="fin-total">
                   <th scope="row">Total Cost / Case</th>
-                  <td className="col-legacy">$189-475</td>
-                  <td className="col-smart">$124.00</td>
+                  <td className="col-legacy">$333-670</td>
+                  <td className="col-smart">$146.50</td>
                 </tr>
               </tbody>
             </table>
@@ -1496,13 +1669,15 @@ function RoiSection() {
                 delay={index * 90}
                 key={bubble.value}
               >
-                <span className="roi-bubble-icon">
-                  <Icon className="icon" aria-hidden="true" />
-                </span>
-                <strong>
-                  {bubble.value}
-                  <span>{bubble.title}</span>
-                </strong>
+                <div className="roi-bubble-metric">
+                  <strong>
+                    <AnimatedMetric {...bubble.metric} />
+                    <span className="roi-count-label">{bubble.title}</span>
+                  </strong>
+                  <span className="roi-bubble-icon">
+                    <Icon className="icon" aria-hidden="true" />
+                  </span>
+                </div>
                 <p>{bubble.description}</p>
               </Reveal>
             );
@@ -1965,6 +2140,8 @@ function SiteFooter() {
 }
 
 export function SmartConveyanceLanding() {
+  usePremiumPointerGlow();
+
   return (
     <>
       <SiteNav />
