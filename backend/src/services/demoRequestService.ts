@@ -1,7 +1,5 @@
-import { mkdir, appendFile } from "node:fs/promises";
-import { dirname } from "node:path";
 import { randomUUID } from "node:crypto";
-import { environment } from "../config/environment.js";
+import { DemoRequestRepository } from "../repositories/demoRequestRepository.js";
 import type { DemoRequestInput } from "../schemas/demoRequestSchema.js";
 import type { DemoRequestRecord } from "../types/demoRequest.js";
 
@@ -11,6 +9,8 @@ type RequestSource = {
 };
 
 export class DemoRequestService {
+  constructor(private readonly demoRequestRepository = new DemoRequestRepository()) {}
+
   async create(input: DemoRequestInput, source: RequestSource): Promise<DemoRequestRecord> {
     const record: DemoRequestRecord = {
       ...input,
@@ -19,8 +19,7 @@ export class DemoRequestService {
       source
     };
 
-    await mkdir(dirname(environment.DEMO_REQUEST_LOG_PATH), { recursive: true });
-    await appendFile(environment.DEMO_REQUEST_LOG_PATH, `${JSON.stringify(record)}\n`, "utf8");
+    await this.demoRequestRepository.create(record);
 
     return record;
   }

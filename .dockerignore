@@ -5,8 +5,9 @@ node_modules
 frontend/dist
 backend/dist
 frontend/.vite
-backend/storage/*.jsonl
 *.pdf
 One-pagers
 Primary Logos
 npm-debug.log*
+SmartConveyance_*.html
+smartconveyance_side_hero.html

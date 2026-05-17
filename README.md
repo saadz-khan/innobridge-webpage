@@ -1,14 +1,21 @@
-# Innobridge SmartConveyance Web
+# SmartSuite SmartConveyance Web
 
 Standalone production-quality one-page web app for SmartConveyance by Innobridge.
 
 ## Stack
 
 - Frontend: Vite, React, TypeScript, custom CSS design tokens
-- Backend: Fastify, TypeScript, Zod validation
-- Runtime: Separate frontend and backend containers with Docker Compose
+- Backend: Fastify, TypeScript, Zod validation, MySQL persistence
+- Runtime: Separate frontend, backend, and database containers with Docker Compose
 
 ## Local Development
+
+Recommended local checkout:
+
+```bash
+mkdir -p ~/Desktop/Dev
+cd ~/Desktop/Dev
+```
 
 ```bash
 npm install
@@ -31,14 +38,28 @@ The frontend expects the runtime logo files in `frontend/public/brand/` when pre
 
 ```bash
 cp .env.example .env
-docker compose up --build
+npm run docker:up
 ```
 
 The production-style app runs at `http://localhost:8080`.
+
+If ports `8080`, `4000`, or `3307` are already taken, override them when starting the stack:
+
+```bash
+FRONTEND_PORT=8081 BACKEND_PORT=4100 MYSQL_HOST_PORT=3308 CORS_ORIGIN=http://localhost:8081 npm run docker:up
+```
+
+Docker Compose runs the stack as:
+
+- `SmartSuiteFrontend`
+- `SmartSuiteBackend`
+- `SmartSuiteDatabase`
+- `SmartSuiteNetwork`
+- `SmartSuiteDatabaseData`
 
 ## API
 
 - `GET /api/health`
 - `POST /api/demo-requests`
 
-Demo requests are validated and appended to a JSONL file. Configure the path with `DEMO_REQUEST_LOG_PATH`.
+Demo requests are validated and saved to MySQL in the `demo_requests` table. The backend creates the table on startup when it does not exist.

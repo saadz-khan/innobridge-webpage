@@ -10,13 +10,13 @@ WORKDIR /app/backend
 RUN npm run build
 
 FROM node:22-alpine AS runtime
+LABEL org.opencontainers.image.title="SmartSuiteBackend"
 ENV NODE_ENV=production
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY backend/package.json ./backend/package.json
 RUN npm ci --workspace backend --omit=dev
 COPY --from=build /app/backend/dist ./backend/dist
-RUN mkdir -p /var/app/data
 WORKDIR /app/backend
 EXPOSE 4000
 CMD ["node", "dist/server.js"]

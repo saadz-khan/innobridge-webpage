@@ -15,6 +15,8 @@ const optionalTrimmedString = (max: number, label: string) =>
     .optional()
     .or(z.literal(""));
 
+const phonePattern = /^[+()\d\s.-]{7,40}$/;
+
 export const demoRequestSchema = z.object({
   firstName: trimmedString(1, 80, "First name"),
   lastName: trimmedString(1, 80, "Last name"),
@@ -24,7 +26,9 @@ export const demoRequestSchema = z.object({
     .trim()
     .email("Enter a valid email")
     .max(180, "Email is too long"),
-  phone: optionalTrimmedString(40, "Phone"),
+  phone: optionalTrimmedString(40, "Phone").refine((value) => !value || phonePattern.test(value), {
+    message: "Enter a valid phone number"
+  }),
   role: optionalTrimmedString(120, "Role"),
   caseload: optionalTrimmedString(80, "Matter volume"),
   message: optionalTrimmedString(1200, "Message"),

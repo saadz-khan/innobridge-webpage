@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SmartConveyance by Innobridge is legal-first conveyancing software that helps law firms reduce manual entry, streamline workflows, and move from intake to filing with confidence." />
+  <meta name="theme-color" content="#35475A" />
+  <title>SmartConveyance by Innobridge | Technology that Speaks Legal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      color-scheme: light;
+      --charcoal: #35475A;
+      --charcoal-900: #171D1A;
+      --charcoal-800: #253444;
+      --charcoal-700: #2D3E4F;
+      --charcoal-500: #5A6B7B;
+      --blue: #187D9E;
+      --blue-600: #126C89;
+      --blue-100: #E8F4F7;
+      --green: #90A668;
+      --green-700: #6F834D;
+      --green-100: #EEF3E7;
+      --pebble: #F2F2F2;
+      --paper: #F7F6F3;
+      --warm: #EBE8E0;
+      --white: #FFFFFF;
+      --ink: #151D26;
+      --muted: #5E6975;
+      --soft: #8B97A3;
+      --border: #DAD7CF;
+      --border-strong: #C6C1B6;
+      --danger: #B54708;
+      --success: #3C6F47;
+      --shadow-sm: 0 1px 2px rgba(23, 29, 26, .05), 0 6px 18px rgba(23, 29, 26, .06);
+      --shadow-md: 0 18px 45px rgba(23, 29, 26, .12);
+      --shadow-lg: 0 32px 90px rgba(23, 29, 26, .20);
+      --radius-sm: 10px;
+      --radius: 18px;
+      --radius-lg: 28px;
+      --radius-xl: 38px;
+      --container: 1180px;
+      --ease: cubic-bezier(.2, .8, .2, 1);
+      --font: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 92px; }
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font);
+      line-height: 1.55;
+      text-rendering: geometricPrecision;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 12% 18%, rgba(24,125,158,.08), transparent 28%),
+        radial-gradient(circle at 82% 8%, rgba(144,166,104,.11), transparent 30%),
+        linear-gradient(180deg, #F8F7F4 0%, #F1EFE9 100%);
+    }
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: .32;
+      background-image:
+        linear-gradient(rgba(23,29,26,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23,29,26,.035) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(180deg, #000 0%, transparent 78%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input, select, textarea { font: inherit; }
+    button { border: 0; background: none; cursor: pointer; }
+    img, svg { display: block; max-width: 100%; }
+    p, h1, h2, h3, h4 { margin-top: 0; }
+    p { color: var(--muted); margin-bottom: 0; }
+    :focus-visible { outline: 3px solid rgba(24,125,158,.33); outline-offset: 4px; }
+    ::selection { background: rgba(144,166,104,.28); }
+
+    .container { width: min(100% - 48px, var(--container)); margin-inline: auto; }
+    .section { padding: 112px 0; position: relative; }
+    .section-tight { padding: 84px 0; }
+    .section-dark {
+      background: var(--charcoal-900);
+      color: var(--white);
+      overflow: hidden;
+    }
+    .section-dark::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 12% 20%, rgba(24,125,158,.21), transparent 34%),
+        radial-gradient(circle at 86% 80%, rgba(144,166,104,.18), transparent 32%);
+      pointer-events: none;
+    }
+    .section-dark > * { position: relative; z-index: 1; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--blue);
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: currentColor;
+      box-shadow: 0 0 0 5px color-mix(in srgb, currentColor 14%, transparent);
+    }
+    .eyebrow-light { color: rgba(255,255,255,.70); }
+    h1 {
+      margin-bottom: 24px;
+      color: var(--white);
+      font-size: clamp(3.1rem, 8vw, 6.5rem);
+      font-weight: 800;
+      line-height: .94;
+      letter-spacing: -.075em;
+    }
+    h1 span {
+      display: inline-block;
+      color: #BFDCE5;
+      letter-spacing: -.08em;
+    }
+    h2 {
+      margin-bottom: 18px;
+      color: var(--ink);
+      font-size: clamp(2.15rem, 4.7vw, 4.65rem);
+      font-weight: 760;
+      line-height: .99;
+      letter-spacing: -.058em;
+    }
+    .section-dark h2, .section-dark h3 { color: var(--white); }
+    h3 {
+      margin-bottom: 10px;
+      color: var(--ink);
+      font-size: clamp(1.15rem, 1.8vw, 1.45rem);
+      font-weight: 740;
+      line-height: 1.18;
+      letter-spacing: -.025em;
+    }
+    h4 { margin-bottom: 8px; color: var(--ink); font-size: 1rem; font-weight: 780; letter-spacing: -.015em; }
+    .lead { max-width: 66ch; font-size: clamp(1.05rem, 1.35vw, 1.24rem); line-height: 1.72; color: var(--muted); }
+    .section-dark .lead, .section-dark p { color: rgba(255,255,255,.67); }
+    .section-head { max-width: 780px; margin-bottom: 56px; }
+    .section-head.center { margin-inline: auto; text-align: center; }
+    .section-head.center .eyebrow { justify-content: center; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 48px;
+      border-radius: 999px;
+      padding: 13px 22px;
+      font-size: .92rem;
+      font-weight: 760;
+      letter-spacing: -.01em;
+      line-height: 1;
+      transition: transform .22s var(--ease), box-shadow .22s var(--ease), background .22s var(--ease), border-color .22s var(--ease), color .22s var(--ease);
+      white-space: nowrap;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: var(--blue); color: var(--white); box-shadow: 0 12px 32px rgba(24,125,158,.32); }
+    .btn-primary:hover { background: var(--blue-600); box-shadow: 0 18px 42px rgba(24,125,158,.38); }
+    .btn-dark { background: var(--charcoal-900); color: var(--white); box-shadow: 0 14px 34px rgba(23,29,26,.18); }
+    .btn-ghost { border: 1px solid rgba(255,255,255,.22); color: var(--white); background: rgba(255,255,255,.065); backdrop-filter: blur(10px); }
+    .btn-ghost:hover { border-color: rgba(255,255,255,.42); background: rgba(255,255,255,.11); }
+    .btn-subtle { border: 1px solid var(--border); background: rgba(255,255,255,.72); color: var(--ink); }
+    .btn-subtle:hover { border-color: var(--border-strong); background: var(--white); box-shadow: var(--shadow-sm); }
+    .icon { width: 18px; height: 18px; flex: 0 0 auto; }
+
+    .skip-link {
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      z-index: 999;
+      transform: translateY(-150%);
+      border-radius: 10px;
+      background: var(--white);
+      color: var(--ink);
+      padding: 10px 14px;
+      box-shadow: var(--shadow-md);
+      transition: transform .2s var(--ease);
+    }
+    .skip-link:focus { transform: translateY(0); }
+
+    .nav {
+      position: fixed;
+      inset: 16px 0 auto;
+      z-index: 100;
+      pointer-events: none;
+      transition: transform .24s var(--ease);
+    }
+    .nav-inner {
+      width: min(100% - 32px, 1240px);
+      min-height: 68px;
+      margin-inline: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      padding: 11px 14px 11px 18px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 999px;
+      background: rgba(23,29,26,.62);
+      box-shadow: 0 18px 50px rgba(23,29,26,.22);
+      backdrop-filter: blur(22px) saturate(1.15);
+      -webkit-backdrop-filter: blur(22px) saturate(1.15);
+      pointer-events: auto;
+      transition: background .24s var(--ease), border-color .24s var(--ease), box-shadow .24s var(--ease);
+    }
+    .nav.scrolled .nav-inner { background: rgba(23,29,26,.84); border-color: rgba(255,255,255,.13); }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-width: max-content;
+    }
+    .brand-mark {
+      position: relative;
+      width: 34px;
+      height: 34px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, var(--blue), var(--green));
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.25), 0 10px 22px rgba(24,125,158,.24);
+      transform: rotate(45deg);
+    }
+    .brand-mark::before, .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border: 2px solid rgba(255,255,255,.86);
+      border-radius: 8px;
+    }
+    .brand-mark::after { inset: 12px; opacity: .46; }
+    .brand-text { display: grid; gap: 1px; color: var(--white); }
+    .brand-text strong { font-size: .98rem; letter-spacing: -.03em; line-height: 1; }
+    .brand-text span { color: rgba(255,255,255,.55); font-size: .7rem; font-weight: 650; letter-spacing: .05em; text-transform: uppercase; }
+    .nav-links { display: flex; align-items: center; gap: 3px; }
+    .nav-links a {
+      border-radius: 999px;
+      color: rgba(255,255,255,.68);
+      padding: 10px 12px;
+      font-size: .84rem;
+      font-weight: 660;
+      transition: color .2s var(--ease), background .2s var(--ease);
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--white); background: rgba(255,255,255,.08); }
+    .nav-actions { display: flex; align-items: center; gap: 10px; }
+    .signin { color: rgba(255,255,255,.67); font-size: .86rem; font-weight: 680; padding: 10px; }
+    .nav-toggle { display: none; color: var(--white); padding: 9px; border-radius: 999px; background: rgba(255,255,255,.08); }
+
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      padding: 140px 0 90px;
+      background:
+        linear-gradient(135deg, rgba(23,29,26,.96), rgba(37,52,68,.96) 48%, rgba(53,71,90,.96)),
+        radial-gradient(circle at 75% 18%, rgba(24,125,158,.45), transparent 30%);
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 78% 18%, rgba(24,125,158,.33), transparent 36%),
+        radial-gradient(circle at 45% 78%, rgba(144,166,104,.15), transparent 30%),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: auto, auto, 58px 58px, 58px 58px;
+      pointer-events: none;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 150px;
+      background: linear-gradient(0deg, var(--paper), transparent);
+      pointer-events: none;
+    }
+    .hero-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(0, .92fr) minmax(560px, 1.08fr);
+      gap: 58px;
+      align-items: center;
+    }
+    .hero-copy { max-width: 650px; }
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      margin-bottom: 26px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 999px;
+      background: rgba(255,255,255,.07);
+      color: rgba(255,255,255,.77);
+      padding: 9px 14px;
+      font-size: .76rem;
+      font-weight: 760;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      backdrop-filter: blur(12px);
+    }
+    .hero-kicker i { width: 8px; height: 8px; border-radius: 999px; background: var(--green); box-shadow: 0 0 0 6px rgba(144,166,104,.16); }
+    .hero-sub { max-width: 58ch; margin-bottom: 32px; color: rgba(255,255,255,.69); font-size: 1.18rem; line-height: 1.74; }
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 34px; }
+    .hero-proof {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      max-width: 680px;
+    }
+    .proof-pill {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      min-height: 88px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 18px;
+      background: rgba(255,255,255,.055);
+      padding: 14px;
+      backdrop-filter: blur(12px);
+    }
+    .proof-pill svg { color: #BFDCE5; flex: 0 0 auto; margin-top: 1px; }
+    .proof-pill span { display: block; color: var(--white); font-size: .9rem; font-weight: 760; line-height: 1.25; letter-spacing: -.01em; }
+    .proof-pill em { display: block; margin-top: 3px; color: rgba(255,255,255,.53); font-size: .76rem; font-style: normal; font-weight: 560; line-height: 1.35; }
+
+    .hero-visual { position: relative; isolation: isolate; }
+    .hero-visual::before {
+      content: "";
+      position: absolute;
+      inset: -10% -10% -14% 6%;
+      z-index: -1;
+      border-radius: 60px;
+      background:
+        radial-gradient(circle at 40% 30%, rgba(24,125,158,.36), transparent 38%),
+        radial-gradient(circle at 72% 75%, rgba(144,166,104,.22), transparent 40%);
+      filter: blur(22px);
+    }
+    .portal-frame {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.16);
+      border-radius: 28px;
+      background: #F9FAFB;
+      box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,.8);
+      transform: perspective(1400px) rotateY(-5deg) rotateX(1.5deg) translateZ(0);
+      transform-origin: center left;
+      transition: transform .35s var(--ease), box-shadow .35s var(--ease);
+    }
+    .portal-frame:hover { transform: perspective(1400px) rotateY(-2.5deg) rotateX(.5deg) translateY(-5px); box-shadow: 0 42px 120px rgba(23,29,26,.32); }
+    .portal-topbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 48px;
+      border-bottom: 1px solid #DDE3EA;
+      background: linear-gradient(180deg, #FFFFFF, #EFF3F6);
+      padding: 0 16px;
+    }
+    .window-dots { display: flex; gap: 7px; }
+    .window-dots span { width: 10px; height: 10px; border-radius: 999px; background: #D1D8DF; }
+    .window-dots span:nth-child(1) { background: #FF6A5F; }
+    .window-dots span:nth-child(2) { background: #F7C052; }
+    .window-dots span:nth-child(3) { background: #53C56B; }
+    .url-pill {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 28px;
+      border: 1px solid #DDE4EB;
+      border-radius: 999px;
+      background: #FFFFFF;
+      color: #7C8793;
+      padding: 0 13px;
+      font-size: .72rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .portal-app { display: grid; grid-template-columns: 182px minmax(0, 1fr); min-height: 590px; background: #F6F7F8; }
+    .portal-sidebar {
+      border-right: 1px solid #E0E4E8;
+      background: #FFFFFF;
+      padding: 18px 14px;
+    }
+    .portal-logo { display: flex; align-items: center; gap: 9px; margin-bottom: 24px; color: var(--charcoal-800); font-weight: 850; font-size: .92rem; letter-spacing: -.03em; }
+    .mini-mark { width: 24px; height: 24px; border-radius: 8px; background: linear-gradient(135deg, var(--blue), var(--green)); transform: rotate(45deg); }
+    .portal-nav { display: grid; gap: 7px; }
+    .portal-nav a { display: flex; align-items: center; gap: 9px; border-radius: 11px; padding: 10px 10px; color: #65717D; font-size: .78rem; font-weight: 720; }
+    .portal-nav a.active { background: var(--blue-100); color: var(--blue); }
+    .portal-nav a span:first-child { width: 8px; height: 8px; border-radius: 999px; background: currentColor; opacity: .75; }
+    .portal-sidebar-card { margin-top: 24px; border-radius: 16px; background: var(--charcoal-800); color: #FFFFFF; padding: 14px; }
+    .portal-sidebar-card strong { display: block; font-size: .82rem; margin-bottom: 4px; }
+    .portal-sidebar-card span { display: block; color: rgba(255,255,255,.64); font-size: .72rem; line-height: 1.45; }
+    .portal-main { min-width: 0; padding: 22px; }
+    .portal-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .portal-title small { display: block; color: #7C8793; font-size: .74rem; font-weight: 760; letter-spacing: .05em; text-transform: uppercase; }
+    .portal-title strong { display: block; margin-top: 3px; color: var(--charcoal-800); font-size: 1.24rem; font-weight: 850; letter-spacing: -.04em; }
+    .status-pill { display: inline-flex; align-items: center; gap: 7px; border-radius: 999px; background: var(--green-100); color: var(--green-700); padding: 8px 11px; font-size: .73rem; font-weight: 820; white-space: nowrap; }
+    .status-pill::before { content: ""; width: 7px; height: 7px; border-radius: 999px; background: currentColor; }
+    .portal-grid { display: grid; grid-template-columns: 1.25fr .82fr; gap: 16px; }
+    .portal-card {
+      border: 1px solid #E0E5EA;
+      border-radius: 18px;
+      background: #FFFFFF;
+      box-shadow: 0 1px 2px rgba(23,29,26,.03);
+      padding: 16px;
+    }
+    .portal-card h4 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 13px; font-size: .86rem; color: var(--charcoal-800); }
+    .portal-card h4 span { color: #8D98A4; font-size: .7rem; font-weight: 720; }
+    .case-rows { display: grid; gap: 9px; }
+    .case-row { display: grid; grid-template-columns: 92px 1fr; align-items: center; gap: 12px; border-radius: 12px; background: #F7F8FA; padding: 10px 12px; }
+    .case-row span { color: #87929E; font-size: .72rem; font-weight: 720; }
+    .case-row strong { color: var(--charcoal-800); font-size: .78rem; font-weight: 790; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .progress-list { display: grid; gap: 9px; }
+    .progress-item { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center; }
+    .progress-check { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 999px; background: var(--green-100); color: var(--green-700); font-size: .72rem; font-weight: 900; }
+    .progress-item:nth-child(3) .progress-check { background: var(--blue-100); color: var(--blue); }
+    .progress-item:nth-child(4) .progress-check { background: #F1F3F5; color: #98A2AD; }
+    .progress-copy strong { display: block; color: var(--charcoal-800); font-size: .79rem; }
+    .progress-copy span { display: block; color: #87929E; font-size: .7rem; }
+    .progress-item em { color: #9AA5B1; font-size: .7rem; font-style: normal; font-weight: 740; }
+    .doc-list { display: grid; gap: 8px; }
+    .doc-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; border-bottom: 1px solid #EEF1F3; padding: 9px 0; color: var(--charcoal-800); font-size: .76rem; font-weight: 730; }
+    .doc-row:last-child { border-bottom: 0; }
+    .doc-row span { color: var(--blue); font-size: .69rem; font-weight: 820; }
+    .ai-panel { position: relative; overflow: hidden; background: linear-gradient(135deg, #FFFFFF, #F3FAFC); }
+    .ai-panel::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: -60%;
+      width: 42%;
+      background: linear-gradient(90deg, transparent, rgba(24,125,158,.12), transparent);
+      animation: scan 5.2s var(--ease) infinite;
+    }
+    @keyframes scan { 0%, 45% { transform: translateX(0); opacity: 0; } 55% { opacity: 1; } 100% { transform: translateX(380%); opacity: 0; } }
+    .ai-lines { display: grid; gap: 10px; position: relative; z-index: 1; }
+    .ai-line { display: grid; grid-template-columns: 1fr 52px; gap: 12px; align-items: center; }
+    .ai-bar { height: 9px; border-radius: 999px; background: #E6EEF2; overflow: hidden; }
+    .ai-bar i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--blue), #55BBD5); }
+    .ai-line span { color: var(--blue); font-size: .7rem; font-weight: 850; text-align: right; }
+    .portal-action { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+    .portal-button { border-radius: 12px; padding: 11px; background: var(--blue); color: #FFFFFF; font-size: .73rem; font-weight: 820; text-align: center; }
+    .portal-button.secondary { background: #EEF3E7; color: var(--green-700); }
+    .float-card {
+      position: absolute;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      align-items: center;
+      gap: 11px;
+      max-width: 245px;
+      border: 1px solid rgba(255,255,255,.52);
+      border-radius: 17px;
+      background: rgba(255,255,255,.96);
+      box-shadow: 0 20px 56px rgba(23,29,26,.18);
+      padding: 13px 14px;
+      animation: floaty 5.4s var(--ease) infinite;
+    }
+    .float-card.one { top: 13%; left: -34px; }
+    .float-card.two { right: -30px; bottom: 18%; animation-delay: .8s; }
+    .float-card-icon { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 12px; background: var(--blue-100); color: var(--blue); font-weight: 900; }
+    .float-card.two .float-card-icon { background: var(--green-100); color: var(--green-700); }
+    .float-card strong { display: block; color: var(--charcoal-800); font-size: .79rem; font-weight: 850; line-height: 1.15; }
+    .float-card span { display: block; margin-top: 3px; color: #687380; font-size: .71rem; line-height: 1.25; font-weight: 620; }
+    @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+
+    .metric-strip {
+      position: relative;
+      z-index: 2;
+      margin-top: -42px;
+      margin-bottom: 26px;
+    }
+    .metric-inner {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: var(--border);
+      box-shadow: var(--shadow-md);
+    }
+    .metric {
+      background: rgba(255,255,255,.86);
+      backdrop-filter: blur(16px);
+      padding: 26px 24px;
+    }
+    .metric strong { display: block; color: var(--ink); font-size: clamp(1.55rem, 2.4vw, 2.25rem); font-weight: 860; letter-spacing: -.055em; line-height: 1; }
+    .metric span { display: block; margin-top: 8px; color: var(--muted); font-size: .84rem; font-weight: 650; line-height: 1.35; }
+
+    .problem-layout { display: grid; grid-template-columns: .78fr 1.22fr; gap: 54px; align-items: start; }
+    .sticky-note {
+      position: sticky;
+      top: 118px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,.74);
+      box-shadow: var(--shadow-sm);
+      padding: 28px;
+      backdrop-filter: blur(18px);
+    }
+    .sticky-note .lead { font-size: 1.03rem; }
+    .tax-card {
+      margin-top: 24px;
+      border-radius: 22px;
+      background: var(--charcoal-900);
+      color: var(--white);
+      padding: 22px;
+      overflow: hidden;
+      position: relative;
+    }
+    .tax-card::before { content: ""; position: absolute; inset: auto -15% -45% 36%; height: 180px; border-radius: 50%; background: rgba(24,125,158,.28); filter: blur(20px); }
+    .tax-card strong { display: block; position: relative; font-size: 2.7rem; line-height: 1; letter-spacing: -.07em; }
+    .tax-card span { display: block; position: relative; margin-top: 8px; color: rgba(255,255,255,.66); font-weight: 630; }
+    .problem-cards { display: grid; gap: 14px; }
+    .pain-card {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 18px;
+      align-items: start;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: rgba(255,255,255,.79);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      transition: transform .24s var(--ease), border-color .24s var(--ease), box-shadow .24s var(--ease);
+    }
+    .pain-card:hover { transform: translateY(-3px); border-color: rgba(24,125,158,.32); box-shadow: var(--shadow-md); }
+    .card-icon {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      border: 1px solid rgba(24,125,158,.16);
+      border-radius: 16px;
+      background: var(--blue-100);
+      color: var(--blue);
+    }
+    .card-icon.green { background: var(--green-100); color: var(--green-700); border-color: rgba(144,166,104,.25); }
+    .card-icon.dark { background: rgba(53,71,90,.09); color: var(--charcoal); border-color: rgba(53,71,90,.16); }
+    .pain-card p { font-size: .96rem; line-height: 1.62; }
+    .bridge-card {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      border-radius: 28px;
+      background: linear-gradient(135deg, var(--charcoal-800), var(--charcoal));
+      color: var(--white);
+      padding: 28px;
+      box-shadow: var(--shadow-md);
+    }
+    .bridge-card h3 { color: var(--white); margin-bottom: 8px; }
+    .bridge-card p { color: rgba(255,255,255,.66); }
+
+    .product-shell {
+      display: grid;
+      grid-template-columns: 370px minmax(0, 1fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+    .tab-list { display: grid; gap: 12px; }
+    .product-tab {
+      text-align: left;
+      display: grid;
+      grid-template-columns: 38px 1fr;
+      gap: 14px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: rgba(255,255,255,.74);
+      color: var(--ink);
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      transition: transform .22s var(--ease), border-color .22s var(--ease), background .22s var(--ease);
+    }
+    .product-tab:hover { transform: translateY(-2px); border-color: rgba(24,125,158,.3); }
+    .product-tab[aria-selected="true"] { background: var(--charcoal-900); border-color: var(--charcoal-900); color: var(--white); }
+    .tab-num { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 13px; background: var(--blue-100); color: var(--blue); font-weight: 850; }
+    .product-tab[aria-selected="true"] .tab-num { background: rgba(255,255,255,.12); color: #BFDCE5; }
+    .product-tab strong { display: block; margin-bottom: 4px; font-size: .96rem; font-weight: 810; letter-spacing: -.02em; }
+    .product-tab span { display: block; color: var(--muted); font-size: .84rem; line-height: 1.45; }
+    .product-tab[aria-selected="true"] span { color: rgba(255,255,255,.64); }
+    .product-stage {
+      position: relative;
+      min-height: 570px;
+      border: 1px solid var(--border);
+      border-radius: 34px;
+      background: rgba(255,255,255,.82);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+    .stage-panel {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(14px);
+      transition: opacity .35s var(--ease), transform .35s var(--ease);
+    }
+    .stage-panel.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    .stage-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,.75);
+      padding: 24px 26px;
+    }
+    .stage-head strong { color: var(--ink); font-size: 1.1rem; font-weight: 850; letter-spacing: -.035em; }
+    .stage-head span { color: var(--muted); font-size: .84rem; font-weight: 650; }
+    .screen-preview { padding: 26px; }
+    .mini-dashboard {
+      min-height: 430px;
+      border: 1px solid #DEE4EA;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #FFFFFF, #F7F9FA);
+      overflow: hidden;
+    }
+    .mini-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid #E6EBEF; padding: 16px 18px; }
+    .mini-toolbar strong { color: var(--charcoal-800); font-size: .9rem; }
+    .mini-toolbar span { border-radius: 999px; background: var(--blue-100); color: var(--blue); padding: 7px 10px; font-size: .7rem; font-weight: 850; }
+    .screen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 18px; }
+    .field-card { min-height: 74px; border: 1px solid #E6EBEF; border-radius: 16px; background: #FFFFFF; padding: 13px; }
+    .field-card label { display: block; color: #87929E; font-size: .68rem; font-weight: 780; letter-spacing: .04em; text-transform: uppercase; }
+    .field-card strong { display: block; margin-top: 7px; color: var(--charcoal-800); font-size: .86rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .wide { grid-column: 1 / -1; }
+    .import-stack { display: grid; gap: 12px; padding: 18px; }
+    .import-row { display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; border: 1px solid #E6EBEF; border-radius: 16px; background: #FFFFFF; padding: 12px; }
+    .file-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 13px; background: var(--blue-100); color: var(--blue); font-weight: 900; }
+    .import-row strong { display: block; color: var(--charcoal-800); font-size: .86rem; }
+    .import-row span { display: block; color: #87929E; font-size: .72rem; }
+    .confidence { color: var(--green-700); font-size: .76rem; font-weight: 900; }
+    .review-list { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 18px; }
+    .review-card { border: 1px solid #E6EBEF; border-radius: 16px; background: #FFFFFF; padding: 16px; }
+    .review-card strong { display: block; color: var(--charcoal-800); font-size: .9rem; margin-bottom: 10px; }
+    .review-card .flag { display: inline-flex; border-radius: 999px; background: #FFF6E8; color: #9A5B00; padding: 7px 9px; font-size: .7rem; font-weight: 850; }
+    .review-card .ok { background: var(--green-100); color: var(--green-700); }
+    .automation-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; padding: 18px; }
+    .automation-card { border: 1px solid #E6EBEF; border-radius: 17px; background: #FFFFFF; padding: 16px; }
+    .automation-card strong { display: block; color: var(--charcoal-800); font-size: .88rem; }
+    .automation-card span { display: block; margin-top: 6px; color: #87929E; font-size: .73rem; line-height: 1.4; }
+    .automation-card:first-child { background: var(--charcoal-800); border-color: var(--charcoal-800); }
+    .automation-card:first-child strong { color: #FFFFFF; }
+    .automation-card:first-child span { color: rgba(255,255,255,.65); }
+
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .feature-card {
+      position: relative;
+      min-height: 260px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: rgba(255,255,255,.75);
+      padding: 26px;
+      box-shadow: var(--shadow-sm);
+      transition: transform .22s var(--ease), box-shadow .22s var(--ease), border-color .22s var(--ease);
+    }
+    .feature-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: rgba(24,125,158,.28); }
+    .feature-card::after { content: ""; position: absolute; right: -50px; bottom: -54px; width: 150px; height: 150px; border-radius: 999px; background: rgba(24,125,158,.08); }
+    .feature-card:nth-child(2n)::after { background: rgba(144,166,104,.12); }
+    .feature-card h3 { margin-top: 22px; }
+    .feature-card p { font-size: .95rem; line-height: 1.62; }
+    .feature-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .feature-index { color: rgba(23,29,26,.22); font-size: 2rem; font-weight: 860; letter-spacing: -.06em; }
+
+    .outcome-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+    .outcome-card {
+      min-height: 172px;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 24px;
+      background: rgba(255,255,255,.06);
+      padding: 22px;
+      backdrop-filter: blur(18px);
+      transition: transform .22s var(--ease), background .22s var(--ease), border-color .22s var(--ease);
+    }
+    .outcome-card:hover { transform: translateY(-3px); background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.18); }
+    .outcome-card .card-icon { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.1); color: #BFDCE5; margin-bottom: 18px; }
+    .outcome-card strong { display: block; color: var(--white); font-size: 1.05rem; font-weight: 800; letter-spacing: -.025em; }
+    .outcome-card span { display: block; margin-top: 7px; color: rgba(255,255,255,.58); font-size: .82rem; line-height: 1.45; }
+
+    .onboarding-wrap { display: grid; grid-template-columns: 1.05fr .95fr; gap: 32px; align-items: center; }
+    .flow-board {
+      position: relative;
+      min-height: 540px;
+      border: 1px solid var(--border);
+      border-radius: 34px;
+      background: rgba(255,255,255,.76);
+      box-shadow: var(--shadow-md);
+      padding: 34px;
+      overflow: hidden;
+    }
+    .flow-board::before { content: ""; position: absolute; inset: 24px; border-radius: 28px; background-image: linear-gradient(rgba(23,29,26,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(23,29,26,.05) 1px, transparent 1px); background-size: 28px 28px; opacity: .7; }
+    .flow-card {
+      position: relative;
+      z-index: 2;
+      width: min(100%, 380px);
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 14px;
+      align-items: center;
+      border: 1px solid var(--border-strong);
+      border-radius: 24px;
+      background: #FFFFFF;
+      box-shadow: 0 12px 28px rgba(23,29,26,.08);
+      padding: 16px;
+    }
+    .flow-card:nth-child(2) { margin-left: auto; margin-top: 30px; }
+    .flow-card:nth-child(3) { margin-top: 30px; }
+    .flow-card:nth-child(4) { margin-left: auto; margin-top: 30px; }
+    .flow-card a { color: var(--blue); font-weight: 780; }
+    .flow-card strong { color: var(--ink); display: block; font-size: .98rem; }
+    .flow-card span { color: var(--muted); display: block; font-size: .84rem; line-height: 1.4; }
+    .flow-arrow { position: absolute; z-index: 1; width: 130px; height: 72px; border: solid var(--charcoal-900); border-width: 0 0 4px 4px; border-radius: 0 0 0 70px; opacity: .9; }
+    .arrow-1 { left: 40%; top: 121px; transform: rotate(-10deg); }
+    .arrow-2 { right: 24%; top: 246px; transform: scaleX(-1) rotate(-8deg); }
+    .arrow-3 { left: 40%; bottom: 112px; transform: rotate(-8deg); }
+    .support-panel {
+      border: 1px solid var(--border);
+      border-radius: 34px;
+      background: var(--charcoal-900);
+      color: var(--white);
+      box-shadow: var(--shadow-lg);
+      padding: 34px;
+      overflow: hidden;
+      position: relative;
+    }
+    .support-panel::after { content: ""; position: absolute; right: -90px; bottom: -90px; width: 260px; height: 260px; border-radius: 999px; background: rgba(24,125,158,.25); filter: blur(12px); }
+    .support-panel h3, .support-panel p, .support-panel .support-list { position: relative; z-index: 1; }
+    .support-panel h3 { color: var(--white); font-size: clamp(1.8rem, 3vw, 2.55rem); }
+    .support-list { display: grid; gap: 12px; margin-top: 26px; }
+    .support-list div { display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,.76); font-size: .94rem; font-weight: 650; }
+    .support-list i { width: 9px; height: 9px; border-radius: 999px; background: var(--green); box-shadow: 0 0 0 6px rgba(144,166,104,.15); }
+
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; align-items: stretch; }
+    .price-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      background: rgba(255,255,255,.82);
+      box-shadow: var(--shadow-sm);
+      padding: 28px;
+      overflow: hidden;
+    }
+    .price-card.featured { border-color: var(--blue); box-shadow: 0 0 0 1px var(--blue), var(--shadow-md); transform: translateY(-10px); }
+    .price-badge { position: absolute; top: 18px; right: 18px; border-radius: 999px; background: var(--blue); color: #FFFFFF; padding: 7px 10px; font-size: .68rem; font-weight: 850; letter-spacing: .05em; text-transform: uppercase; }
+    .price-card h3 { margin-bottom: 8px; }
+    .price-card p { min-height: 54px; font-size: .91rem; line-height: 1.55; }
+    .price { margin: 26px 0 22px; color: var(--ink); }
+    .price strong { font-size: 3rem; line-height: 1; letter-spacing: -.075em; }
+    .price span { color: var(--muted); font-weight: 680; }
+    .price-list { display: grid; gap: 12px; margin: 0 0 28px; padding: 0; list-style: none; }
+    .price-list li { display: flex; align-items: flex-start; gap: 10px; color: var(--muted); font-size: .9rem; line-height: 1.45; }
+    .price-list li::before { content: "✓"; display: grid; place-items: center; flex: 0 0 20px; height: 20px; border-radius: 999px; background: var(--green-100); color: var(--green-700); font-size: .72rem; font-weight: 900; }
+    .price-card .btn { margin-top: auto; width: 100%; }
+
+    .roi-layout { display: grid; grid-template-columns: .9fr 1.1fr; gap: 36px; align-items: center; }
+    .roi-card { border: 1px solid rgba(255,255,255,.1); border-radius: 32px; background: rgba(255,255,255,.07); padding: 30px; box-shadow: var(--shadow-lg); }
+    .roi-stat { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; }
+    .roi-stat strong { color: var(--white); font-size: clamp(4rem, 9vw, 7rem); line-height: .88; letter-spacing: -.09em; }
+    .roi-stat span { color: rgba(255,255,255,.64); font-weight: 760; }
+    .comparison { display: grid; gap: 18px; }
+    .bar-row strong { display: flex; justify-content: space-between; color: rgba(255,255,255,.86); font-size: .92rem; margin-bottom: 9px; }
+    .bar-track { height: 18px; border-radius: 999px; background: rgba(255,255,255,.11); overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--blue), #69C4DA); }
+    .bar-fill.manual { width: 92%; background: linear-gradient(90deg, #77828D, #AAB2BA); }
+    .bar-fill.innobridge { width: 28%; background: linear-gradient(90deg, var(--green), #B9C99C); }
+    .savings-box { margin-top: 26px; border: 1px solid rgba(144,166,104,.25); border-radius: 24px; background: rgba(144,166,104,.1); padding: 20px; color: rgba(255,255,255,.78); }
+    .savings-box strong { display: block; color: var(--white); font-size: 1.55rem; letter-spacing: -.04em; }
+
+    .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .quote-card { border: 1px solid var(--border); border-radius: 28px; background: rgba(255,255,255,.76); box-shadow: var(--shadow-sm); padding: 28px; }
+    .quote-card .stars { color: var(--green-700); letter-spacing: .08em; margin-bottom: 18px; font-size: .9rem; }
+    .quote-card blockquote { margin: 0 0 24px; color: var(--ink); font-size: .99rem; line-height: 1.7; letter-spacing: -.01em; }
+    .author { display: flex; align-items: center; gap: 12px; }
+    .avatar { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 999px; background: var(--charcoal); color: #FFFFFF; font-weight: 850; }
+    .author strong { display: block; color: var(--ink); font-size: .89rem; }
+    .author span { display: block; color: var(--muted); font-size: .78rem; }
+
+    .story-wrap { display: grid; grid-template-columns: .78fr 1.22fr; gap: 46px; align-items: start; }
+    .story-card { border-radius: 34px; background: var(--charcoal-900); color: #FFFFFF; padding: 32px; box-shadow: var(--shadow-lg); position: sticky; top: 118px; overflow: hidden; }
+    .story-card::after { content: ""; position: absolute; right: -70px; top: -70px; width: 220px; height: 220px; border-radius: 999px; background: rgba(24,125,158,.28); filter: blur(8px); }
+    .story-card h3, .story-card p { position: relative; z-index: 1; }
+    .story-card h3 { color: #FFFFFF; font-size: 2.2rem; }
+    .story-card p { color: rgba(255,255,255,.66); }
+    .values-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .value-card { border: 1px solid var(--border); border-radius: 24px; background: rgba(255,255,255,.78); padding: 22px; box-shadow: var(--shadow-sm); }
+    .value-card strong { display: block; color: var(--ink); font-size: 1.02rem; font-weight: 820; margin-bottom: 8px; }
+    .value-card span { color: var(--muted); font-size: .91rem; line-height: 1.55; }
+
+    .demo-grid { display: grid; grid-template-columns: .78fr 1.22fr; gap: 40px; align-items: start; }
+    .demo-card { border: 1px solid var(--border); border-radius: 32px; background: rgba(255,255,255,.8); box-shadow: var(--shadow-md); padding: 30px; }
+    .demo-benefits { display: grid; gap: 14px; margin-top: 28px; }
+    .demo-benefits div { display: flex; gap: 12px; align-items: flex-start; color: var(--muted); font-weight: 650; }
+    .demo-benefits i { margin-top: 8px; width: 8px; height: 8px; border-radius: 999px; background: var(--green); box-shadow: 0 0 0 5px rgba(144,166,104,.15); }
+    .demo-form { display: grid; gap: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field label { display: block; margin-bottom: 7px; color: var(--ink); font-size: .81rem; font-weight: 760; }
+    .field input, .field select, .field textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: #FFFFFF;
+      color: var(--ink);
+      padding: 14px 15px;
+      transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+    }
+    .field textarea { min-height: 120px; resize: vertical; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(24,125,158,.11); outline: 0; }
+    .checkbox { display: flex; align-items: flex-start; gap: 10px; color: var(--muted); font-size: .85rem; line-height: 1.45; }
+    .checkbox input { margin-top: 4px; accent-color: var(--blue); }
+    .form-note { border-radius: 16px; background: var(--green-100); color: var(--green-700); padding: 12px 14px; font-size: .84rem; font-weight: 700; display: none; }
+    .form-note.show { display: block; }
+
+    .faq-wrap { display: grid; grid-template-columns: .8fr 1.2fr; gap: 46px; align-items: start; }
+    .faq-list { display: grid; gap: 12px; }
+    .faq-item { border: 1px solid var(--border); border-radius: 22px; background: rgba(255,255,255,.78); box-shadow: var(--shadow-sm); overflow: hidden; }
+    .faq-q { width: 100%; display: flex; justify-content: space-between; gap: 18px; align-items: center; padding: 20px 22px; color: var(--ink); text-align: left; font-weight: 790; letter-spacing: -.015em; }
+    .faq-q span { display: grid; place-items: center; flex: 0 0 28px; height: 28px; border-radius: 999px; background: var(--blue-100); color: var(--blue); transition: transform .2s var(--ease); }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height .28s var(--ease), padding .28s var(--ease); color: var(--muted); padding: 0 22px; font-size: .92rem; line-height: 1.65; }
+    .faq-item.open .faq-a { max-height: 240px; padding: 0 22px 20px; }
+    .faq-item.open .faq-q span { transform: rotate(45deg); }
+
+    .footer { background: var(--charcoal-900); color: var(--white); padding: 70px 0 32px; }
+    .footer-grid { display: grid; grid-template-columns: 1.4fr repeat(3, .75fr); gap: 48px; margin-bottom: 46px; }
+    .footer p { color: rgba(255,255,255,.55); max-width: 34ch; font-size: .9rem; margin-top: 18px; }
+    .footer h4 { color: rgba(255,255,255,.45); font-size: .76rem; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 16px; }
+    .footer a { display: block; color: rgba(255,255,255,.62); font-size: .9rem; margin-bottom: 10px; transition: color .2s var(--ease); }
+    .footer a:hover { color: #FFFFFF; }
+    .support-footer-box { border: 1px solid rgba(255,255,255,.1); border-radius: 22px; background: rgba(255,255,255,.06); padding: 18px; margin-top: 20px; }
+    .support-footer-box strong { color: #FFFFFF; display: block; margin-bottom: 7px; }
+    .support-footer-box span { display: block; color: rgba(255,255,255,.55); font-size: .82rem; line-height: 1.5; }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,.1); padding-top: 24px; color: rgba(255,255,255,.42); font-size: .82rem; }
+    .footer-bottom a { display: inline; margin: 0 0 0 18px; font-size: .82rem; }
+
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 1120px) {
+      .hero-grid, .problem-layout, .product-shell, .onboarding-wrap, .roi-layout, .story-wrap, .demo-grid, .faq-wrap { grid-template-columns: 1fr; }
+      .hero-grid { gap: 42px; }
+      .hero-visual { max-width: 880px; }
+      .portal-frame { transform: none; }
+      .portal-frame:hover { transform: translateY(-4px); }
+      .sticky-note, .story-card { position: relative; top: auto; }
+      .product-shell { gap: 18px; }
+      .tab-list { grid-template-columns: repeat(2, 1fr); }
+      .features-grid, .testimonial-grid, .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+      .outcome-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; position: absolute; left: 16px; right: 16px; top: 82px; flex-direction: column; align-items: stretch; border-radius: 24px; background: rgba(23,29,26,.96); padding: 12px; box-shadow: var(--shadow-lg); }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 14px 16px; }
+      .nav-toggle { display: inline-flex; }
+    }
+    @media (max-width: 760px) {
+      .container { width: min(100% - 32px, var(--container)); }
+      .section { padding: 84px 0; }
+      .hero { padding: 118px 0 72px; }
+      h1 { font-size: clamp(3.1rem, 16vw, 5rem); }
+      h2 { font-size: clamp(2rem, 11vw, 3.4rem); }
+      .brand-text span, .signin, .nav-actions .btn { display: none; }
+      .hero-proof, .metric-inner, .tab-list, .features-grid, .pricing-grid, .testimonial-grid, .values-grid, .form-row, .footer-grid { grid-template-columns: 1fr; }
+      .portal-app { grid-template-columns: 1fr; min-height: auto; }
+      .portal-sidebar { display: none; }
+      .portal-grid, .screen-grid, .review-list, .automation-grid { grid-template-columns: 1fr; }
+      .portal-main { padding: 16px; }
+      .float-card { display: none; }
+      .product-stage { min-height: 680px; }
+      .bridge-card { grid-template-columns: 1fr; }
+      .flow-board { padding: 20px; min-height: auto; }
+      .flow-card, .flow-card:nth-child(2), .flow-card:nth-child(3), .flow-card:nth-child(4) { width: 100%; margin: 0 0 16px; }
+      .flow-arrow { display: none; }
+      .price-card.featured { transform: none; }
+      .footer-bottom { align-items: flex-start; flex-direction: column; }
+      .footer-bottom a { margin-left: 0; margin-right: 16px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .001ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <nav class="nav" id="nav" aria-label="Primary navigation">
+    <div class="nav-inner">
+      <a class="brand" href="#top" aria-label="SmartConveyance by Innobridge home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-text"><strong>SmartConveyance</strong><span>by Innobridge</span></span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="#problem">Pain points</a>
+        <a href="#product">Product</a>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#support">Support</a>
+      </div>
+      <div class="nav-actions">
+        <a class="signin" href="https://smartconveyance.innobridge.ca/">Sign in</a>
+        <a class="btn btn-primary" href="#demo">Book a Demo</a>
+        <button class="nav-toggle" id="navToggle" aria-label="Open navigation" aria-expanded="false">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main">
+    <section class="hero" id="top" aria-labelledby="heroTitle">
+      <div class="container hero-grid">
+        <div class="hero-copy reveal">
+          <div class="hero-kicker"><i></i> SmartConveyance by Innobridge</div>
+          <h1 id="heroTitle">Technology that Speaks <span>Legal.</span></h1>
+          <p class="hero-sub">Software that adapts to your workflow. SmartConveyance helps law firms streamline real estate conveyancing, reduce manual errors, and move from intake to filing with confidence.</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#demo">
+              Book a Demo
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+            <a class="btn btn-ghost" href="#product">
+              See how it works
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m10 8 6 4-6 4z"/></svg>
+            </a>
+          </div>
+          <div class="hero-proof" aria-label="Product strengths">
+            <div class="proof-pill">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M4 7h16M6 7v5a6 6 0 0 0 12 0V7"/></svg>
+              <div><span>Legal-first design</span><em>Built with legal professionals</em></div>
+            </div>
+            <div class="proof-pill">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg>
+              <div><span>AI-assisted workflow</span><em>From intake to filing</em></div>
+            </div>
+            <div class="proof-pill">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/></svg>
+              <div><span>360° support</span><em>Phone, Zoom, guides, training</em></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal" aria-label="SmartConveyance portal preview">
+          <div class="portal-frame">
+            <div class="portal-topbar">
+              <div class="window-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+              <div class="url-pill">smartconveyance.innobridge.ca / matter / SC-4821</div>
+              <span class="status-pill">Live matter</span>
+            </div>
+            <div class="portal-app">
+              <aside class="portal-sidebar">
+                <div class="portal-logo"><span class="mini-mark"></span> SmartConveyance</div>
+                <nav class="portal-nav" aria-label="Portal preview navigation">
+                  <a class="active" href="#"><span></span>Overview</a>
+                  <a href="#"><span></span>Parties</a>
+                  <a href="#"><span></span>Property</a>
+                  <a href="#"><span></span>Documents</a>
+                  <a href="#"><span></span>LTSA Filing</a>
+                  <a href="#"><span></span>Audit Trail</a>
+                </nav>
+                <div class="portal-sidebar-card">
+                  <strong>AI import complete</strong>
+                  <span>Contract, commission report, and tax certificate matched into the file.</span>
+                </div>
+              </aside>
+              <div class="portal-main">
+                <div class="portal-head">
+                  <div class="portal-title"><small>Residential Purchase</small><strong>2518 Alder Street, Vancouver</strong></div>
+                  <span class="status-pill">Ready for review</span>
+                </div>
+                <div class="portal-grid">
+                  <div class="portal-card">
+                    <h4>Case details <span>Updated now</span></h4>
+                    <div class="case-rows">
+                      <div class="case-row"><span>Buyer</span><strong>Jordan Lee and Priya Sharma</strong></div>
+                      <div class="case-row"><span>Seller</span><strong>M. Henderson Holdings Ltd.</strong></div>
+                      <div class="case-row"><span>Completion</span><strong>June 18, 2026</strong></div>
+                      <div class="case-row"><span>Lender</span><strong>Royal Bank of Canada</strong></div>
+                    </div>
+                  </div>
+                  <div class="portal-card ai-panel">
+                    <h4>AI confidence <span>4 sources</span></h4>
+                    <div class="ai-lines">
+                      <div class="ai-line"><div class="ai-bar"><i style="width:96%"></i></div><span>96%</span></div>
+                      <div class="ai-line"><div class="ai-bar"><i style="width:92%"></i></div><span>92%</span></div>
+                      <div class="ai-line"><div class="ai-bar"><i style="width:88%"></i></div><span>88%</span></div>
+                      <div class="ai-line"><div class="ai-bar"><i style="width:94%"></i></div><span>94%</span></div>
+                    </div>
+                    <div class="portal-action">
+                      <div class="portal-button">Review fields</div>
+                      <div class="portal-button secondary">Import report</div>
+                    </div>
+                  </div>
+                  <div class="portal-card">
+                    <h4>Workflow status <span>Intake to filing</span></h4>
+                    <div class="progress-list">
+                      <div class="progress-item"><div class="progress-check">✓</div><div class="progress-copy"><strong>Intake created</strong><span>Case-relevant fields shown</span></div><em>Done</em></div>
+                      <div class="progress-item"><div class="progress-check">✓</div><div class="progress-copy"><strong>Data imported</strong><span>Contract, tax certificate, lender</span></div><em>Done</em></div>
+                      <div class="progress-item"><div class="progress-check">3</div><div class="progress-copy"><strong>Counsel review</strong><span>Two flagged values need approval</span></div><em>Now</em></div>
+                      <div class="progress-item"><div class="progress-check">4</div><div class="progress-copy"><strong>Generate and file</strong><span>Completion package and LTSA</span></div><em>Next</em></div>
+                    </div>
+                  </div>
+                  <div class="portal-card">
+                    <h4>Generated files <span>One click</span></h4>
+                    <div class="doc-list">
+                      <div class="doc-row">Statement of Adjustments <span>Ready</span></div>
+                      <div class="doc-row">Form A Transfer <span>Ready</span></div>
+                      <div class="doc-row">Buyer Report Letter <span>Queued</span></div>
+                      <div class="doc-row">LTSA Filing Package <span>Ready</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="float-card one"><div class="float-card-icon">AI</div><div><strong>Case data extracted</strong><span>No duplicate entry required</span></div></div>
+          <div class="float-card two"><div class="float-card-icon">✓</div><div><strong>LTSA workflow ready</strong><span>Filing data organized</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="metric-strip">
+      <div class="container metric-inner reveal">
+        <div class="metric"><strong>$150+</strong><span>Potential savings per matter through reduced admin time.</span></div>
+        <div class="metric"><strong>~1.5h</strong><span>Estimated staff time per file after workflow automation.</span></div>
+        <div class="metric"><strong>10:1</strong><span>Revenue-to-cost capacity narrative for growth-minded firms.</span></div>
+        <div class="metric"><strong>360°</strong><span>Support across onboarding, training, and daily use.</span></div>
+      </div>
+    </div>
+
+    <section class="section" id="problem" aria-labelledby="problemTitle">
+      <div class="container problem-layout">
+        <div class="sticky-note reveal">
+          <div class="eyebrow">The pain point</div>
+          <h2 id="problemTitle">Faster conveyancing. Fewer errors.</h2>
+          <p class="lead">The real problem is not a lack of software. It is fragmented work: re-keying, switching tools, and checking the same file across multiple places.</p>
+          <div class="tax-card"><strong>Context Tax</strong><span>The invisible cost of disconnected legal work.</span></div>
+        </div>
+        <div class="problem-cards">
+          <article class="pain-card reveal">
+            <div class="card-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6M12 16v6M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M2 12h6M16 12h6M4.93 19.07l4.24-4.24M14.83 9.17l4.24-4.24"/></svg></div>
+            <div><h3>AI-empowered features</h3><p>Deep automation supports accurate conveyancing, reduces manual errors, minimizes re-keying, and helps generate case-specific files from a cleaner matter record.</p></div>
+          </article>
+          <article class="pain-card reveal">
+            <div class="card-icon green"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20 20 4M8 4h12v12M4 12h5M4 16h9"/></svg></div>
+            <div><h3>Make complex conveyancing simple</h3><p>A calm, legal-first interface keeps the work easy to learn, easy to use, and tailored to the way conveyancing practitioners actually operate.</p></div>
+          </article>
+          <article class="pain-card reveal">
+            <div class="card-icon dark"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h5l2 3h11v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M8 7V5a2 2 0 0 1 2-2h3l2 4"/></svg></div>
+            <div><h3>Streamlined workflow</h3><p>All-in-one forms and one-click generation simplify the process from intake to filing so the file moves forward without tool switching.</p></div>
+          </article>
+          <div class="bridge-card reveal">
+            <div><h3>The Innobridge Bridge</h3><p>One legal operating layer that turns matter data into documents, review checkpoints, collaboration, and filing-ready workflows.</p></div>
+            <a class="btn btn-primary" href="#product">Explore product</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tight" id="product" aria-labelledby="productTitle">
+      <div class="container">
+        <div class="section-head center reveal">
+          <div class="eyebrow">The product</div>
+          <h2 id="productTitle">AI-assisted intake-to-filing.</h2>
+          <p class="lead">A guided product flow that starts with a new case, imports the relevant data, surfaces review moments, and generates the right files for the matter.</p>
+        </div>
+        <div class="product-shell reveal">
+          <div class="tab-list" role="tablist" aria-label="Product workflow">
+            <button class="product-tab" role="tab" aria-selected="true" aria-controls="stage1" id="tab1" data-stage="stage1"><span class="tab-num">1</span><span><strong>Create New Case</strong><span>Only case-relevant fields appear, keeping setup simple and focused.</span></span></button>
+            <button class="product-tab" role="tab" aria-selected="false" aria-controls="stage2" id="tab2" data-stage="stage2"><span class="tab-num">2</span><span><strong>Auto Data Import</strong><span>Contracts, reports, tax certificates, and lender details populate the matter record.</span></span></button>
+            <button class="product-tab" role="tab" aria-selected="false" aria-controls="stage3" id="tab3" data-stage="stage3"><span class="tab-num">3</span><span><strong>Review & Adjust</strong><span>Review key details and adjust only the items that need attention.</span></span></button>
+            <button class="product-tab" role="tab" aria-selected="false" aria-controls="stage4" id="tab4" data-stage="stage4"><span class="tab-num">4</span><span><strong>Generate & File</strong><span>Generate only the files needed by the case, then move into integrations.</span></span></button>
+          </div>
+          <div class="product-stage">
+            <div class="stage-panel active" id="stage1" role="tabpanel" aria-labelledby="tab1">
+              <div class="stage-head"><div><strong>Create New Case</strong><span>Case-type logic keeps setup focused.</span></div><span class="status-pill">Focused setup</span></div>
+              <div class="screen-preview"><div class="mini-dashboard"><div class="mini-toolbar"><strong>New Matter Setup</strong><span>Residential Purchase</span></div><div class="screen-grid"><div class="field-card"><label>Matter type</label><strong>Purchase</strong></div><div class="field-card"><label>Property class</label><strong>Residential</strong></div><div class="field-card wide"><label>Property address</label><strong>2518 Alder Street, Vancouver BC</strong></div><div class="field-card"><label>Completion date</label><strong>June 18, 2026</strong></div><div class="field-card"><label>Required workflow</label><strong>Buyer side, lender file</strong></div></div></div></div>
+            </div>
+            <div class="stage-panel" id="stage2" role="tabpanel" aria-labelledby="tab2">
+              <div class="stage-head"><div><strong>Auto Data Import</strong><span>Extract, match, and populate fields with review confidence.</span></div><span class="status-pill">AI assisted</span></div>
+              <div class="screen-preview"><div class="mini-dashboard"><div class="mini-toolbar"><strong>Import Sources</strong><span>4 files matched</span></div><div class="import-stack"><div class="import-row"><div class="file-icon">PDF</div><div><strong>Contract of Purchase and Sale</strong><span>Buyer, seller, property, dates</span></div><div class="confidence">96%</div></div><div class="import-row"><div class="file-icon">TAX</div><div><strong>Tax Certificate</strong><span>Roll number and adjustments</span></div><div class="confidence">92%</div></div><div class="import-row"><div class="file-icon">LDR</div><div><strong>Lender Instructions</strong><span>Mortgage and insurance details</span></div><div class="confidence">89%</div></div><div class="import-row"><div class="file-icon">COM</div><div><strong>Commission Report</strong><span>Brokerage details and calculations</span></div><div class="confidence">94%</div></div></div></div></div>
+            </div>
+            <div class="stage-panel" id="stage3" role="tabpanel" aria-labelledby="tab3">
+              <div class="stage-head"><div><strong>Review & Adjust</strong><span>Focus attention where judgment is needed.</span></div><span class="status-pill">Counsel visible</span></div>
+              <div class="screen-preview"><div class="mini-dashboard"><div class="mini-toolbar"><strong>Review Queue</strong><span>2 items flagged</span></div><div class="review-list"><div class="review-card"><strong>Buyer names</strong><span class="ok">Verified</span></div><div class="review-card"><strong>Tax adjustment</strong><span class="flag">Needs review</span></div><div class="review-card"><strong>Lender reference</strong><span class="ok">Verified</span></div><div class="review-card"><strong>Possession terms</strong><span class="flag">Counsel check</span></div></div></div></div>
+            </div>
+            <div class="stage-panel" id="stage4" role="tabpanel" aria-labelledby="tab4">
+              <div class="stage-head"><div><strong>More Automation</strong><span>Files, title search, insurance ordering, and web filing support.</span></div><span class="status-pill">Filing ready</span></div>
+              <div class="screen-preview"><div class="mini-dashboard"><div class="mini-toolbar"><strong>Automation Center</strong><span>One-click package</span></div><div class="automation-grid"><div class="automation-card"><strong>Generate closing package</strong><span>Only case-required files are selected.</span></div><div class="automation-card"><strong>Title search integration</strong><span>Start from the same matter record.</span></div><div class="automation-card"><strong>Insurance ordering</strong><span>Reusable matter data reduces re-entry.</span></div><div class="automation-card"><strong>Web filing</strong><span>Prepared data moves into the filing workflow.</span></div></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features" aria-labelledby="featuresTitle">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="eyebrow">Feature list</div>
+          <h2 id="featuresTitle">Specialized tools for conveyancing practitioners.</h2>
+          <p class="lead">From easy data entry and auto-calculations to title searches, file generation, templates, and productivity reporting, the essentials are covered in one workflow.</p>
+        </div>
+        <div class="features-grid">
+          <article class="feature-card reveal"><div class="feature-top"><div class="card-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><span class="feature-index">01</span></div><h3>Purchase and sale files</h3><p>Support for residential and commercial matters, with workflows that stay relevant to the selected file type.</p></article>
+          <article class="feature-card reveal"><div class="feature-top"><div class="card-icon green"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div><span class="feature-index">02</span></div><h3>Smart templates</h3><p>Customizable firm templates and consistent document generation from one authoritative matter record.</p></article>
+          <article class="feature-card reveal"><div class="feature-top"><div class="card-icon dark"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div><span class="feature-index">03</span></div><h3>Case progress tracking</h3><p>Track matter state, review checkpoints, status updates, and audit activity without asking around.</p></article>
+          <article class="feature-card reveal"><div class="feature-top"><div class="card-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h6M7 16h8"/></svg></div><span class="feature-index">04</span></div><h3>AI data import</h3><p>Populate matter fields from contracts, commission reports, certificates, and other source files.</p></article>
+          <article class="feature-card reveal"><div class="feature-top"><div class="card-icon green"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18"/><path d="M12 3v18"/><path d="m17 7 4 5-4 5"/><path d="m7 7-4 5 4 5"/></svg></div><span class="feature-index">05</span></div><h3>Third-party workflow</h3><p>Support for title search, insurance ordering, and filing workflows tied back to the same matter.</p></article>
+          <article class="feature-card reveal"><div class="feature-top"><div class="card-icon dark"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg></div><span class="feature-index">06</span></div><h3>Law-firm control</h3><p>Role-aware workflow, audit trails, legal review points, and consistent file state support firm confidence.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark" id="outcomes" aria-labelledby="outcomesTitle">
+      <div class="container">
+        <div class="section-head center reveal">
+          <div class="eyebrow eyebrow-light">Impact</div>
+          <h2 id="outcomesTitle">Digital conveyancing, re-engineered.</h2>
+          <p class="lead">A calmer operating layer that creates measurable operational outcomes for legal teams.</p>
+        </div>
+        <div class="outcome-grid">
+          <div class="outcome-card reveal"><div class="card-icon">$</div><strong>Save $150+ per case</strong><span>Reduce the cost of repeat administrative work.</span></div>
+          <div class="outcome-card reveal"><div class="card-icon">h</div><strong>Save hours per case</strong><span>Free time from manual entry and status chasing.</span></div>
+          <div class="outcome-card reveal"><div class="card-icon">↻</div><strong>Workflow consistency</strong><span>Use repeatable steps for every matter.</span></div>
+          <div class="outcome-card reveal"><div class="card-icon">✓</div><strong>Precision conveyancing</strong><span>Review matters with cleaner information.</span></div>
+          <div class="outcome-card reveal"><div class="card-icon">↑</div><strong>Productivity</strong><span>Increase case capacity without adding complexity.</span></div>
+          <div class="outcome-card reveal"><div class="card-icon">●</div><strong>Confidence</strong><span>Give lawyers and conveyancers a shared state of truth.</span></div>
+          <div class="outcome-card reveal"><div class="card-icon">◈</div><strong>In-control</strong><span>See what is done, what is flagged, and what is next.</span></div>
+          <div class="outcome-card reveal"><div class="card-icon">▣</div><strong>Security</strong><span>Support legal workflows with structured controls.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="support" aria-labelledby="supportTitle">
+      <div class="container onboarding-wrap">
+        <div class="flow-board reveal" aria-label="Onboarding flow">
+          <div class="flow-card"><div class="card-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.32 1.77.59 2.61a2 2 0 0 1-.45 2.11L8 9.69a16 16 0 0 0 6.31 6.31l1.25-1.25a2 2 0 0 1 2.11-.45c.84.27 1.72.47 2.61.59A2 2 0 0 1 22 16.92z"/></svg></div><div><strong>Discovery Call</strong><span><a href="#demo">Book a demo</a> and map AI-driven solutions to your workflow.</span></div></div>
+          <div class="flow-arrow arrow-1"></div>
+          <div class="flow-card"><div class="card-icon green"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg></div><div><strong>Quick onboarding</strong><span><a href="#demo">Start setup</a> with a fast-track path built for your team.</span></div></div>
+          <div class="flow-arrow arrow-2"></div>
+          <div class="flow-card"><div class="card-icon dark"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg></div><div><strong>Seamless training</strong><span>Use embedded guides and visit the <a href="#supportDetails">support section</a> for help.</span></div></div>
+          <div class="flow-arrow arrow-3"></div>
+          <div class="flow-card"><div class="card-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m7 15 4-4 4 4 5-8"/></svg></div><div><strong>Conveyancing</strong><span>Automation, AI features, third-party integrations, and <a href="#supportDetails">360° support</a>.</span></div></div>
+        </div>
+        <div class="support-panel reveal" id="supportDetails">
+          <div class="eyebrow eyebrow-light">Onboarding and training</div>
+          <h2 id="supportTitle">Sign up, and start conveyancing today.</h2>
+          <p class="lead">Accessible support is available through phone, email, Zoom, embedded guides, and one-on-one training from onboarding to daily management.</p>
+          <div class="support-list">
+            <div><i></i> Phone and email support</div>
+            <div><i></i> Live Zoom walkthroughs</div>
+            <div><i></i> Embedded how-to guidance</div>
+            <div><i></i> One-on-one onboarding and training</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="pricing" aria-labelledby="pricingTitle">
+      <div class="container">
+        <div class="section-head center reveal">
+          <div class="eyebrow">Pricing plan</div>
+          <h2 id="pricingTitle">Enterprise-grade efficiency without enterprise-level cost.</h2>
+          <p class="lead">Simple pricing that makes operational gains visible without long-term lock-in.</p>
+        </div>
+        <div class="pricing-grid">
+          <article class="price-card reveal"><h3>Free Trial</h3><p>Validate the workflow with your team before committing to volume usage.</p><div class="price"><strong>$0</strong><span> / trial</span></div><ul class="price-list"><li>Guided walkthrough</li><li>Sample matter setup</li><li>Workflow fit assessment</li><li>No long-term commitment</li></ul><a class="btn btn-subtle" href="#demo">Start trial</a></article>
+          <article class="price-card featured reveal"><span class="price-badge">Most focused</span><h3>Basic</h3><p>Pay per matter with core features included for residential and commercial workflows.</p><div class="price"><strong>$79</strong><span> / case</span></div><ul class="price-list"><li>Purchase and sale files</li><li>AI data import</li><li>One-click file generation</li><li>LTSA workflow support</li><li>360° support included</li></ul><a class="btn btn-primary" href="#demo">Book your demo</a></article>
+          <article class="price-card reveal"><h3>Premium</h3><p>For firms that need deeper configuration, templates, training, and rollout support.</p><div class="price"><strong>Custom</strong></div><ul class="price-list"><li>Advanced workflow setup</li><li>Custom firm templates</li><li>Team training plan</li><li>Implementation support</li><li>Priority onboarding</li></ul><a class="btn btn-dark" href="#demo">Talk to sales</a></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark" id="roi" aria-labelledby="roiTitle">
+      <div class="container roi-layout">
+        <div class="reveal">
+          <div class="eyebrow eyebrow-light">ROI</div>
+          <h2 id="roiTitle">Growth-ready infrastructure for serious firms.</h2>
+          <p class="lead">Your tech stack should accelerate the practice instead of throttling it. SmartConveyance is positioned around immediate ROI and increased billable capacity.</p>
+        </div>
+        <div class="roi-card reveal">
+          <div class="roi-stat"><strong>10:1</strong><span>revenue-to-cost capacity narrative</span></div>
+          <div class="comparison">
+            <div class="bar-row"><strong><span>Manual staff time per file</span><span>4 to 6 hours</span></strong><div class="bar-track"><div class="bar-fill manual"></div></div></div>
+            <div class="bar-row"><strong><span>With SmartConveyance</span><span>~1.5 hours</span></strong><div class="bar-track"><div class="bar-fill innobridge"></div></div></div>
+          </div>
+          <div class="savings-box"><strong>$81,000+ projected annual savings</strong><span>Illustrative annual savings for a mid-sized firm, based on the website plan narrative.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="testimonials" aria-labelledby="testimonialsTitle">
+      <div class="container">
+        <div class="section-head center reveal"><div class="eyebrow">Testimonials</div><h2 id="testimonialsTitle">Trusted by conveyancing professionals.</h2><p class="lead">A serious product page needs proof that speaks in the language of lawyers, paralegals, and firm owners.</p></div>
+        <div class="testimonial-grid">
+          <article class="quote-card reveal"><div class="stars">★★★★★</div><blockquote>SmartConveyance focuses on what is truly essential. Training new staff was straightforward, and the workflow is easy to learn without disrupting the team.</blockquote><div class="author"><div class="avatar">J</div><div><strong>Jeremy</strong><span>Lawyer</span></div></div></article>
+          <article class="quote-card reveal"><div class="stars">★★★★★</div><blockquote>Tasks that used to take hours are now done in minutes. Smart data entry, auto-completion, and document generation have streamlined my work.</blockquote><div class="author"><div class="avatar">A</div><div><strong>Amber</strong><span>Paralegal</span></div></div></article>
+          <article class="quote-card reveal"><div class="stars">★★★★★</div><blockquote>Adopting SmartConveyance has been transformative. We can manage more cases with the same team and give lawyers more time to focus on clients.</blockquote><div class="author"><div class="avatar">R</div><div><strong>Richard</strong><span>Firm Owner</span></div></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="story" aria-labelledby="storyTitle">
+      <div class="container story-wrap">
+        <div class="story-card reveal"><div class="eyebrow eyebrow-light">Our story</div><h2 id="storyTitle">Legal DNA, engineered into the product.</h2><p>Innobridge was launched in Alberta in 2022 to build a bridge between legal processes and digital solutions. The platform is designed around how law actually works, not around generic software habits.</p></div>
+        <div class="values-grid">
+          <div class="value-card reveal"><strong>Innovation</strong><span>Fusing systems design with research-backed AI to keep legal teams ahead of the curve.</span></div>
+          <div class="value-card reveal"><strong>Simplicity</strong><span>Believing that in legal tech, simple is the ultimate sophistication.</span></div>
+          <div class="value-card reveal"><strong>Productivity</strong><span>Removing technical bottlenecks so the same team can increase case capacity.</span></div>
+          <div class="value-card reveal"><strong>Quality</strong><span>Delivering reliable workflows through native architecture built for the legal landscape.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="demo" aria-labelledby="demoTitle">
+      <div class="container demo-grid">
+        <div class="reveal">
+          <div class="eyebrow">Book a demo</div>
+          <h2 id="demoTitle">Start with a legal workflow fit assessment.</h2>
+          <p class="lead">A solutions expert can show how SmartConveyance fits your file types, team structure, and current conveyancing process.</p>
+          <div class="demo-benefits"><div><i></i> Personalized 15-minute walkthrough</div><div><i></i> No contract, pay per matter</div><div><i></i> Same-day onboarding path</div><div><i></i> 360° support from day one</div></div>
+        </div>
+        <div class="demo-card reveal">
+          <form class="demo-form" id="demoForm">
+            <div class="form-row"><div class="field"><label for="firstName">First name</label><input id="firstName" name="firstName" autocomplete="given-name" required placeholder="Jane" /></div><div class="field"><label for="lastName">Last name</label><input id="lastName" name="lastName" autocomplete="family-name" required placeholder="Smith" /></div></div>
+            <div class="form-row"><div class="field"><label for="firm">Firm name</label><input id="firm" name="firm" required placeholder="Smith & Associates LLP" /></div><div class="field"><label for="email">Work email</label><input id="email" name="email" autocomplete="email" required type="email" placeholder="jane@firm.ca" /></div></div>
+            <div class="form-row"><div class="field"><label for="role">Your role</label><select id="role" name="role"><option value="">Select role</option><option>Lawyer / Partner</option><option>Conveyancer</option><option>Legal Assistant</option><option>Paralegal</option><option>Firm Owner / Administrator</option></select></div><div class="field"><label for="volume">Monthly matter volume</label><select id="volume" name="volume"><option value="">Select volume</option><option>1-10</option><option>11-30</option><option>31-60</option><option>61-100</option><option>100+</option></select></div></div>
+            <div class="field"><label for="message">What should the demo focus on?</label><textarea id="message" name="message" placeholder="LTSA workflow, document generation, team collaboration..."></textarea></div>
+            <label class="checkbox"><input type="checkbox" required /> <span>I agree to be contacted by Innobridge about SmartConveyance. We respect your privacy and will never share your information.</span></label>
+            <button class="btn btn-primary" type="submit">Book your demo today</button>
+            <div class="form-note" id="formNote">Thanks. This front-end prototype captured the request locally. Connect this form to your CRM or email service before production.</div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tight" id="faq" aria-labelledby="faqTitle">
+      <div class="container faq-wrap">
+        <div class="reveal"><div class="eyebrow">FAQ</div><h2 id="faqTitle">Common questions.</h2><p class="lead">Clear answers reduce friction and help buyers understand fit before they book.</p></div>
+        <div class="faq-list reveal">
+          <div class="faq-item open"><button class="faq-q" type="button" aria-expanded="true">Do you offer onboarding support?<span>+</span></button><div class="faq-a">Yes. Our project teams help firms navigate change, engage stakeholders, and adopt the workflow confidently.</div></div>
+          <div class="faq-item"><button class="faq-q" type="button" aria-expanded="false">Which provinces currently support SmartConveyance?<span>+</span></button><div class="faq-a">SmartConveyance currently focuses on British Columbia conveyancing workflows, with additional provinces planned.</div></div>
+          <div class="faq-item"><button class="faq-q" type="button" aria-expanded="false">Is it for both residential and commercial matters?<span>+</span></button><div class="faq-a">Yes. The workflow supports residential and commercial conveyancing with matter-specific setup and generated files.</div></div>
+          <div class="faq-item"><button class="faq-q" type="button" aria-expanded="false">What tools does it integrate with?<span>+</span></button><div class="faq-a">The product narrative includes myLTSA workflow support and FCT-aware conveyancing, plus third-party automation for title search, insurance ordering, and web filing.</div></div>
+          <div class="faq-item"><button class="faq-q" type="button" aria-expanded="false">Can I import data from my previous system?<span>+</span></button><div class="faq-a">Contact support@innobridge.ca to assess migration needs and available import options for your firm.</div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"></span><span class="brand-text"><strong>SmartConveyance</strong><span>by Innobridge</span></span></a>
+          <p>Technology that Speaks Legal. Built for conveyancing teams that need clarity, speed, and control.</p>
+          <div class="support-footer-box"><strong>360° support</strong><span>Phone, email, Zoom, embedded guides, webinars, and one-on-one expert training from onboarding to daily management.</span></div>
+        </div>
+        <div><h4>Product</h4><a href="#problem">Pain points</a><a href="#product">Workflow</a><a href="#features">Features</a><a href="#outcomes">Outcomes</a></div>
+        <div><h4>Company</h4><a href="#pricing">Pricing</a><a href="#support">Support</a><a href="#story">Our story</a><a href="#demo">Book a Demo</a></div>
+        <div><h4>Contact</h4><a href="mailto:support@innobridge.ca">support@innobridge.ca</a><a href="tel:+18882669010">+1 (888) 266-9010</a><a href="https://smartconveyance.innobridge.ca/">Sign in</a></div>
+      </div>
+      <div class="footer-bottom"><span>© 2026 Innobridge Consulting Inc. All rights reserved.</span><span><a href="https://smartconveyance.innobridge.ca/files/PrivacyPolicy.pdf">Privacy</a><a href="https://smartconveyance.innobridge.ca/files/TermsOfUse.pdf">Terms</a></span></div>
+    </div>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 18);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    navToggle?.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+    });
+    navLinks?.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      navToggle?.setAttribute('aria-expanded', 'false');
+    }));
+
+    const revealItems = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealItems.forEach(item => revealObserver.observe(item));
+
+    const tabs = document.querySelectorAll('.product-tab');
+    const panels = document.querySelectorAll('.stage-panel');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.setAttribute('aria-selected', 'false'));
+        panels.forEach(p => p.classList.remove('active'));
+        tab.setAttribute('aria-selected', 'true');
+        document.getElementById(tab.dataset.stage).classList.add('active');
+      });
+    });
+
+    document.querySelectorAll('.faq-q').forEach(button => {
+      button.addEventListener('click', () => {
+        const item = button.closest('.faq-item');
+        const isOpen = item.classList.toggle('open');
+        button.setAttribute('aria-expanded', String(isOpen));
+      });
+    });
+
+    const demoForm = document.getElementById('demoForm');
+    const formNote = document.getElementById('formNote');
+    demoForm?.addEventListener('submit', event => {
+      event.preventDefault();
+      formNote.classList.add('show');
+      formNote.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  </script>
+</body>
+</html>

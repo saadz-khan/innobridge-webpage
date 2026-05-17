@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { FormEvent } from "react";
+import type { ChangeEvent, FocusEvent, FormEvent } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
@@ -46,11 +46,165 @@ type ProductStage = {
 
 type FaqItem = {
   question: string;
-  answer: string;
+  answer: string[];
 };
 
+type FaqGroup = {
+  title: string;
+  description: string;
+  items: FaqItem[];
+};
+
+type DemoSubmitState =
+  | { status: "idle"; message: "" }
+  | { status: "loading"; message: "Submitting..." }
+  | { status: "success"; message: string }
+  | { status: "error"; message: string };
+
+type DemoFormValues = {
+  firstName: string;
+  lastName: string;
+  firmName: string;
+  email: string;
+  phone: string;
+  role: string;
+  caseload: string;
+  message: string;
+  consent: boolean;
+};
+
+type DemoFormField = keyof DemoFormValues;
+type DemoFormErrors = Partial<Record<DemoFormField, string>>;
+type DemoFormTouched = Partial<Record<DemoFormField, boolean>>;
+
+type DemoErrorResponse = {
+  message?: string;
+  errors?: Partial<Record<DemoFormField, string[]>>;
+};
+
+const initialDemoFormValues: DemoFormValues = {
+  firstName: "",
+  lastName: "",
+  firmName: "",
+  email: "",
+  phone: "",
+  role: "",
+  caseload: "",
+  message: "",
+  consent: false
+};
+
+const demoFormFieldOrder: DemoFormField[] = [
+  "firstName",
+  "lastName",
+  "firmName",
+  "email",
+  "phone",
+  "role",
+  "caseload",
+  "message",
+  "consent"
+];
+
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phonePattern = /^[+()\d\s.-]{7,40}$/;
+
+function normalizeDemoForm(values: DemoFormValues): DemoFormValues {
+  return {
+    firstName: values.firstName.trim(),
+    lastName: values.lastName.trim(),
+    firmName: values.firmName.trim(),
+    email: values.email.trim(),
+    phone: values.phone.trim(),
+    role: values.role.trim(),
+    caseload: values.caseload.trim(),
+    message: values.message.trim(),
+    consent: values.consent
+  };
+}
+
+function validateDemoForm(values: DemoFormValues): DemoFormErrors {
+  const normalized = normalizeDemoForm(values);
+  const errors: DemoFormErrors = {};
+
+  if (!normalized.firstName) {
+    errors.firstName = "Enter your first name.";
+  } else if (normalized.firstName.length > 80) {
+    errors.firstName = "First name must be 80 characters or fewer.";
+  }
+
+  if (!normalized.lastName) {
+    errors.lastName = "Enter your last name.";
+  } else if (normalized.lastName.length > 80) {
+    errors.lastName = "Last name must be 80 characters or fewer.";
+  }
+
+  if (!normalized.firmName) {
+    errors.firmName = "Enter your firm name.";
+  } else if (normalized.firmName.length < 2) {
+    errors.firmName = "Firm name must be at least 2 characters.";
+  } else if (normalized.firmName.length > 160) {
+    errors.firmName = "Firm name must be 160 characters or fewer.";
+  }
+
+  if (!normalized.email) {
+    errors.email = "Enter your work email.";
+  } else if (!emailPattern.test(normalized.email)) {
+    errors.email = "Enter a valid work email.";
+  } else if (normalized.email.length > 180) {
+    errors.email = "Email must be 180 characters or fewer.";
+  }
+
+  if (normalized.phone && !phonePattern.test(normalized.phone)) {
+    errors.phone = "Enter a valid phone number or leave it blank.";
+  }
+
+  if (normalized.role.length > 120) {
+    errors.role = "Role must be 120 characters or fewer.";
+  }
+
+  if (normalized.caseload.length > 80) {
+    errors.caseload = "Matter volume must be 80 characters or fewer.";
+  }
+
+  if (normalized.message.length > 1200) {
+    errors.message = "Message must be 1200 characters or fewer.";
+  }
+
+  if (!normalized.consent) {
+    errors.consent = "Confirm that Innobridge can contact you.";
+  }
+
+  return errors;
+}
+
+function getFirstDemoFormError(errors: DemoFormErrors) {
+  return demoFormFieldOrder.find((field) => errors[field]);
+}
+
+function focusDemoFormField(field: DemoFormField) {
+  window.requestAnimationFrame(() => {
+    document.getElementById(field)?.focus();
+  });
+}
+
+function mapServerErrors(errors: DemoErrorResponse["errors"]): DemoFormErrors {
+  if (!errors) {
+    return {};
+  }
+
+  return demoFormFieldOrder.reduce<DemoFormErrors>((mappedErrors, field) => {
+    const message = errors[field]?.[0];
+
+    if (message) {
+      mappedErrors[field] = message;
+    }
+
+    return mappedErrors;
+  }, {});
+}
+
 const navLinks = [
-  { label: "Pain points", href: "#problem" },
   { label: "Product", href: "#product" },
   { label: "Features", href: "#features" },
   { label: "Pricing", href: "#pricing" },
@@ -70,7 +224,7 @@ const proofPills: IconCard[] = [
   },
   {
     title: "360° support",
-    description: "Phone, Zoom, guides, training",
+    description: "Phone, Email, Zoom, How-to, 1-on-1",
     icon: MessageCircle
   }
 ];
@@ -85,33 +239,33 @@ const metrics = [
     label: "Estimated staff time per file after workflow automation."
   },
   {
-    value: "10:1",
-    label: "Revenue-to-cost capacity narrative for growth-minded firms."
-  },
-  {
     value: "360°",
     label: "Support across onboarding, training, and daily use."
+  },
+  {
+    value: "All case types",
+    label: "Residential and commercial workflows for purchase, sale, refinance, and family transfer matters."
   }
 ];
 
 const painCards: IconCard[] = [
   {
-    title: "AI-empowered features",
+    title: "AI-powered features",
     description:
-      "Deep automation supports accurate conveyancing, reduces manual errors, minimizes re-keying, and helps generate case-specific files from a cleaner matter record.",
+      "Deep automation supports accurate conveyancing, reduces manual errors, minimizes re-keying, and helps generate case-specific files.",
     icon: Sparkles
   },
   {
     title: "Make complex conveyancing simple",
     description:
-      "A calm, legal-first interface keeps the work easy to learn, easy to use, and tailored to the way conveyancing practitioners actually operate.",
+      "A calm, legal-first interface keeps the workflow simple to learn, easy to use, and tailored to your practice",
     icon: LineChart,
     tone: "green"
   },
   {
     title: "Streamlined workflow",
     description:
-      "All-in-one forms and one-click generation simplify the process from intake to filing so the file moves forward without tool switching.",
+      "All-in-one form and one-click file generation that greatly simplify the conveyancing process from intake to filing.",
     icon: FolderOpen,
     tone: "dark"
   }
@@ -120,14 +274,14 @@ const painCards: IconCard[] = [
 const productStages: ProductStage[] = [
   {
     title: "Create New Case",
-    tabCopy: "Only case-relevant fields appear, keeping setup simple and focused.",
-    headerCopy: "Case-type logic keeps setup focused.",
-    status: "Focused setup"
+    tabCopy: "Start with the required file details, then lock the matter foundation before automation begins.",
+    headerCopy: "A polished case-start screen inspired by the real SmartConveyance setup flow.",
+    status: "Case foundation"
   },
   {
-    title: "Auto Data Import",
-    tabCopy: "Contracts, reports, tax certificates, and lender details populate the matter record.",
-    headerCopy: "Extract, match, and populate fields with review confidence.",
+    title: "Data Import",
+    tabCopy: "Select a document type, upload the source file, and prepare extracted data for review.",
+    headerCopy: "Document selection and consent are designed as a guided, low-friction intake step.",
     status: "AI assisted"
   },
   {
@@ -146,37 +300,37 @@ const productStages: ProductStage[] = [
 
 const featureCards: IconCard[] = [
   {
-    title: "Purchase and sale files",
+    title: "All conveyancing files",
     description:
-      "Support for residential and commercial matters, with workflows that stay relevant to the selected file type.",
+      "Residential and commercial matters for purchase, sales, refinance, and family transfer.",
     icon: CheckCircle2
+  },
+  {
+    title: "AI-assisted workflow",
+    description:
+      "Auto calculation, auto data import, and one-click file generation, within the All-in-One form.",
+    icon: FileText
+  },
+  {
+    title: "Third-party integrations",
+    description:
+      "Support for title search, webfiling, title insurance ordering.",
+    icon: Workflow,
+    tone: "green"
   },
   {
     title: "Smart templates",
     description:
-      "Customizable firm templates and consistent document generation from one authoritative matter record.",
+      "Customizable firm templates and consistent document generation.",
     icon: PenLine,
     tone: "green"
   },
   {
     title: "Case progress tracking",
     description:
-      "Track matter state, review checkpoints, status updates, and audit activity without asking around.",
+      "Track matter state, review checkpoints, status updates, and audit activity.",
     icon: BarChart3,
     tone: "dark"
-  },
-  {
-    title: "AI data import",
-    description:
-      "Populate matter fields from contracts, commission reports, certificates, and other source files.",
-    icon: FileText
-  },
-  {
-    title: "Third-party workflow",
-    description:
-      "Support for title search, insurance ordering, and filing workflows tied back to the same matter.",
-    icon: Workflow,
-    tone: "green"
   },
   {
     title: "Law-firm control",
@@ -198,37 +352,35 @@ const outcomes: IconCard[] = [
   { icon: LockKeyhole, title: "Security", description: "Support legal workflows with structured controls.", tone: "green" }
 ];
 
-const supportSteps: Array<IconCard & { linkCopy: string; linkHref?: string }> = [
+const supportSteps: IconCard[] = [
   {
     title: "Discovery Call",
-    description: "and map AI-driven solutions to your workflow.",
-    linkCopy: "Book a demo",
-    linkHref: "#demo",
+    description: "Learn and map our AI-driven solutions to your workflow.",
     icon: Phone
   },
   {
     title: "Quick onboarding",
-    description: "with a fast-track path built for your team.",
-    linkCopy: "Start setup",
-    linkHref: "#demo",
+    description: "Fast-track setup built for your team's immediate transition.",
     icon: ArrowRight,
     tone: "green"
   },
   {
     title: "Seamless training",
-    description: "Use embedded guides and visit the",
-    linkCopy: "support section",
-    linkHref: "#supportDetails",
+    description: "Embedded guidance and hands-on training help your team move with confidence.",
     icon: BookOpen,
     tone: "dark"
   },
   {
     title: "Conveyancing",
-    description: "Automation, AI features, third-party integrations, and",
-    linkCopy: "360° support",
-    linkHref: "#supportDetails",
+    description: "Automation, AI features, third-party integrations, and 360° support.",
     icon: LineChart
   }
+];
+
+const supportFlowSegments = [
+  "M 82 20 C 100 24 94 29 18 28",
+  "M 18 44 C 0 48 6 53 82 52",
+  "M 82 68 C 100 72 94 77 18 76"
 ];
 
 const pricingPlans = [
@@ -236,29 +388,45 @@ const pricingPlans = [
     name: "Free Trial",
     description: "Validate the workflow with your team before committing to volume usage.",
     price: "$0",
-    suffix: " / trial",
-    cta: "Start trial",
-    buttonClass: "btn-subtle",
+    suffix: " / case",
     features: ["Guided walkthrough", "Sample matter setup", "Workflow fit assessment", "No long-term commitment"]
   },
   {
     name: "Basic",
-    description: "Pay per matter with core features included for residential and commercial workflows.",
+    description: "Pay per case with core features included for residential and commercial workflows.",
     price: "$79",
     suffix: " / case",
-    cta: "Book your demo",
-    buttonClass: "btn-primary",
-    badge: "Most focused",
-    features: ["Purchase and sale files", "AI data import", "One-click file generation", "LTSA workflow support", "360° support included"]
+    badge: "Most popular",
+    features: ["All conveyancing matters", "AI data import", "One-click file generation", "LTSA workflow support", "360° support included"]
   },
   {
     name: "Premium",
     description: "For firms that need deeper configuration, templates, training, and rollout support.",
     price: "Custom",
     suffix: "",
-    cta: "Talk to sales",
-    buttonClass: "btn-dark",
     features: ["Advanced workflow setup", "Custom firm templates", "Team training plan", "Implementation support", "Priority onboarding"]
+  }
+];
+
+const roiBubbles: Array<IconCard & { value: string }> = [
+  {
+    value: "$65-351",
+    title: "per case",
+    description: "Save $65-351/case using SmartConveyance compared to others.",
+    icon: DollarSign,
+    tone: "green"
+  },
+  {
+    value: "$105,300",
+    title: "per year",
+    description: "Save up to $105,300/year for a typical firm processing 300+ cases per year.",
+    icon: BarChart3
+  },
+  {
+    value: "4h",
+    title: "per case",
+    description: "Save up to 4 hours/case operation time, freeing legal professionals for higher-value work.",
+    icon: Clock3
   }
 ];
 
@@ -288,56 +456,133 @@ const testimonials = [
 
 const values: IconCard[] = [
   {
-    title: "Innovation",
-    description: "Fusing systems design with research-backed AI to keep legal teams ahead of the curve.",
-    icon: Sparkles
-  },
-  {
     title: "Simplicity",
-    description: "Believing that in legal tech, simple is the ultimate sophistication.",
+    description: "Creating user-friendly systems that are easy to adopt and practical for daily legal work.",
     icon: CheckCircle2,
     tone: "green"
   },
   {
+    title: "Quality",
+    description: "Delivering dependable solutions and responsive support that legal professionals can trust.",
+    icon: ShieldCheck,
+    tone: "green"
+  },
+  {
     title: "Productivity",
-    description: "Removing technical bottlenecks so the same team can increase case capacity.",
+    description: "Driving automation, integration, and workflow optimization that save time and reduce repetitive effort.",
     icon: LineChart
   },
   {
-    title: "Quality",
-    description: "Delivering reliable workflows through native architecture built for the legal landscape.",
-    icon: ShieldCheck,
-    tone: "green"
+    title: "Innovation",
+    description: "Advancing our platforms with intelligent capabilities that improve user experience and enable firms to grow with confidence.",
+    icon: Sparkles
+  },
+];
+
+const faqGroups: FaqGroup[] = [
+  {
+    title: "Getting Started",
+    description: "Onboarding, payment, cancellation, and team support.",
+    items: [
+      {
+        question: "Do you offer on-boarding support?",
+        answer: [
+          "Yes. Project managers and product specialists help the firm navigate organizational change, engage stakeholders, and handle software adoption smoothly."
+        ]
+      },
+      {
+        question: "What forms of payment are accepted?",
+        answer: [
+          "We are currently accepting credit and debit cards as payment methods."
+        ]
+      },
+      {
+        question: "What is SmartConveyance's cancellation and refund policy?",
+        answer: [
+          "SmartConveyance charges per file or transaction. Once a transaction or file is initiated, the payment is non-refundable, and completed transactions or generated documents are treated as final.",
+          "Requests for refunds caused by technical issues are reviewed individually. If SmartConveyance failed to perform as advertised because of a verified platform issue, support may provide a credit or refund."
+        ]
+      }
+    ]
+  },
+  {
+    title: "Product Fit",
+    description: "Coverage, province availability, and integrations.",
+    items: [
+      {
+        question: "Is SmartConveyance for both residential & commercial use?",
+        answer: [
+          "Yes. SmartConveyance is built for both residential and commercial property transactions and includes workflows designed for purchase, sale, refinance, and family-transfer matters."
+        ]
+      },
+      {
+        question: "Which provinces currently support SmartConveyance?",
+        answer: [
+          "SmartConveyance currently supports British Columbia, with additional provinces planned as the platform expands."
+        ]
+      },
+      {
+        question: "What tools and platforms currently integrate with SmartConveyance?",
+        answer: [
+          "Our system connects with LTSA for title searches and FCT for title insurance, providing a unified workflow for your firm."
+        ]
+      }
+    ]
+  },
+  {
+    title: "Data And Security",
+    description: "Protection, third-party data handling, residency, and retention.",
+    items: [
+      {
+        question: "How does SmartConveyance protect my data?",
+        answer: [
+          "SmartConveyance protects user data through secure encryption practices, controlled access, and regular security assessments.",
+          "More detail is available in the Privacy Policy linked from the site footer."
+        ]
+      },
+      {
+        question: "How do you handle my data when I use third-party integrations?",
+        answer: [
+          "When SmartConveyance connects with third-party services, only the data needed to support the requested workflow is shared.",
+          "Each integration is handled through secure protocols, and users are encouraged to review the privacy policies of the connected services."
+        ]
+      },
+      {
+        question: "What is your procedure for data residency and retention?",
+        answer: [
+          "SmartConveyance stores and processes data in accordance with applicable data protection laws and keeps data only as long as needed to deliver services and meet legal obligations.",
+          "Retention periods depend on the type of data and service agreement, and deletion can be requested through customer support."
+        ]
+      }
+    ]
+  },
+  {
+    title: "Support And Migration",
+    description: "Customer support, legacy data, and direct contact.",
+    items: [
+      {
+        question: "What level of customer support does SmartConveyance provide?",
+        answer: [
+          "SmartConveyance offers 360-degree support, including phone, email, Zoom assistance, embedded how-to guides, webinars, and one-on-one expert training."
+        ]
+      },
+      {
+        question: "Is there a way to import my old data to SmartConveyance?",
+        answer: [
+          "If you are interested in migrating data from your previous software or filing system, please contact us at support@innobridge.ca. We will work with you to better assess your needs and options."
+        ]
+      },
+      {
+        question: "I still have questions. Who can I reach out to?",
+        answer: [
+          "Questions can be sent to support@innobridge.ca. The support team can help with setup, workflow fit, platform questions, and next steps."
+        ]
+      }
+    ]
   }
 ];
 
-const faqs: FaqItem[] = [
-  {
-    question: "Do you offer onboarding support?",
-    answer:
-      "Yes. Our project teams help firms navigate change, engage stakeholders, and adopt the workflow confidently."
-  },
-  {
-    question: "Which provinces currently support SmartConveyance?",
-    answer:
-      "SmartConveyance currently focuses on British Columbia conveyancing workflows, with additional provinces planned."
-  },
-  {
-    question: "Is it for both residential and commercial matters?",
-    answer:
-      "Yes. The workflow supports residential and commercial conveyancing with matter-specific setup and generated files."
-  },
-  {
-    question: "What tools does it integrate with?",
-    answer:
-      "The product narrative includes myLTSA workflow support and FCT-aware conveyancing, plus third-party automation for title search, insurance ordering, and web filing."
-  },
-  {
-    question: "Can I import data from my previous system?",
-    answer:
-      "Contact support@innobridge.ca to assess migration needs and available import options for your firm."
-  }
-];
+const faqCount = faqGroups.reduce((count, group) => count + group.items.length, 0);
 
 function Brand({ variant = "color" }: { variant?: "color" | "light" }) {
   const logoSrc =
@@ -358,14 +603,50 @@ function Brand({ variant = "color" }: { variant?: "color" | "light" }) {
 function SiteNav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 18);
+    const sectionIds = navLinks.map((link) => link.href.slice(1));
+    let ticking = false;
 
-    onScroll();
+    const updateScrollState = () => {
+      const scrollY = window.scrollY;
+      const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const sectionProbe = scrollY + 220;
+      let currentSection = "";
+      const sections = sectionIds
+        .map((id) => document.getElementById(id))
+        .filter((section): section is HTMLElement => Boolean(section))
+        .sort((a, b) => a.offsetTop - b.offsetTop);
+
+      for (const section of sections) {
+        if (section.offsetTop <= sectionProbe) {
+          currentSection = section.id;
+        }
+      }
+
+      setScrolled(scrollY > 18);
+      setScrollProgress(documentHeight > 0 ? Math.min(scrollY / documentHeight, 1) : 0);
+      setActiveSection(currentSection);
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScrollState);
+        ticking = true;
+      }
+    };
+
+    updateScrollState();
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
 
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
   return (
@@ -373,6 +654,11 @@ function SiteNav() {
       <a href="#main" className="skip-link">
         Skip to content
       </a>
+      <div
+        className="scroll-progress"
+        style={{ transform: `scaleX(${scrollProgress})` }}
+        aria-hidden="true"
+      />
       <nav className={`nav${scrolled ? " scrolled" : ""}`} id="nav" aria-label="Primary navigation">
         <div className="nav-inner">
           <a href="#top" aria-label="SmartConveyance by Innobridge home">
@@ -380,7 +666,13 @@ function SiteNav() {
           </a>
           <div className={`nav-links${menuOpen ? " open" : ""}`} id="navLinks">
             {navLinks.map((link) => (
-              <a href={link.href} key={link.href} onClick={() => setMenuOpen(false)}>
+              <a
+                className={activeSection === link.href.slice(1) ? "active" : undefined}
+                href={link.href}
+                key={link.href}
+                onClick={() => setMenuOpen(false)}
+                aria-current={activeSection === link.href.slice(1) ? "page" : undefined}
+              >
                 {link.label}
               </a>
             ))}
@@ -417,154 +709,176 @@ function CardIcon({ icon: Icon, tone }: { icon: LucideIcon; tone?: IconCard["ton
 }
 
 function HeroPortalPreview() {
-  const caseRows = [
-    ["Buyer", "Jordan Lee and Priya Sharma"],
-    ["Seller", "M. Henderson Holdings Ltd."],
-    ["Completion", "June 18, 2026"],
-    ["Lender", "Royal Bank of Canada"]
+  const overviewItems = [
+    ["Completion Date", "2023-06-21"],
+    ["Buyer", "Nathanael Cormier"],
+    ["Seller", "Annetta Upton"],
+    ["Strata", "267 Maybell Springs\nApt. 136\nVancouver, BC"]
   ];
 
-  const progressRows = [
-    ["✓", "Intake created", "Case-relevant fields shown", "Done"],
-    ["✓", "Data imported", "Contract, tax certificate, lender", "Done"],
-    ["3", "Counsel review", "Two flagged values need approval", "Now"],
-    ["4", "Generate and file", "Completion package and LTSA", "Next"]
+  const tabs = [
+    "Case",
+    "Property",
+    "Buyer & Seller",
+    "Mortgage",
+    "Purchase",
+    "Adjustments",
+    "Services"
   ];
 
-  const docRows = [
-    ["Statement of Adjustments", "Ready"],
-    ["Form A Transfer", "Ready"],
-    ["Buyer Report Letter", "Queued"],
-    ["LTSA Filing Package", "Ready"]
+  const fields = [
+    ["Case Number", "9230375", "input"],
+    ["Representing", "Buyer", "select"],
+    ["Property ID (PID)", "025-728-857", "input"],
+    ["Property Type", "Strata", "select"],
+    ["Completion Date", "2023-06-21", "input"],
+    ["Adjustment Date", "2023-06-22", "input"],
+    ["Possession Date", "2023-06-22", "input"],
+    ["Contract Date", "2023-05-17", "input"]
   ];
 
   return (
-    <div className="hero-visual" aria-label="SmartConveyance portal preview">
-      <div className="portal-frame">
-        <div className="portal-topbar">
-          <div className="window-dots" aria-hidden="true">
+    <section className="hero-portal-preview" aria-label="SmartConveyance portal preview">
+      <div className="portal-preview-shell">
+        <div className="portal-preview-browserbar" aria-hidden="true">
+          <div className="portal-window-controls">
             <span />
             <span />
             <span />
           </div>
-          <div className="url-pill">smartconveyance.innobridge.ca / matter / SC-4821</div>
-          <span className="status-pill">Live matter</span>
+          <div className="portal-preview-address">
+            smartconveyance.innobridge.ca <span>/</span> matter <span>/</span> 9230375
+          </div>
+          <div className="portal-live-pill">
+            <i />
+            Live matter
+          </div>
         </div>
-        <div className="portal-app">
-          <aside className="portal-sidebar">
-            <div className="portal-logo">
-              <img
-                className="portal-logo-img"
-                src="/brand/smartconveyance-primary-dark.png"
-                alt="SmartConveyance"
-                decoding="async"
-              />
+
+        <aside className="portal-preview-sidebar">
+          <div className="portal-preview-logo">
+            <img
+              src="/brand/smartconveyance-primary-dark.png"
+              alt="SmartConveyance"
+              decoding="async"
+            />
+          </div>
+
+          <div className="portal-user-card">
+            <div className="portal-avatar">JS</div>
+            <div>
+              <strong>John Smith</strong>
+              <span>SmartConveyance</span>
             </div>
-            <nav className="portal-nav" aria-label="Portal preview navigation">
-              {["Overview", "Parties", "Property", "Documents", "LTSA Filing", "Audit Trail"].map((item, index) => (
-                <a className={index === 0 ? "active" : undefined} href="#product" key={item}>
-                  <span />
-                  {item}
-                </a>
+          </div>
+
+          <button className="portal-nav-button">
+            Navigation
+            <span>⌄</span>
+          </button>
+
+          <div className="portal-overview-card">
+            <div className="portal-overview-title">Overview</div>
+
+            {overviewItems.map(([label, value]) => (
+              <div className="portal-overview-item" key={label}>
+                <div className="portal-overview-icon" />
+                <div>
+                  <strong>{label}</strong>
+                  <span>
+                    {value.split("\n").map((line) => (
+                      <span className="portal-line" key={line}>
+                        {line}
+                      </span>
+                    ))}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </aside>
+
+        <main className="portal-preview-main">
+          <header className="portal-preview-header">
+            <div>
+              <div className="portal-breadcrumb">
+                <span>Home</span>
+                <em>›</em>
+                <strong>Case 9230375</strong>
+              </div>
+
+              <div className="portal-case-heading">
+                <div>
+                  <span>PURCHASE</span>
+                  <h3>Case</h3>
+                </div>
+
+                <div className="portal-case-number">9230375</div>
+                <div className="portal-status-pill">
+                  <span>✓</span>
+                  In progress
+                </div>
+              </div>
+            </div>
+
+            <div className="portal-actions" aria-hidden="true">
+              <button>▣</button>
+              <button>↱</button>
+              <button>⇩</button>
+              <button>◉</button>
+            </div>
+          </header>
+
+          <nav className="portal-tabs" aria-label="Case sections">
+            {tabs.map((tab, index) => (
+              <button className={index === 0 ? "active" : ""} key={tab}>
+                <span className="portal-tab-icon" />
+                {tab}
+                {index > 0 && <em>⌄</em>}
+              </button>
+            ))}
+          </nav>
+
+          <section className="portal-form-card">
+            <div className="portal-section-title">
+              <h4>General Information</h4>
+              <span>i</span>
+            </div>
+
+            <div className="portal-form-grid">
+              {fields.map(([label, value, type], index) => (
+                <div
+                  className={`portal-field ${
+                    index >= 4 ? "portal-field-separated" : ""
+                  }`}
+                  key={label}
+                >
+                  <label>
+                    {label}
+                    <sup>*</sup>
+                  </label>
+
+                  <div className="portal-input">
+                    <span>{value}</span>
+                    {type === "select" && <em>⌄</em>}
+                  </div>
+                </div>
               ))}
-            </nav>
-            <div className="portal-sidebar-card">
-              <strong>AI import complete</strong>
-              <span>Contract, commission report, and tax certificate matched into the file.</span>
             </div>
-          </aside>
-          <div className="portal-main">
-            <div className="portal-head">
-              <div className="portal-title">
-                <small>Residential Purchase</small>
-                <strong>2518 Alder Street, Vancouver</strong>
-              </div>
-              <span className="status-pill">Ready for review</span>
-            </div>
-            <div className="portal-grid">
-              <div className="portal-card">
-                <h4>
-                  Case details <span>Updated now</span>
-                </h4>
-                <div className="case-rows">
-                  {caseRows.map(([label, value]) => (
-                    <div className="case-row" key={label}>
-                      <span>{label}</span>
-                      <strong>{value}</strong>
-                    </div>
-                  ))}
-                </div>
-              </div>
+          </section>
+        </main>
 
-              <div className="portal-card ai-panel">
-                <h4>
-                  AI confidence <span>4 sources</span>
-                </h4>
-                <div className="ai-lines">
-                  {[96, 92, 88, 94].map((value) => (
-                    <div className="ai-line" key={value}>
-                      <div className="ai-bar">
-                        <i style={{ width: `${value}%` }} />
-                      </div>
-                      <span>{value}%</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="portal-action">
-                  <div className="portal-button">Review fields</div>
-                  <div className="portal-button secondary">Import report</div>
-                </div>
-              </div>
+        <div className="portal-floating-card portal-floating-card-one">
+          <strong>AI import complete</strong>
+          <span>Case fields matched from source documents</span>
+        </div>
 
-              <div className="portal-card">
-                <h4>
-                  Workflow status <span>Intake to filing</span>
-                </h4>
-                <div className="progress-list">
-                  {progressRows.map(([step, title, copy, state]) => (
-                    <div className="progress-item" key={title}>
-                      <div className="progress-check">{step}</div>
-                      <div className="progress-copy">
-                        <strong>{title}</strong>
-                        <span>{copy}</span>
-                      </div>
-                      <em>{state}</em>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="portal-card">
-                <h4>
-                  Generated files <span>One click</span>
-                </h4>
-                <div className="doc-list">
-                  {docRows.map(([label, state]) => (
-                    <div className="doc-row" key={label}>
-                      {label} <span>{state}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="portal-floating-card portal-floating-card-two">
+          <strong>Ready for review</strong>
+          <span>Required fields organized by workflow</span>
         </div>
       </div>
-      <div className="float-card one">
-        <div className="float-card-icon">AI</div>
-        <div>
-          <strong>Case data extracted</strong>
-          <span>No duplicate entry required</span>
-        </div>
-      </div>
-      <div className="float-card two">
-        <div className="float-card-icon">✓</div>
-        <div>
-          <strong>LTSA workflow ready</strong>
-          <span>Filing data organized</span>
-        </div>
-      </div>
-    </div>
+    </section>
   );
 }
 
@@ -594,7 +908,7 @@ function HeroSection() {
             </a>
             <a className="btn btn-ghost" href="#product">
               See how it works
-              <CirclePlay className="icon" aria-hidden="true" />
+              <ArrowRight className="icon" aria-hidden="true" />
             </a>
           </div>
           <div className="hero-proof" aria-label="Product strengths">
@@ -642,7 +956,7 @@ function ProblemSection() {
     <section className="section" id="problem" aria-labelledby="problemTitle">
       <div className="container problem-layout">
         <Reveal className="sticky-note">
-          <div className="eyebrow">The pain point</div>
+          <div className="eyebrow">WHY SMARTCONVEYANCE</div>
           <h2 id="problemTitle">Faster conveyancing. Fewer errors.</h2>
           <p className="lead">
             The real problem is not a lack of software. It is fragmented work: re-keying, switching tools, and checking
@@ -684,45 +998,71 @@ function ProblemSection() {
 
 function StageOne() {
   const fields = [
-    ["Matter type", "Purchase"],
-    ["Property class", "Residential"],
-    ["Property address", "2518 Alder Street, Vancouver BC", "wide"],
-    ["Completion date", "June 18, 2026"],
-    ["Required workflow", "Buyer side, lender file"]
+    ["Case Number", "Enter firm case number", "empty"],
+    ["Property ID (PID)", "XXX-XXX-XXX"],
+    ["Representing", "Buyer", "select"],
+    ["Property Type", "Single Family House", "select"]
   ];
 
   return (
-    <div className="screen-grid">
-      {fields.map(([label, value, className]) => (
-        <div className={`field-card${className ? ` ${className}` : ""}`} key={label}>
-          <label>{label}</label>
-          <strong>{value}</strong>
-        </div>
-      ))}
+    <div className="case-create-preview">
+      <div className="case-preview-topline">
+        <span>Required setup</span>
+        <strong>New conveyance file</strong>
+      </div>
+      <div className="case-form-stack">
+        {fields.map(([label, value, variant]) => (
+          <div
+            className={`app-field${variant === "empty" ? " app-field-empty" : ""}${variant === "select" ? " app-select" : ""}`}
+            key={label}
+          >
+            <label>
+              {label} <b>*</b>
+            </label>
+            {variant === "empty" ? <span>{value}</span> : <strong>{value}</strong>}
+            {variant === "select" ? <i aria-hidden="true" /> : null}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
 function StageTwo() {
-  const rows = [
-    ["PDF", "Contract of Purchase and Sale", "Buyer, seller, property, dates", "96%"],
-    ["TAX", "Tax Certificate", "Roll number and adjustments", "92%"],
-    ["LDR", "Lender Instructions", "Mortgage and insurance details", "89%"],
-    ["COM", "Commission Report", "Brokerage details and calculations", "94%"]
+  const documentOptions = [
+    ["Tax Certificate", "Import roll number, taxes, and adjustment data."],
+    ["Contract of Purchase and Sale (CPS)", "Extract parties, dates, price, deposits, and property details."],
+    ["Conveyancer's Instruction Report (CIR)", "Bring instruction data into the matter record."]
   ];
 
   return (
-    <div className="import-stack">
-      {rows.map(([fileType, title, copy, confidence]) => (
-        <div className="import-row" key={title}>
-          <div className="file-icon">{fileType}</div>
-          <div>
-            <strong>{title}</strong>
-            <span>{copy}</span>
-          </div>
-          <div className="confidence">{confidence}</div>
+    <div className="data-import-preview">
+      <div className="document-picker">
+        <label>Document Type</label>
+        <div className="select-shell">
+          <span>Document Type</span>
+          <i aria-hidden="true" />
         </div>
-      ))}
+        <div className="doc-menu">
+          {documentOptions.map(([title, copy], index) => (
+            <div className={`doc-option${index === 0 ? " active" : ""}`} key={title}>
+              <strong>{title}</strong>
+              <span>{copy}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="upload-dropzone">
+        <div className="upload-icon">PDF</div>
+        <div>
+          <strong>Drop file or browse to upload</strong>
+          <span>SmartConveyance reads the selected document type, then prepares extracted fields for review.</span>
+        </div>
+      </div>
+      <div className="import-footer">
+        <span>Next step: review extracted fields before they update the case.</span>
+        <button type="button">Next</button>
+      </div>
     </div>
   );
 }
@@ -749,7 +1089,7 @@ function StageThree() {
 
 function StageFour() {
   const rows = [
-    ["Generate closing package", "Only case-required files are selected."],
+    ["Generate closing package", "Only case-required files are generated."],
     ["Title search integration", "Start from the same matter record."],
     ["Insurance ordering", "Reusable matter data reduces re-entry."],
     ["Web filing", "Prepared data moves into the filing workflow."]
@@ -768,19 +1108,28 @@ function StageFour() {
 }
 
 function StageContent({ index }: { index: number }) {
-  const titles = ["New Matter Setup", "Import Sources", "Review Queue", "Automation Center"];
+  const titles = ["New Case Setup", "Import Sources", "Review Queue", "Automation Center"];
   const pills = ["Residential Purchase", "4 files matched", "2 items flagged", "One-click package"];
   const content = [<StageOne key="stage-one" />, <StageTwo key="stage-two" />, <StageThree key="stage-three" />, <StageFour key="stage-four" />];
 
   return (
     <div className="screen-preview">
-      <div className="mini-dashboard">
-        <div className="mini-toolbar">
-          <strong>{titles[index]}</strong>
-          <span>{pills[index]}</span>
+      {index < 2 ? (
+        content[index]
+      ) : (
+        <div className="mini-dashboard">
+          <div className="mini-toolbar">
+            <strong>{titles[index]}</strong>
+            <span>{pills[index]}</span>
+          </div>
+          {content[index]}
         </div>
-        {content[index]}
-      </div>
+      )}
+      {index > 1 ? (
+        <div className="product-cursor" aria-hidden="true">
+          <span />
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -820,7 +1169,21 @@ function ProductSection() {
               </button>
             ))}
           </div>
-          <div className="product-stage">
+          <div
+            className="product-stage"
+            onPointerMove={(event) => {
+              const rect = event.currentTarget.getBoundingClientRect();
+              const x = ((event.clientX - rect.left) / rect.width) * 100;
+              const y = ((event.clientY - rect.top) / rect.height) * 100;
+
+              event.currentTarget.style.setProperty("--stage-x", `${x.toFixed(1)}%`);
+              event.currentTarget.style.setProperty("--stage-y", `${y.toFixed(1)}%`);
+            }}
+            onPointerLeave={(event) => {
+              event.currentTarget.style.setProperty("--stage-x", "76%");
+              event.currentTarget.style.setProperty("--stage-y", "16%");
+            }}
+          >
             {productStages.map((stage, index) => (
               <div
                 className={`stage-panel${activeStage === index ? " active" : ""}`}
@@ -882,7 +1245,6 @@ function OutcomesSection() {
         <Reveal className="section-head center">
           <div className="eyebrow eyebrow-light">Impact</div>
           <h2 id="outcomesTitle">Digital conveyancing, re-engineered.</h2>
-          <p className="lead">A calmer operating layer that creates measurable operational outcomes for legal teams.</p>
         </Reveal>
         <div className="outcome-grid">
           {outcomes.map((outcome, index) => {
@@ -904,146 +1266,6 @@ function OutcomesSection() {
   );
 }
 
-function SupportSection() {
-  return (
-    <section className="section" id="support" aria-labelledby="supportTitle">
-      <div className="container onboarding-wrap">
-        <Reveal className="flow-board" aria-label="Onboarding flow">
-          {supportSteps.map((step, index) => {
-            const Icon = step.icon;
-
-            return (
-              <div className="flow-card" key={step.title}>
-                <CardIcon icon={Icon} tone={step.tone} />
-                <div>
-                  <strong>{step.title}</strong>
-                  <span>
-                    {index === 0 || index === 1 ? (
-                      <>
-                        <a href={step.linkHref}>{step.linkCopy}</a> {step.description}
-                      </>
-                    ) : index === 2 ? (
-                      <>
-                        {step.description} <a href={step.linkHref}>{step.linkCopy}</a> for help.
-                      </>
-                    ) : (
-                      <>
-                        {step.description} <a href={step.linkHref}>{step.linkCopy}</a>.
-                      </>
-                    )}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-          <div className="flow-arrow arrow-1" />
-          <div className="flow-arrow arrow-2" />
-          <div className="flow-arrow arrow-3" />
-        </Reveal>
-
-        <Reveal className="support-panel" id="supportDetails">
-          <div className="eyebrow eyebrow-light">Onboarding and training</div>
-          <h2 id="supportTitle">Sign up, and start conveyancing today.</h2>
-          <p className="lead">
-            Accessible support is available through phone, email, Zoom, embedded guides, and one-on-one training from
-            onboarding to daily management.
-          </p>
-          <div className="support-list">
-            {["Phone and email support", "Live Zoom walkthroughs", "Embedded how-to guidance", "One-on-one onboarding and training"].map((item) => (
-              <div key={item}>
-                <i />
-                {item}
-              </div>
-            ))}
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-function PricingSection() {
-  return (
-    <section className="section" id="pricing" aria-labelledby="pricingTitle">
-      <div className="container">
-        <Reveal className="section-head center">
-          <div className="eyebrow">Pricing plan</div>
-          <h2 id="pricingTitle">Enterprise-grade efficiency without enterprise-level cost.</h2>
-          <p className="lead">Simple pricing that makes operational gains visible without long-term lock-in.</p>
-        </Reveal>
-        <div className="pricing-grid">
-          {pricingPlans.map((plan, index) => (
-            <Reveal className={`price-card${plan.badge ? " featured" : ""}`} delay={index * 80} key={plan.name}>
-              {plan.badge ? <span className="price-badge">{plan.badge}</span> : null}
-              <h3>{plan.name}</h3>
-              <p>{plan.description}</p>
-              <div className="price">
-                <strong>{plan.price}</strong>
-                {plan.suffix ? <span>{plan.suffix}</span> : null}
-              </div>
-              <ul className="price-list">
-                {plan.features.map((feature) => (
-                  <li key={feature}>{feature}</li>
-                ))}
-              </ul>
-              <a className={`btn ${plan.buttonClass}`} href="#demo">
-                {plan.cta}
-              </a>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function RoiSection() {
-  return (
-    <section className="section section-dark" id="roi" aria-labelledby="roiTitle">
-      <div className="container roi-layout">
-        <Reveal>
-          <div className="eyebrow eyebrow-light">ROI</div>
-          <h2 id="roiTitle">Growth-ready infrastructure for serious firms.</h2>
-          <p className="lead">
-            Your tech stack should accelerate the practice instead of throttling it. SmartConveyance is positioned around
-            immediate ROI and increased billable capacity.
-          </p>
-        </Reveal>
-        <Reveal className="roi-card">
-          <div className="roi-stat">
-            <strong>10:1</strong>
-            <span>revenue-to-cost capacity narrative</span>
-          </div>
-          <div className="comparison">
-            <div className="bar-row">
-              <strong>
-                <span>Manual staff time per file</span>
-                <span>4 to 6 hours</span>
-              </strong>
-              <div className="bar-track">
-                <div className="bar-fill manual" />
-              </div>
-            </div>
-            <div className="bar-row">
-              <strong>
-                <span>With SmartConveyance</span>
-                <span>~1.5 hours</span>
-              </strong>
-              <div className="bar-track">
-                <div className="bar-fill innobridge" />
-              </div>
-            </div>
-          </div>
-          <div className="savings-box">
-            <strong>$81,000+ projected annual savings</strong>
-            <span>Illustrative annual savings for a mid-sized firm, based on the website plan narrative.</span>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
 function TestimonialsSection() {
   return (
     <section className="section" id="testimonials" aria-labelledby="testimonialsTitle">
@@ -1051,9 +1273,6 @@ function TestimonialsSection() {
         <Reveal className="section-head center">
           <div className="eyebrow">Testimonials</div>
           <h2 id="testimonialsTitle">Trusted by conveyancing professionals.</h2>
-          <p className="lead">
-            A serious product page needs proof that speaks in the language of lawyers, paralegals, and firm owners.
-          </p>
         </Reveal>
         <div className="testimonial-grid">
           {testimonials.map((testimonial, index) => (
@@ -1077,6 +1296,223 @@ function TestimonialsSection() {
   );
 }
 
+function SupportSection() {
+  return (
+    <section className="section" id="support" aria-labelledby="supportTitle">
+      <div className="container onboarding-wrap">
+        <Reveal className="flow-board" aria-label="Onboarding flow">
+          <svg className="flow-route" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="supportRouteGradient" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stopColor="#171D1A" />
+                <stop offset="55%" stopColor="#187D9E" />
+                <stop offset="100%" stopColor="#187D9E" />
+              </linearGradient>
+              <marker id="supportRouteArrow" markerHeight="5.5" markerWidth="5.5" orient="auto" refX="4.8" refY="2.75">
+                <path d="M .6 .6 L 5 2.75 L .6 4.9 Z" fill="#171D1A" />
+              </marker>
+            </defs>
+            {supportFlowSegments.map((segment, index) => (
+              <g className="flow-route-segment" key={segment}>
+                <path className="flow-route-glow" d={segment} vectorEffect="non-scaling-stroke" />
+                <path
+                  className="flow-route-track"
+                  d={segment}
+                  markerEnd="url(#supportRouteArrow)"
+                  vectorEffect="non-scaling-stroke"
+                />
+                <path
+                  className="flow-route-motion"
+                  d={segment}
+                  vectorEffect="non-scaling-stroke"
+                  style={{ animationDelay: `${index * 0.34}s` }}
+                />
+                <circle className="flow-route-dot" r=".95">
+                  <animateMotion begin={`${index * 0.5}s`} dur="3.8s" path={segment} repeatCount="indefinite" />
+                </circle>
+              </g>
+            ))}
+          </svg>
+          {supportSteps.map((step, index) => {
+            const Icon = step.icon;
+
+            return (
+              <div className={`flow-card flow-card-${index + 1}`} key={step.title}>
+                <CardIcon icon={Icon} tone={step.tone} />
+                <div>
+                  <strong>{step.title}</strong>
+                  <span>{step.description}</span>
+                </div>
+              </div>
+            );
+          })}
+        </Reveal>
+
+        <Reveal className="support-panel" id="supportDetails">
+          <div className="eyebrow eyebrow-light">Onboarding and training</div>
+          <h2 id="supportTitle">Sign up, and start conveyancing today.</h2>
+          <p className="lead">
+            Accessible support is available through phone, email, Zoom, embedded guides, and one-on-one training from
+            onboarding to daily management.
+          </p>
+          <div className="support-list">
+            {["Phone and email support", "Live Zoom walkthroughs", "Embedded how-to guidance", "One-on-one onboarding and training"].map((item) => (
+              <div key={item}>
+                <i />
+                {item}
+              </div>
+            ))}
+          </div>
+          <a className="btn btn-primary support-panel-cta" href="#demo">
+            Book a Demo
+            <ArrowRight className="icon" aria-hidden="true" />
+          </a>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function PricingSection() {
+  return (
+    <section className="section" id="pricing" aria-labelledby="pricingTitle">
+      <div className="container">
+        <Reveal className="section-head center">
+          <div className="eyebrow">Pricing plan</div>
+          <h2 id="pricingTitle">Enterprise-grade efficiency without enterprise-level cost.</h2>
+          <p className="lead">Simple pricing <b>no contract or hidden fees</b>, that makes operational gains visible without long-term lock-in.</p>
+        </Reveal>
+        <div className="pricing-grid">
+          {pricingPlans.map((plan, index) => (
+            <Reveal className={`price-card${plan.badge ? " featured" : ""}`} delay={index * 80} key={plan.name}>
+              {plan.badge ? <span className="price-badge">{plan.badge}</span> : null}
+              <h3>{plan.name}</h3>
+              <p>{plan.description}</p>
+              <div className="price">
+                <strong>{plan.price}</strong>
+                {plan.suffix ? <span>{plan.suffix}</span> : null}
+              </div>
+              <ul className="price-list">
+                {plan.features.map((feature) => (
+                  <li key={feature}>{feature}</li>
+                ))}
+              </ul>
+            </Reveal>
+          ))}
+        </div>
+        <Reveal className="pricing-action" delay={260}>
+          <a className="btn btn-primary pricing-expert-cta" href="#demo">
+            Talk to an Expert
+            <ArrowRight className="icon" aria-hidden="true" />
+          </a>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function RoiSection() {
+  return (
+    <section className="section section-dark roi-decision-section" id="roi" aria-labelledby="roiTitle">
+      <div className="container">
+        <Reveal className="section-head center roi-decision-head">
+          <div className="eyebrow eyebrow-light">Return on Investment</div>
+          <h2 id="roiTitle">The numbers that move decisions.</h2>
+        </Reveal>
+
+        <Reveal className="time-compare-block">
+          <div className="time-bars">
+            <div className="time-bar-row">
+              <div className="time-bar-name">Legacy Digital Conveyancing</div>
+              <div className="time-bar-track">
+                <div className="time-bar-fill bar-legacy" />
+              </div>
+              <div className="time-bar-val tv-legacy">4-6 hours</div>
+            </div>
+            <div className="time-bar-row">
+              <div className="time-bar-name">SmartConveyance</div>
+              <div className="time-bar-track">
+                <div className="time-bar-fill bar-smart" />
+              </div>
+              <div className="time-bar-val tv-smart">~1.5 hours</div>
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal className="fin-table-card">
+          <div className="fin-table-scroll">
+            <table className="fin-table" aria-label="Financial justification comparison table">
+              <thead>
+                <tr>
+                  <th>Metric (Per Case)</th>
+                  <th className="col-legacy">Legacy Digital Conveyancing</th>
+                  <th className="col-smart">
+                    <span className="fin-head-smart">
+                      <span className="fin-check">✓</span>
+                      SmartConveyance
+                    </span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Staff Labour / File</th>
+                  <td className="col-legacy">2-5 hrs</td>
+                  <td className="col-smart">Less than 1 hr</td>
+                </tr>
+                <tr>
+                  <th scope="row">
+                    Labour Cost <small>at $45 / hr</small>
+                  </th>
+                  <td className="col-legacy">$90-225</td>
+                  <td className="col-smart">$45.00</td>
+                </tr>
+                <tr>
+                  <th scope="row">Software Fees</th>
+                  <td className="col-legacy">$99-$250 + contract and hidden fees</td>
+                  <td className="col-smart">$79.00 no contract, no hidden fees</td>
+                </tr>
+                <tr className="fin-total">
+                  <th scope="row">Total Cost / Case</th>
+                  <td className="col-legacy">$189-475</td>
+                  <td className="col-smart">$124.00</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="fin-table-note">
+            Illustrative comparison based on Innobridge&apos;s financial justification model. Figures use a $45/hr
+            staff labour rate. Results may vary by firm size, matter volume, and workflow configuration.
+          </div>
+        </Reveal>
+
+        <div className="roi-bubble-grid">
+          {roiBubbles.map((bubble, index) => {
+            const Icon = bubble.icon;
+
+            return (
+              <Reveal
+                className={`roi-bubble${bubble.tone === "green" ? " roi-bubble-primary" : ""}`}
+                delay={index * 90}
+                key={bubble.value}
+              >
+                <span className="roi-bubble-icon">
+                  <Icon className="icon" aria-hidden="true" />
+                </span>
+                <strong>
+                  {bubble.value}
+                  <span>{bubble.title}</span>
+                </strong>
+                <p>{bubble.description}</p>
+              </Reveal>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function StorySection() {
   return (
     <section className="section" id="story" aria-labelledby="storyTitle">
@@ -1091,12 +1527,9 @@ function StorySection() {
           <div className="eyebrow eyebrow-light">Our story</div>
           <h2 id="storyTitle">Legal DNA, engineered into the product.</h2>
           <p>
-            Innobridge was launched in Alberta in 2022 to build a bridge between legal processes and digital solutions.
-            The platform is designed around how law actually works, not around generic software habits.
+            Our vision is to shape a future where intelligent legal technology makes legal practice more efficient, accessible, and empowering. We strive to equip legal professionals with tools that streamline work, strengthen accuracy, and support sustainable growth, enabling them to serve clients with confidence and redefine what excellent legal service can look like in a modern world.
           </p>
           <div className="story-facts" aria-label="Company highlights">
-            <span><strong>2022</strong> Alberta launch</span>
-            <span><strong>Legal-first</strong> process design</span>
           </div>
         </Reveal>
         <div className="values-grid">
@@ -1120,11 +1553,95 @@ function StorySection() {
 }
 
 function DemoSection() {
-  const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState<DemoFormValues>(initialDemoFormValues);
+  const [touched, setTouched] = useState<DemoFormTouched>({});
+  const [errors, setErrors] = useState<DemoFormErrors>({});
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [submitState, setSubmitState] = useState<DemoSubmitState>({ status: "idle", message: "" });
+  const isSubmitting = submitState.status === "loading";
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const getFieldError = (field: DemoFormField) => (touched[field] || submitAttempted ? errors[field] : undefined);
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const target = event.target;
+    const field = target.name as DemoFormField;
+    const value = target instanceof HTMLInputElement && target.type === "checkbox" ? target.checked : target.value;
+    const nextForm = { ...form, [field]: value };
+
+    setForm(nextForm);
+
+    if (submitAttempted || touched[field]) {
+      setErrors(validateDemoForm(nextForm));
+    }
+
+    if (submitState.status !== "idle" && submitState.status !== "loading") {
+      setSubmitState({ status: "idle", message: "" });
+    }
+  };
+
+  const handleBlur = (event: FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const field = event.target.name as DemoFormField;
+
+    setTouched((currentTouched) => ({ ...currentTouched, [field]: true }));
+    setErrors(validateDemoForm(form));
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSubmitted(true);
+    const normalizedForm = normalizeDemoForm(form);
+    const validationErrors = validateDemoForm(normalizedForm);
+    const firstInvalidField = getFirstDemoFormError(validationErrors);
+
+    setSubmitAttempted(true);
+    setTouched(Object.fromEntries(demoFormFieldOrder.map((field) => [field, true])) as DemoFormTouched);
+    setErrors(validationErrors);
+
+    if (firstInvalidField) {
+      setSubmitState({ status: "error", message: "Please fix the highlighted fields before submitting." });
+      focusDemoFormField(firstInvalidField);
+      return;
+    }
+
+    setSubmitState({ status: "loading", message: "Submitting..." });
+
+    try {
+      const response = await fetch("/api/demo-requests", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(normalizedForm)
+      });
+
+      if (!response.ok) {
+        const body = (await response.json().catch(() => null)) as DemoErrorResponse | null;
+        const serverErrors = mapServerErrors(body?.errors);
+        const firstServerError = getFirstDemoFormError(serverErrors);
+
+        if (firstServerError) {
+          setErrors(serverErrors);
+          setSubmitState({ status: "error", message: body?.message || "Please check the highlighted fields." });
+          focusDemoFormField(firstServerError);
+          return;
+        }
+
+        throw new Error(body?.message || "The request could not be submitted.");
+      }
+
+      setForm(initialDemoFormValues);
+      setTouched({});
+      setErrors({});
+      setSubmitAttempted(false);
+      setSubmitState({
+        status: "success",
+        message: "Your request was received. Innobridge will follow up with demo scheduling details."
+      });
+    } catch (error) {
+      setSubmitState({
+        status: "error",
+        message: error instanceof Error ? error.message : "The request could not be submitted."
+      });
+    }
   };
 
   return (
@@ -1134,11 +1651,11 @@ function DemoSection() {
           <div className="eyebrow">Book a demo</div>
           <h2 id="demoTitle">Start with a legal workflow fit assessment.</h2>
           <p className="lead">
-            A solutions expert can show how SmartConveyance fits your file types, team structure, and current conveyancing
+            A solutions expert can show how SmartConveyance fits your practice, team structure, and current conveyancing
             process.
           </p>
           <div className="demo-benefits">
-            {["Personalized 15-minute walkthrough", "No contract, pay per matter", "Same-day onboarding path", "360° support from day one"].map((benefit) => (
+            {["Personalized 15-minute walkthrough", "No contract, pay per case", "Same-day onboarding path", "Ongoing 360° support from day one"].map((benefit) => (
               <div key={benefit}>
                 <i />
                 {benefit}
@@ -1147,31 +1664,109 @@ function DemoSection() {
           </div>
         </Reveal>
         <Reveal className="demo-card">
-          <form className="demo-form" id="demoForm" onSubmit={handleSubmit}>
+          <form className="demo-form" id="demoForm" onSubmit={handleSubmit} noValidate aria-busy={isSubmitting}>
             <div className="form-row">
               <div className="field">
                 <label htmlFor="firstName">First name</label>
-                <input id="firstName" name="firstName" autoComplete="given-name" required placeholder="Jane" />
+                <input
+                  id="firstName"
+                  name="firstName"
+                  autoComplete="given-name"
+                  maxLength={80}
+                  required
+                  placeholder="Jane"
+                  value={form.firstName}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  aria-invalid={Boolean(getFieldError("firstName"))}
+                  aria-describedby={getFieldError("firstName") ? "firstNameError" : undefined}
+                />
+                {getFieldError("firstName") ? <span className="field-error" id="firstNameError">{getFieldError("firstName")}</span> : null}
               </div>
               <div className="field">
                 <label htmlFor="lastName">Last name</label>
-                <input id="lastName" name="lastName" autoComplete="family-name" required placeholder="Smith" />
+                <input
+                  id="lastName"
+                  name="lastName"
+                  autoComplete="family-name"
+                  maxLength={80}
+                  required
+                  placeholder="Smith"
+                  value={form.lastName}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  aria-invalid={Boolean(getFieldError("lastName"))}
+                  aria-describedby={getFieldError("lastName") ? "lastNameError" : undefined}
+                />
+                {getFieldError("lastName") ? <span className="field-error" id="lastNameError">{getFieldError("lastName")}</span> : null}
               </div>
             </div>
             <div className="form-row">
               <div className="field">
-                <label htmlFor="firm">Firm name</label>
-                <input id="firm" name="firm" required placeholder="Smith & Associates LLP" />
+                <label htmlFor="firmName">Firm name</label>
+                <input
+                  id="firmName"
+                  name="firmName"
+                  autoComplete="organization"
+                  maxLength={160}
+                  required
+                  placeholder="Smith & Associates LLP"
+                  value={form.firmName}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  aria-invalid={Boolean(getFieldError("firmName"))}
+                  aria-describedby={getFieldError("firmName") ? "firmNameError" : undefined}
+                />
+                {getFieldError("firmName") ? <span className="field-error" id="firmNameError">{getFieldError("firmName")}</span> : null}
               </div>
               <div className="field">
                 <label htmlFor="email">Work email</label>
-                <input id="email" name="email" autoComplete="email" required type="email" placeholder="jane@firm.ca" />
+                <input
+                  id="email"
+                  name="email"
+                  autoComplete="email"
+                  maxLength={180}
+                  required
+                  type="email"
+                  placeholder="jane@firm.ca"
+                  value={form.email}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  aria-invalid={Boolean(getFieldError("email"))}
+                  aria-describedby={getFieldError("email") ? "emailError" : undefined}
+                />
+                {getFieldError("email") ? <span className="field-error" id="emailError">{getFieldError("email")}</span> : null}
               </div>
             </div>
             <div className="form-row">
               <div className="field">
+                <label htmlFor="phone">Phone <span>(optional)</span></label>
+                <input
+                  id="phone"
+                  name="phone"
+                  autoComplete="tel"
+                  maxLength={40}
+                  type="tel"
+                  placeholder="+1 (604) 000-0000"
+                  value={form.phone}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  aria-invalid={Boolean(getFieldError("phone"))}
+                  aria-describedby={getFieldError("phone") ? "phoneError" : undefined}
+                />
+                {getFieldError("phone") ? <span className="field-error" id="phoneError">{getFieldError("phone")}</span> : null}
+              </div>
+              <div className="field">
                 <label htmlFor="role">Your role</label>
-                <select id="role" name="role">
+                <select
+                  id="role"
+                  name="role"
+                  value={form.role}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  aria-invalid={Boolean(getFieldError("role"))}
+                  aria-describedby={getFieldError("role") ? "roleError" : undefined}
+                >
                   <option value="">Select role</option>
                   <option>Lawyer / Partner</option>
                   <option>Conveyancer</option>
@@ -1179,10 +1774,21 @@ function DemoSection() {
                   <option>Paralegal</option>
                   <option>Firm Owner / Administrator</option>
                 </select>
+                {getFieldError("role") ? <span className="field-error" id="roleError">{getFieldError("role")}</span> : null}
               </div>
+            </div>
+            <div className="form-row">
               <div className="field">
-                <label htmlFor="volume">Monthly matter volume</label>
-                <select id="volume" name="volume">
+                <label htmlFor="caseload">Monthly matter volume</label>
+                <select
+                  id="caseload"
+                  name="caseload"
+                  value={form.caseload}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  aria-invalid={Boolean(getFieldError("caseload"))}
+                  aria-describedby={getFieldError("caseload") ? "caseloadError" : undefined}
+                >
                   <option value="">Select volume</option>
                   <option>1-10</option>
                   <option>11-30</option>
@@ -1190,25 +1796,53 @@ function DemoSection() {
                   <option>61-100</option>
                   <option>100+</option>
                 </select>
+                {getFieldError("caseload") ? <span className="field-error" id="caseloadError">{getFieldError("caseload")}</span> : null}
               </div>
             </div>
             <div className="field">
-              <label htmlFor="message">What should the demo focus on?</label>
-              <textarea id="message" name="message" placeholder="LTSA workflow, document generation, team collaboration..." />
+              <label htmlFor="message">What should the demo focus on? <span>(optional)</span></label>
+              <textarea
+                id="message"
+                name="message"
+                maxLength={1200}
+                placeholder="LTSA workflow, document generation, team collaboration..."
+                value={form.message}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                aria-invalid={Boolean(getFieldError("message"))}
+                aria-describedby={getFieldError("message") ? "messageError messageMeta" : "messageMeta"}
+              />
+              <span className="field-meta" id="messageMeta">{form.message.length}/1200 characters</span>
+              {getFieldError("message") ? <span className="field-error" id="messageError">{getFieldError("message")}</span> : null}
             </div>
-            <label className="checkbox">
-              <input type="checkbox" required />{" "}
+            <label className={`checkbox${getFieldError("consent") ? " checkbox-error" : ""}`}>
+              <input
+                id="consent"
+                name="consent"
+                type="checkbox"
+                checked={form.consent}
+                required
+                onBlur={handleBlur}
+                onChange={handleChange}
+                aria-invalid={Boolean(getFieldError("consent"))}
+                aria-describedby={getFieldError("consent") ? "consentError" : undefined}
+              />{" "}
               <span>
                 I agree to be contacted by Innobridge about SmartConveyance. We respect your privacy and will never share
                 your information.
               </span>
             </label>
-            <button className="btn btn-primary" type="submit">
-              Book your demo today
+            {getFieldError("consent") ? <span className="field-error checkbox-field-error" id="consentError">{getFieldError("consent")}</span> : null}
+            <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Submitting..." : "Book your demo today"}
             </button>
-            <div className={`form-note${submitted ? " show" : ""}`} id="formNote" aria-live="polite">
-              Thanks. This front-end prototype captured the request locally. Connect this form to your CRM or email service
-              before production.
+            <div
+              className={`form-note form-note--${submitState.status}${submitState.status !== "idle" ? " show" : ""}`}
+              id="formNote"
+              aria-live="polite"
+              role={submitState.status === "error" ? "alert" : "status"}
+            >
+              {submitState.message}
             </div>
           </form>
         </Reveal>
@@ -1218,35 +1852,68 @@ function DemoSection() {
 }
 
 function FaqSection() {
-  const [openIndex, setOpenIndex] = useState(0);
+  const [openFaqId, setOpenFaqId] = useState("faq-0-0");
 
   return (
     <section className="section section-tight" id="faq" aria-labelledby="faqTitle">
       <div className="container faq-wrap">
-        <Reveal>
+        <Reveal className="faq-intro">
           <div className="eyebrow">FAQ</div>
           <h2 id="faqTitle">Common questions.</h2>
-          <p className="lead">Clear answers reduce friction and help buyers understand fit before they book.</p>
+          <p className="lead">
+            Practical answers from the Innobridge FAQ, arranged for teams comparing fit, rollout, security, and support.
+          </p>
+          <div className="faq-summary">
+            <span>{faqCount} answers</span>
+            <strong>Need something specific?</strong>
+            <p>Reach support directly or book a guided workflow assessment with the SmartConveyance team.</p>
+            <div className="faq-summary-actions">
+              <a className="btn btn-primary" href="#demo">Book a Demo</a>
+              <a className="btn btn-subtle" href="mailto:support@innobridge.ca">Email support</a>
+            </div>
+          </div>
         </Reveal>
         <Reveal className="faq-list">
-          {faqs.map((faq, index) => {
-            const isOpen = openIndex === index;
-
-            return (
-              <div className={`faq-item${isOpen ? " open" : ""}`} key={faq.question}>
-                <button
-                  className="faq-q"
-                  type="button"
-                  aria-expanded={isOpen}
-                  onClick={() => setOpenIndex(isOpen ? -1 : index)}
-                >
-                  {faq.question}
-                  <span>+</span>
-                </button>
-                <div className="faq-a">{faq.answer}</div>
+          {faqGroups.map((group, groupIndex) => (
+            <div className="faq-group" key={group.title}>
+              <div className="faq-group-head">
+                <div>
+                  <span>{String(groupIndex + 1).padStart(2, "0")}</span>
+                  <strong>{group.title}</strong>
+                </div>
+                <p>{group.description}</p>
               </div>
-            );
-          })}
+              <div className="faq-items">
+                {group.items.map((faq, itemIndex) => {
+                  const faqId = `faq-${groupIndex}-${itemIndex}`;
+                  const panelId = `${faqId}-panel`;
+                  const isOpen = openFaqId === faqId;
+
+                  return (
+                    <div className={`faq-item${isOpen ? " open" : ""}`} key={faq.question}>
+                      <button
+                        className="faq-q"
+                        type="button"
+                        aria-expanded={isOpen}
+                        aria-controls={panelId}
+                        onClick={() => setOpenFaqId(isOpen ? "" : faqId)}
+                      >
+                        {faq.question}
+                        <span aria-hidden="true">+</span>
+                      </button>
+                      <div className="faq-a" id={panelId}>
+                        <div>
+                          {faq.answer.map((paragraph) => (
+                            <p key={paragraph}>{paragraph}</p>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </Reveal>
       </div>
     </section>
@@ -1262,14 +1929,7 @@ function SiteFooter() {
             <a href="#top" aria-label="SmartConveyance by Innobridge home">
               <Brand variant="light" />
             </a>
-            <p>Technology that Speaks Legal. Built for conveyancing teams that need clarity, speed, and control.</p>
-            <div className="support-footer-box">
-              <strong>360° support</strong>
-              <span>
-                Phone, email, Zoom, embedded guides, webinars, and one-on-one expert training from onboarding to daily
-                management.
-              </span>
-            </div>
+            <p>Technology that Speaks Legal. Built for conveyancing teams that need precision, speed, and control.</p>
           </div>
           <div>
             <h4>Product</h4>
@@ -1286,7 +1946,7 @@ function SiteFooter() {
             <a href="#demo">Book a Demo</a>
           </div>
           <div>
-            <h4>Contact</h4>
+            <h4>360° Support</h4>
             <a href="mailto:support@innobridge.ca">support@innobridge.ca</a>
             <a href="tel:+18882669010">+1 (888) 266-9010</a>
             <a href="https://smartconveyance.innobridge.ca/">Sign in</a>
@@ -1315,10 +1975,10 @@ export function SmartConveyanceLanding() {
         <ProductSection />
         <FeaturesSection />
         <OutcomesSection />
+        <TestimonialsSection />
         <SupportSection />
         <PricingSection />
         <RoiSection />
-        <TestimonialsSection />
         <StorySection />
         <DemoSection />
         <FaqSection />

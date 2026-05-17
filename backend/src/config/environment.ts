@@ -6,7 +6,12 @@ const environmentSchema = z.object({
   HOST: z.string().default("0.0.0.0"),
   PORT: z.coerce.number().int().positive().default(4000),
   CORS_ORIGIN: z.string().default("http://localhost:5173"),
-  DEMO_REQUEST_LOG_PATH: z.string().default("storage/demo-requests.jsonl"),
+  MYSQL_HOST: z.string().default("127.0.0.1"),
+  MYSQL_PORT: z.coerce.number().int().positive().default(3306),
+  MYSQL_DATABASE: z.string().default("smartsuite"),
+  MYSQL_USER: z.string().default("smartsuite"),
+  MYSQL_PASSWORD: z.string().default("smartsuite_password"),
+  MYSQL_CONNECTION_LIMIT: z.coerce.number().int().positive().default(10),
   RATE_LIMIT_MAX: z.coerce.number().int().positive().default(80),
   RATE_LIMIT_WINDOW: z.string().default("1 minute")
 });
