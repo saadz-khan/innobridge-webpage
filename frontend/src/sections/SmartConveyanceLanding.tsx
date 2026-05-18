@@ -7,7 +7,6 @@ import {
   BarChart3,
   BookOpen,
   CheckCircle2,
-  CirclePlay,
   Clock3,
   DollarSign,
   FileText,
@@ -52,9 +51,14 @@ type RoiBubble = IconCard & {
 
 type ProductStage = {
   title: string;
-  tabCopy: string;
   headerCopy: string;
   status: string;
+};
+
+type IntegrationLogo = {
+  name: string;
+  description: string;
+  logo: string;
 };
 
 type FaqItem = {
@@ -388,11 +392,11 @@ const proofPills: IconCard[] = [
 
 const metrics = [
   {
-    value: "$150+",
-    label: "Potential savings per matter through reduced admin time."
+    value: "$105K/year",
+    label: "Potential savings for typical law firm through reduced software cost and admin time."
   },
   {
-    value: "~1.5h",
+    value: "<1h",
     label: "Estimated staff time per file after workflow automation."
   },
   {
@@ -431,27 +435,41 @@ const painCards: IconCard[] = [
 const productStages: ProductStage[] = [
   {
     title: "Create New Case",
-    tabCopy: "Start with the required file details, then lock the matter foundation before automation begins.",
-    headerCopy: "A polished case-start screen inspired by the real SmartConveyance setup flow.",
+    headerCopy: "Simplified file automation offers only case-relevant details, allowing for a concise and focused layout that offers feasibility with simplified design and minimal setup.",
     status: "Case foundation"
   },
   {
     title: "Data Import",
-    tabCopy: "Select a document type, upload the source file, and prepare extracted data for review.",
-    headerCopy: "Document selection and consent are designed as a guided, low-friction intake step.",
+    headerCopy: "Auto-data import directly populates case details from contract, commission report, tax certificate, and more, eliminating re-keying and errors.",
     status: "AI assisted"
   },
   {
     title: "Review & Adjust",
-    tabCopy: "Review key details and adjust only the items that need attention.",
-    headerCopy: "Focus attention where judgment is needed.",
+    headerCopy: "Maintain full control by reviewing key details and updating only as needed. Open files anytime to continue editing or to upload more documents.",
     status: "Counsel visible"
   },
   {
-    title: "Generate & File",
-    tabCopy: "Generate only the files needed by the case, then move into integrations.",
-    headerCopy: "Files, title search, insurance ordering, and web filing support.",
+    title: "More Automation",
+    headerCopy: "One-click file generation smartly recognizes cases and generates only files needed by the case. Third-party integration further automates title search, insurance ordering, and web filing.",
     status: "Filing ready"
+  }
+];
+
+const integrationLogos: IntegrationLogo[] = [
+  {
+    name: "LTSA",
+    description: "Web filing",
+    logo: "/integrations/ltsa-logo.svg"
+  },
+  {
+    name: "FCT",
+    description: "Title insurance",
+    logo: "/integrations/fct-logo.svg"
+  },
+  {
+    name: "Stripe",
+    description: "Payments",
+    logo: "/integrations/stripe-logo.svg"
   }
 ];
 
@@ -567,23 +585,23 @@ const pricingPlans = [
 
 const roiBubbles: RoiBubble[] = [
   {
-    value: "$65-351",
-    metric: { end: 65, finalLabel: "$65-351", prefix: "$", rangeEnd: 351 },
+    value: "Save $65-351",
+    metric: { end: 65, finalLabel: "Save $65-351", prefix: "$", rangeEnd: 351 },
     title: "per case",
     description: "Save $65-351/case using SmartConveyance compared to others.",
     icon: DollarSign,
     tone: "green"
   },
   {
-    value: "$105,300",
-    metric: { end: 105300, finalLabel: "$105,300", prefix: "$" },
+    value: "Save $105,300",
+    metric: { end: 105300, finalLabel: "Save $105,300", prefix: "$" },
     title: "per year",
     description: "Save up to $105,300/year for a typical firm processing 300+ cases per year.",
     icon: BarChart3
   },
   {
-    value: "4h",
-    metric: { end: 4, finalLabel: "4h", suffix: "h" },
+    value: "Save 4h",
+    metric: { end: 4, finalLabel: "Save 4h", suffix: "h" },
     title: "per case",
     description: "Save up to 4 hours/case operation time, freeing legal professionals for higher-value work.",
     icon: Clock3
@@ -1126,6 +1144,16 @@ function ProblemSection() {
             <strong>Context Tax</strong>
             <span>The invisible cost of disconnected legal work.</span>
           </div>
+          <div className="context-integration-card" aria-label="SmartConveyance ecosystem integrations">
+            <span>Connected ecosystem</span>
+            <div className="context-logo-row">
+              {integrationLogos.map((integration) => (
+                <div className={`context-logo-pill ${integration.name.toLowerCase()}`} key={integration.name}>
+                  <img src={integration.logo} alt={`${integration.name} logo`} loading="lazy" />
+                </div>
+              ))}
+            </div>
+          </div>
         </Reveal>
 
         <div className="problem-cards">
@@ -1256,13 +1284,23 @@ function StageFour() {
   ];
 
   return (
-    <div className="automation-grid">
-      {rows.map(([title, copy]) => (
-        <div className="automation-card" key={title}>
-          <strong>{title}</strong>
-          <span>{copy}</span>
-        </div>
-      ))}
+    <div className="automation-preview">
+      <div className="automation-integrations" aria-label="Connected automation partners">
+        {integrationLogos.map((integration) => (
+          <div className={`integration-logo-card ${integration.name.toLowerCase()}`} key={integration.name}>
+            <img src={integration.logo} alt={`${integration.name} logo`} loading="lazy" />
+            <span>{integration.description}</span>
+          </div>
+        ))}
+      </div>
+      <div className="automation-grid">
+        {rows.map(([title, copy]) => (
+          <div className="automation-card" key={title}>
+            <strong>{title}</strong>
+            <span>{copy}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -1322,10 +1360,7 @@ function ProductSection() {
                 onClick={() => setActiveStage(index)}
               >
                 <span className="tab-num">{index + 1}</span>
-                <span>
-                  <strong>{stage.title}</strong>
-                  <span>{stage.tabCopy}</span>
-                </span>
+                <strong className="tab-title">{stage.title}</strong>
               </button>
             ))}
           </div>
@@ -1578,38 +1613,8 @@ function RoiSection() {
     <section className="section section-dark roi-decision-section" id="roi" aria-labelledby="roiTitle">
       <div className="container">
         <Reveal className="section-head center roi-decision-head">
-          <div className="eyebrow eyebrow-light">Financial Impact</div>
-          <h2 id="roiTitle">The numbers that move decisions.</h2>
-          <p className="lead">
-            From time saved per file to annualized firm savings - a clear, side-by-side operating comparison built for
-            partners, administrators, and decision-makers.
-          </p>
-        </Reveal>
-
-        <Reveal className="time-compare-block">
-          <div className="compare-top">
-            <div className="compare-eyebrow">
-              <span className="compare-dot" />
-              Staff time per file
-            </div>
-            <div className="compare-pill">~75% less time per case</div>
-          </div>
-          <div className="time-bars">
-            <div className="time-bar-row">
-              <div className="time-bar-name">Legacy Manual Process</div>
-              <div className="time-bar-track">
-                <div className="time-bar-fill bar-legacy" />
-              </div>
-              <div className="time-bar-val tv-legacy">4-6 hours</div>
-            </div>
-            <div className="time-bar-row">
-              <div className="time-bar-name">SmartConveyance</div>
-              <div className="time-bar-track">
-                <div className="time-bar-fill bar-smart" />
-              </div>
-              <div className="time-bar-val tv-smart">~1.5 hours</div>
-            </div>
-          </div>
+          <div className="eyebrow eyebrow-light">Impact</div>
+          <h2 id="roiTitle">Smart choice that empower your growth.</h2>
         </Reveal>
 
         <Reveal className="fin-table-card">
@@ -1618,7 +1623,7 @@ function RoiSection() {
               <thead>
                 <tr>
                   <th>Metric (Per Case)</th>
-                  <th className="col-legacy">Legacy Manual Process</th>
+                  <th className="col-legacy">Legacy Digital Conveyancing</th>
                   <th className="col-smart">
                     <span className="fin-head-smart">
                       <span className="fin-check">✓</span>
