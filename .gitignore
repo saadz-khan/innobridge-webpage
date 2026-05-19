@@ -12,6 +12,10 @@ coverage/
 *.tsbuildinfo
 One-pagers/
 Primary Logos/
-frontend/public/brand/
+frontend/public/brand/*
+!frontend/public/brand/innobridge-primary-light.png
+!frontend/public/brand/smartconveyance-icon-dark.png
+!frontend/public/brand/smartconveyance-primary-dark.png
+!frontend/public/brand/smartconveyance-primary-light.png
 backend/storage/*.jsonl
 frontend/.vite/

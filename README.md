@@ -26,13 +26,32 @@ Frontend runs at `http://localhost:5173` and proxies `/api` to the backend at `h
 
 ## Brand Assets
 
-Large source assets and logo files are intentionally not tracked in git. Keep them locally in:
+Large source files are intentionally not tracked in git. Keep editable/source assets locally in:
 
 - `Primary Logos/`
 - `One-pagers/`
-- `frontend/public/brand/`
 
-The frontend expects the runtime logo files in `frontend/public/brand/` when previewing or building the site.
+Optimized runtime logo files needed by the deployed frontend are tracked in `frontend/public/brand/`.
+
+## Static Preview Deployment
+
+The frontend can be deployed without the backend for colleague review. In static preview mode the demo form still validates, but it does not submit to MySQL.
+
+### GitHub Pages
+
+The workflow in `.github/workflows/deploy-frontend-pages.yml` builds only the frontend and publishes `frontend/dist`.
+
+Expected Pages URL after the workflow runs:
+
+```text
+https://saadz-khan.github.io/innobridge-webpage/
+```
+
+In GitHub, set **Settings → Pages → Build and deployment → Source** to **GitHub Actions**. Then push `main` or `smartconveyance-enhanced-implementation`, or run the workflow manually.
+
+### Netlify
+
+The `netlify.toml` file is configured for a free Netlify static deploy. Connect the GitHub repository in Netlify and use the default settings from the file.
 
 ## Docker
 

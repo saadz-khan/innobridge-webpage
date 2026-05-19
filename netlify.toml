@@ -1,0 +1,13 @@
+[build]
+  command = "npm ci && npm run build --workspace frontend"
+  publish = "frontend/dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+  VITE_DEMO_FORM_MODE = "static"
+  VITE_APP_BASE_PATH = "/"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

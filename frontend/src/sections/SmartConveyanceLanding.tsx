@@ -99,6 +99,11 @@ type DemoErrorResponse = {
   errors?: Partial<Record<DemoFormField, string[]>>;
 };
 
+const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
+const demoFormMode = import.meta.env.VITE_DEMO_FORM_MODE || "api";
+const isStaticDemoMode = demoFormMode === "static";
+const staticDemoStorageKey = "smartconveyance-demo-preview-requests";
+
 const initialDemoFormValues: DemoFormValues = {
   firstName: "",
   lastName: "",
@@ -125,6 +130,22 @@ const demoFormFieldOrder: DemoFormField[] = [
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phonePattern = /^[+()\d\s.-]{7,40}$/;
+
+function saveStaticDemoRequest(values: DemoFormValues) {
+  try {
+    const existingRequests = window.localStorage.getItem(staticDemoStorageKey);
+    const requests = existingRequests ? (JSON.parse(existingRequests) as unknown[]) : [];
+
+    requests.push({
+      ...values,
+      submittedAt: new Date().toISOString()
+    });
+
+    window.localStorage.setItem(staticDemoStorageKey, JSON.stringify(requests.slice(-25)));
+  } catch {
+    // Static previews should keep the form flow working even when localStorage is unavailable.
+  }
+}
 
 function normalizeDemoForm(values: DemoFormValues): DemoFormValues {
   return {
@@ -463,17 +484,17 @@ const integrationLogos: IntegrationLogo[] = [
   {
     name: "LTSA",
     description: "Web filing",
-    logo: "/integrations/ltsa-logo.svg"
+    logo: assetPath("/integrations/ltsa-logo.svg")
   },
   {
     name: "FCT",
     description: "Title insurance",
-    logo: "/integrations/fct-logo.svg"
+    logo: assetPath("/integrations/fct-logo.svg")
   },
   {
     name: "Stripe",
     description: "Payments",
-    logo: "/integrations/stripe-logo.svg"
+    logo: assetPath("/integrations/stripe-logo.svg")
   }
 ];
 
@@ -859,7 +880,9 @@ const faqCount = faqGroups.reduce((count, group) => count + group.items.length, 
 
 function Brand({ variant = "color" }: { variant?: "color" | "light" }) {
   const logoSrc =
-    variant === "light" ? "/brand/smartconveyance-primary-light.png" : "/brand/smartconveyance-primary-dark.png";
+    variant === "light"
+      ? assetPath("/brand/smartconveyance-primary-light.png")
+      : assetPath("/brand/smartconveyance-primary-dark.png");
 
   return (
     <span className="brand">
@@ -1031,7 +1054,7 @@ function HeroPortalPreview() {
         <aside className="portal-preview-sidebar">
           <div className="portal-preview-logo">
             <img
-              src="/brand/smartconveyance-primary-dark.png"
+              src={assetPath("/brand/smartconveyance-primary-dark.png")}
               alt="SmartConveyance"
               decoding="async"
             />
@@ -1945,7 +1968,7 @@ function StorySection() {
         <Reveal className="story-card">
           <img
             className="story-logo"
-            src="/brand/innobridge-primary-light.png"
+            src={assetPath("/brand/innobridge-primary-light.png")}
             alt="Innobridge"
             decoding="async"
           />
@@ -2028,6 +2051,20 @@ function DemoSection() {
     }
 
     setSubmitState({ status: "loading", message: "Submitting..." });
+
+    if (isStaticDemoMode) {
+      await new Promise((resolve) => window.setTimeout(resolve, 550));
+      saveStaticDemoRequest(normalizedForm);
+      setForm(initialDemoFormValues);
+      setTouched({});
+      setErrors({});
+      setSubmitAttempted(false);
+      setSubmitState({
+        status: "success",
+        message: "Preview mode: your request was validated locally. Connect the backend before launch to save requests to the database."
+      });
+      return;
+    }
 
     try {
       const response = await fetch("/api/demo-requests", {
@@ -2291,7 +2328,7 @@ function FaqSection() {
           <div className="faq-summary">
             <span>{faqCount} answers</span>
             <strong>Need something specific?</strong>
-            <p>Reach support directly or book a guided workflow assessment with the SmartConveyance team.</p>
+            <p>Book a guided workflow assessment with the SmartConveyance team.</p>
             <div className="faq-summary-actions">
               <a className="btn btn-primary" href="#demo">Book a Demo</a>
             </div>
