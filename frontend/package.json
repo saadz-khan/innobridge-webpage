@@ -19,7 +19,10 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "fast-xml-parser": "^5.8.0",
+    "svg-path-bbox": "^2.1.0",
     "typescript": "^5.7.2",
-    "vite": "^6.0.5"
+    "vite": "^6.0.5",
+    "vite-plugin-svgr": "^5.2.0"
   }
 }
