@@ -6,6 +6,7 @@ import {
   BadgeCheck,
   BarChart3,
   BookOpen,
+  ChevronRight,
   CheckCircle2,
   Clock3,
   DollarSign,
@@ -393,6 +394,22 @@ const navLinks = [
   { label: "Pricing", href: "#pricing" },
   { label: "Support", href: "#support" }
 ];
+
+const navSectionTargets = [
+  { sectionId: "problem", navId: "" },
+  { sectionId: "product", navId: "product" },
+  { sectionId: "features", navId: "features" },
+  { sectionId: "outcomes", navId: "" },
+  { sectionId: "testimonials", navId: "" },
+  { sectionId: "support", navId: "support" },
+  { sectionId: "pricing", navId: "pricing" },
+  { sectionId: "roi", navId: "" },
+  { sectionId: "story", navId: "" },
+  { sectionId: "demo", navId: "" },
+  { sectionId: "faq", navId: "" }
+] as const;
+
+const navSectionIdToNavId = new Map<string, string>(navSectionTargets.map(({ sectionId, navId }) => [sectionId, navId]));
 
 const proofPills: IconCard[] = [
   {
@@ -903,28 +920,28 @@ function SiteNav() {
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
-    const sectionIds = navLinks.map((link) => link.href.slice(1));
+    const sectionIds = navSectionTargets.map(({ sectionId }) => sectionId);
     let ticking = false;
 
     const updateScrollState = () => {
       const scrollY = window.scrollY;
       const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const sectionProbe = scrollY + 220;
-      let currentSection = "";
+      const activationLine = Math.min(Math.max(window.innerHeight * 0.34, 280), 420);
+      let currentSectionId = "";
       const sections = sectionIds
         .map((id) => document.getElementById(id))
         .filter((section): section is HTMLElement => Boolean(section))
         .sort((a, b) => a.offsetTop - b.offsetTop);
 
       for (const section of sections) {
-        if (section.offsetTop <= sectionProbe) {
-          currentSection = section.id;
+        if (section.getBoundingClientRect().top <= activationLine) {
+          currentSectionId = section.id;
         }
       }
 
       setScrolled(scrollY > 18);
       setScrollProgress(documentHeight > 0 ? Math.min(scrollY / documentHeight, 1) : 0);
-      setActiveSection(currentSection);
+      setActiveSection(navSectionIdToNavId.get(currentSectionId) ?? "");
       ticking = false;
     };
 
@@ -1001,6 +1018,25 @@ function CardIcon({ icon: Icon, tone }: { icon: LucideIcon; tone?: IconCard["ton
     <div className={`card-icon${tone === "green" ? " green" : ""}${tone === "dark" ? " dark" : ""}`}>
       <Icon className="icon" aria-hidden="true" />
     </div>
+  );
+}
+
+function BridgeIllustration() {
+  return (
+    <svg className="bridge-illustration" viewBox="0 0 320 128" aria-hidden="true" focusable="false">
+      <path className="bridge-deck" d="M22 88H298" />
+      <path className="bridge-base" d="M34 101H286" />
+      <path className="bridge-tower" d="M86 35V113" />
+      <path className="bridge-tower" d="M234 35V113" />
+      <path className="bridge-arch" d="M36 88C70 54 104 50 160 82C216 50 250 54 284 88" />
+      <path className="bridge-cable" d="M86 35C108 72 131 83 160 83C189 83 212 72 234 35" />
+      <path className="bridge-cable" d="M86 35C66 65 48 80 34 88" />
+      <path className="bridge-cable" d="M234 35C254 65 272 80 286 88" />
+      <path className="bridge-rail" d="M22 76H298" />
+      <path className="bridge-posts" d="M55 80V101M86 76V101M117 80V101M148 82V101M172 82V101M203 80V101M234 76V101M265 80V101" />
+      <circle className="bridge-light" cx="86" cy="35" r="6" />
+      <circle className="bridge-light" cx="234" cy="35" r="6" />
+    </svg>
   );
 }
 
@@ -1272,21 +1308,26 @@ function ProblemSection() {
                 <h3>{card.title}</h3>
                 <p>{card.description}</p>
               </div>
+              <ChevronRight className="pain-card-arrow" aria-hidden="true" />
             </Reveal>
           ))}
-          <Reveal className="bridge-card">
-            <div>
-              <h3>The Innobridge Bridge</h3>
-              <p>
-                One legal operating layer that turns matter data into documents, review checkpoints, collaboration, and
-                filing-ready workflows.
-              </p>
-            </div>
-            <a className="btn btn-primary" href="#product">
-              Explore product
-            </a>
-          </Reveal>
         </div>
+
+        <Reveal className="bridge-card">
+          <BridgeIllustration />
+          <div className="bridge-card-copy">
+            <h3>The Innobridge Bridge</h3>
+            <p>
+              One legal operating layer that turns matter data into documents, review checkpoints, collaboration, and
+              filing-ready workflows.
+            </p>
+          </div>
+          <a className="btn btn-primary" href="#product">
+            Explore product
+            <ArrowRight className="icon" aria-hidden="true" />
+          </a>
+        </Reveal>
+
         <div className="why-proof-row" aria-label="SmartConveyance coverage and integrations">
           <Reveal className="context-integration-card why-proof-card">
             <span>Connected ecosystem</span>
@@ -2326,7 +2367,6 @@ function FaqSection() {
             Practical answers from the Innobridge FAQ, arranged for teams comparing fit, rollout, security, and support.
           </p>
           <div className="faq-summary">
-            <span>{faqCount} answers</span>
             <strong>Need something specific?</strong>
             <p>Book a guided workflow assessment with the SmartConveyance team.</p>
             <div className="faq-summary-actions">

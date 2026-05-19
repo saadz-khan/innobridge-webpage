@@ -804,7 +804,7 @@ h4 {
 .portal-preview-shell {
   position: relative;
   display: grid;
-  grid-template-columns: 156px 1fr;
+  grid-template-columns: 180px 1fr;
   grid-template-rows: 54px 1fr;
   min-height: 524px;
   overflow: hidden;
@@ -847,19 +847,21 @@ h4 {
   width: 11px;
   height: 11px;
   border-radius: 999px;
-  box-shadow: 0 0 0 1px rgba(var(--brand-ink-rgb), .05) inset;
+  box-shadow:
+    0 0 0 1px rgba(var(--brand-ink-rgb), .10) inset,
+    0 1px 2px rgba(var(--brand-ink-rgb), .08);
 }
 
 .portal-window-controls span:nth-child(1) {
-  background: var(--blue);
+  background: #ff5f57;
 }
 
 .portal-window-controls span:nth-child(2) {
-  background: var(--green);
+  background: #ffbd2e;
 }
 
 .portal-window-controls span:nth-child(3) {
-  background: var(--border-strong);
+  background: #28c840;
 }
 
 .portal-preview-address {
@@ -927,14 +929,21 @@ h4 {
 .portal-preview-logo {
   display: flex;
   align-items: center;
-  height: 36px;
-  margin-bottom: 10px;
+  min-width: 0;
+  height: 40px;
+  margin-bottom: 12px;
+  padding-inline: 2px;
+  overflow: hidden;
 }
 
 .portal-preview-logo img {
-  width: 128px;
+  display: block;
+  width: 150px;
+  max-width: 100%;
   height: auto;
+  max-height: 32px;
   object-fit: contain;
+  object-position: left center;
 }
 
 .portal-user-card,
@@ -2069,35 +2078,46 @@ h4 {
 
 .problem-layout {
   display: grid;
-  grid-template-columns: .78fr 1.22fr;
-  column-gap: 54px;
-  row-gap: 28px;
-  align-items: start;
+  grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
+  gap: 16px;
+  align-items: stretch;
 }
 
 .sticky-note {
   position: relative;
   top: auto;
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, .74);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .88), rgba(255, 255, 255, .75)),
+    radial-gradient(circle at 92% 10%, rgba(var(--brand-blue-rgb), .08), transparent 28%);
   box-shadow: var(--shadow-sm);
-  padding: 28px;
+  padding: clamp(24px, 3vw, 30px);
   backdrop-filter: blur(18px);
 }
 
 .sticky-note .lead {
+  max-width: 34rem;
   font-size: 1.03rem;
 }
 
 .tax-card {
-  margin-top: 24px;
+  margin-top: auto;
+  min-height: 124px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   border-radius: 22px;
-  background: var(--charcoal-900);
+  background:
+    radial-gradient(circle at 84% 20%, rgba(var(--brand-blue-rgb), .24), transparent 34%),
+    linear-gradient(135deg, var(--charcoal-900), color-mix(in srgb, var(--charcoal-900) 72%, var(--cg-blue)));
   color: var(--white);
-  padding: 22px;
+  padding: 24px 26px;
   overflow: hidden;
   position: relative;
+  box-shadow: 0 18px 44px rgba(23, 29, 26, .16);
 }
 
 .tax-card::before {
@@ -2190,10 +2210,9 @@ h4 {
 .why-proof-row {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
-  gap: 18px;
+  grid-template-columns: minmax(0, .45fr) minmax(0, .55fr);
+  gap: 16px;
   align-items: stretch;
-  margin-top: 12px;
 }
 
 .why-proof-card {
@@ -2202,18 +2221,22 @@ h4 {
 
 .problem-cards {
   display: grid;
-  gap: 14px;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .pain-card {
+  position: relative;
   display: grid;
-  grid-template-columns: 52px 1fr;
-  gap: 18px;
-  align-items: start;
+  grid-template-columns: 72px minmax(0, 1fr) 20px;
+  gap: 20px;
+  align-items: center;
   border: 1px solid var(--border);
   border-radius: 24px;
-  background: rgba(255, 255, 255, .79);
-  padding: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(255, 255, 255, .78)),
+    radial-gradient(circle at 96% 12%, rgba(var(--brand-blue-rgb), .07), transparent 30%);
+  padding: 22px 24px;
   box-shadow: var(--shadow-sm);
   transition: transform .24s var(--ease), border-color .24s var(--ease), box-shadow .24s var(--ease);
 }
@@ -2247,31 +2270,109 @@ h4 {
   border-color: rgba(53, 71, 90, .16);
 }
 
+.pain-card .card-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+}
+
+.pain-card .icon {
+  width: 30px;
+  height: 30px;
+}
+
+.pain-card h3 {
+  margin-bottom: 5px;
+  font-size: clamp(1.16rem, 1.8vw, 1.45rem);
+  letter-spacing: -.04em;
+}
+
 .pain-card p {
-  font-size: .96rem;
-  line-height: 1.62;
+  max-width: 39rem;
+  color: var(--text-muted);
+  font-size: .98rem;
+  line-height: 1.48;
+}
+
+.pain-card-arrow {
+  width: 22px;
+  height: 22px;
+  color: var(--charcoal);
+  opacity: .86;
+  transition: transform .22s var(--ease), color .22s var(--ease);
+}
+
+.pain-card:hover .pain-card-arrow {
+  color: var(--blue);
+  transform: translateX(3px);
 }
 
 .bridge-card {
-  margin-top: 18px;
+  grid-column: 1 / -1;
+  margin-top: 0;
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 18px;
+  grid-template-columns: minmax(230px, .34fr) minmax(0, 1fr) auto;
+  gap: clamp(18px, 3vw, 34px);
   align-items: center;
   border-radius: 28px;
-  background: linear-gradient(135deg, var(--charcoal-800), var(--charcoal));
+  background:
+    radial-gradient(circle at 94% 14%, rgba(var(--brand-blue-rgb), .34), transparent 34%),
+    linear-gradient(135deg, var(--charcoal-900), var(--charcoal-800));
   color: var(--white);
-  padding: 28px;
+  padding: clamp(26px, 3vw, 34px);
   box-shadow: var(--shadow-md);
+  overflow: hidden;
 }
 
 .bridge-card h3 {
   color: var(--white);
   margin-bottom: 8px;
+  font-size: clamp(1.55rem, 2.6vw, 2.15rem);
+  letter-spacing: -.045em;
 }
 
 .bridge-card p {
   color: rgba(255, 255, 255, .66);
+  max-width: 44rem;
+}
+
+.bridge-card .btn {
+  justify-self: end;
+  white-space: nowrap;
+}
+
+.bridge-illustration {
+  width: 100%;
+  min-width: 210px;
+  max-width: 290px;
+  color: var(--blue-600);
+  filter: drop-shadow(0 16px 24px rgba(24, 125, 158, .16));
+}
+
+.bridge-illustration path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.bridge-illustration .bridge-base,
+.bridge-illustration .bridge-deck {
+  stroke-width: 5;
+}
+
+.bridge-illustration .bridge-cable,
+.bridge-illustration .bridge-posts,
+.bridge-illustration .bridge-rail {
+  opacity: .72;
+  stroke-width: 2.5;
+}
+
+.bridge-illustration .bridge-light {
+  fill: var(--white);
+  stroke: rgba(255, 255, 255, .65);
+  stroke-width: 2;
 }
 
 .product-shell {
@@ -5296,6 +5397,39 @@ h4 {
   .integration-logo-card.ltsa img {
     width: 108px;
     height: 38px;
+  }
+
+  .pain-card {
+    grid-template-columns: 58px minmax(0, 1fr) 18px;
+    gap: 16px;
+    align-items: start;
+    padding: 22px 20px;
+  }
+
+  .pain-card .card-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+  }
+
+  .pain-card .icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .pain-card h3 {
+    margin-top: 2px;
+    font-size: 1.08rem;
+    line-height: 1.14;
+  }
+
+  .pain-card p {
+    font-size: .94rem;
+    line-height: 1.5;
+  }
+
+  .pain-card-arrow {
+    align-self: center;
   }
 
   .matter-coverage-card {
