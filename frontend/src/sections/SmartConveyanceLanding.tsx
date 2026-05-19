@@ -2202,7 +2202,7 @@ function DemoSection() {
             </div>
             <div className="form-row">
               <div className="field">
-                <label htmlFor="phone">Phone <span>(optional)</span></label>
+                <label htmlFor="phone">Phone</label>
                 <input
                   id="phone"
                   name="phone"
