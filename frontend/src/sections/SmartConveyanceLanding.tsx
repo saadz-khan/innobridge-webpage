@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { ChangeEvent, FocusEvent, FormEvent } from "react";
+import type { CSSProperties, ChangeEvent, FocusEvent, FormEvent } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
@@ -233,7 +233,8 @@ const premiumSurfaceSelector = [
   ".faq-item",
   ".roi-bubble",
   ".time-compare-block",
-  ".fin-table-card"
+  ".fin-table-card",
+  ".matter-coverage-card"
 ].join(", ");
 
 function usePremiumPointerGlow() {
@@ -455,6 +456,9 @@ const productStages: ProductStage[] = [
   }
 ];
 
+const PRODUCT_STAGE_INTERVAL_MS = 6200;
+const matterCoverage = ["Purchase", "Sale", "Refinance", "Family Transfer"];
+
 const integrationLogos: IntegrationLogo[] = [
   {
     name: "LTSA",
@@ -552,11 +556,102 @@ const supportSteps: IconCard[] = [
   }
 ];
 
-const supportFlowSegments = [
-  "M 82 20 C 100 24 94 29 18 28",
-  "M 18 44 C 0 48 6 53 82 52",
-  "M 82 68 C 100 72 94 77 18 76"
-];
+type FlowPoint = {
+  x: number;
+  y: number;
+};
+
+type SupportFlowRoute = {
+  id: string;
+  d: string;
+};
+
+function clampNumber(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function formatRouteNumber(value: number) {
+  return Number(value.toFixed(1));
+}
+
+function getPointDistance(a: FlowPoint, b: FlowPoint) {
+  return Math.hypot(a.x - b.x, a.y - b.y);
+}
+
+function getRoundedPolylinePath(points: FlowPoint[], cornerRadius: number) {
+  const routePoints = points.filter((point, index) => {
+    const previousPoint = points[index - 1];
+
+    return !previousPoint || getPointDistance(point, previousPoint) > 0.5;
+  });
+
+  if (routePoints.length < 2) {
+    return "";
+  }
+
+  let d = `M ${formatRouteNumber(routePoints[0].x)} ${formatRouteNumber(routePoints[0].y)}`;
+
+  for (let index = 1; index < routePoints.length - 1; index += 1) {
+    const previousPoint = routePoints[index - 1];
+    const currentPoint = routePoints[index];
+    const nextPoint = routePoints[index + 1];
+    const previousDistance = getPointDistance(currentPoint, previousPoint);
+    const nextDistance = getPointDistance(currentPoint, nextPoint);
+    const radius = Math.min(cornerRadius, previousDistance / 2, nextDistance / 2);
+
+    if (radius < 1) {
+      d += ` L ${formatRouteNumber(currentPoint.x)} ${formatRouteNumber(currentPoint.y)}`;
+      continue;
+    }
+
+    const beforeCorner: FlowPoint = {
+      x: currentPoint.x + ((previousPoint.x - currentPoint.x) / previousDistance) * radius,
+      y: currentPoint.y + ((previousPoint.y - currentPoint.y) / previousDistance) * radius
+    };
+
+    const afterCorner: FlowPoint = {
+      x: currentPoint.x + ((nextPoint.x - currentPoint.x) / nextDistance) * radius,
+      y: currentPoint.y + ((nextPoint.y - currentPoint.y) / nextDistance) * radius
+    };
+
+    d += ` L ${formatRouteNumber(beforeCorner.x)} ${formatRouteNumber(beforeCorner.y)}`;
+    d += ` Q ${formatRouteNumber(currentPoint.x)} ${formatRouteNumber(currentPoint.y)} ${formatRouteNumber(afterCorner.x)} ${formatRouteNumber(afterCorner.y)}`;
+  }
+
+  const lastPoint = routePoints[routePoints.length - 1];
+  d += ` L ${formatRouteNumber(lastPoint.x)} ${formatRouteNumber(lastPoint.y)}`;
+
+  return d;
+}
+
+function buildSupportFlowPath(previousRect: DOMRect, nextRect: DOMRect, boardRect: DOMRect) {
+  const portGap = 14;
+  const edgeLane = clampNumber(boardRect.width * 0.032, 16, 24);
+  const start: FlowPoint = {
+    x: clampNumber(previousRect.right - boardRect.left + portGap, 22, boardRect.width - 22),
+    y: previousRect.top - boardRect.top + previousRect.height / 2
+  };
+  const end: FlowPoint = {
+    x: clampNumber(nextRect.left - boardRect.left - portGap, 22, boardRect.width - 22),
+    y: nextRect.top - boardRect.top + nextRect.height / 2
+  };
+  const rightLane = clampNumber(Math.max(boardRect.width - edgeLane, start.x + 10), 22, boardRect.width - 12);
+  const leftLane = clampNumber(Math.min(edgeLane, end.x - 10), 12, boardRect.width - 22);
+  const bridgeY = start.y + (end.y - start.y) / 2;
+  const cornerRadius = clampNumber(Math.abs(end.y - start.y) * 0.18, 18, 28);
+
+  return getRoundedPolylinePath(
+    [
+      start,
+      { x: rightLane, y: start.y },
+      { x: rightLane, y: bridgeY },
+      { x: leftLane, y: bridgeY },
+      { x: leftLane, y: end.y },
+      end
+    ],
+    cornerRadius
+  );
+}
 
 const pricingPlans = [
   {
@@ -586,7 +681,7 @@ const pricingPlans = [
 const roiBubbles: RoiBubble[] = [
   {
     value: "Save $65-351",
-    metric: { end: 65, finalLabel: "Save $65-351", prefix: "$", rangeEnd: 351 },
+    metric: { end: 65, finalLabel: "Save $65-351", prefix: "Save $", rangeEnd: 351 },
     title: "per case",
     description: "Save $65-351/case using SmartConveyance compared to others.",
     icon: DollarSign,
@@ -594,7 +689,7 @@ const roiBubbles: RoiBubble[] = [
   },
   {
     value: "Save $105,300",
-    metric: { end: 105300, finalLabel: "Save $105,300", prefix: "$" },
+    metric: { end: 105300, finalLabel: "Save $105,300", prefix: "Save $" },
     title: "per year",
     description: "Save up to $105,300/year for a typical firm processing 300+ cases per year.",
     icon: BarChart3
@@ -1144,16 +1239,6 @@ function ProblemSection() {
             <strong>Context Tax</strong>
             <span>The invisible cost of disconnected legal work.</span>
           </div>
-          <div className="context-integration-card" aria-label="SmartConveyance ecosystem integrations">
-            <span>Connected ecosystem</span>
-            <div className="context-logo-row">
-              {integrationLogos.map((integration) => (
-                <div className={`context-logo-pill ${integration.name.toLowerCase()}`} key={integration.name}>
-                  <img src={integration.logo} alt={`${integration.name} logo`} loading="lazy" />
-                </div>
-              ))}
-            </div>
-          </div>
         </Reveal>
 
         <div className="problem-cards">
@@ -1177,6 +1262,27 @@ function ProblemSection() {
             <a className="btn btn-primary" href="#product">
               Explore product
             </a>
+          </Reveal>
+        </div>
+        <div className="why-proof-row" aria-label="SmartConveyance coverage and integrations">
+          <Reveal className="context-integration-card why-proof-card">
+            <span>Connected ecosystem</span>
+            <div className="context-logo-row">
+              {integrationLogos.map((integration) => (
+                <div className={`context-logo-pill ${integration.name.toLowerCase()}`} key={integration.name}>
+                  <img src={integration.logo} alt={`${integration.name} logo`} loading="lazy" />
+                </div>
+              ))}
+            </div>
+          </Reveal>
+          <Reveal className="matter-coverage-card problem-coverage-card" delay={90}>
+            <span className="coverage-kicker">Matter coverage</span>
+            <strong>Residential & Commercial</strong>
+            <div className="matter-coverage-list">
+              {matterCoverage.map((matterType) => (
+                <span key={matterType}>{matterType}</span>
+              ))}
+            </div>
           </Reveal>
         </div>
       </div>
@@ -1323,17 +1429,33 @@ function StageContent({ index }: { index: number }) {
           {content[index]}
         </div>
       )}
-      {index > 1 ? (
-        <div className="product-cursor" aria-hidden="true">
-          <span />
-        </div>
-      ) : null}
     </div>
   );
 }
 
 function ProductSection() {
   const [activeStage, setActiveStage] = useState(0);
+  const [cycleNonce, setCycleNonce] = useState(0);
+  const [isStagePaused, setIsStagePaused] = useState(false);
+
+  useEffect(() => {
+    if (isStagePaused) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      setActiveStage((currentStage) => (currentStage + 1) % productStages.length);
+    }, PRODUCT_STAGE_INTERVAL_MS);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [activeStage, cycleNonce, isStagePaused]);
+
+  const selectStage = (index: number) => {
+    setActiveStage(index);
+    setCycleNonce((currentNonce) => currentNonce + 1);
+  };
 
   return (
     <section className="section section-tight" id="product" aria-labelledby="productTitle">
@@ -1346,7 +1468,19 @@ function ProductSection() {
             generates the right files for the matter.
           </p>
         </Reveal>
-        <Reveal className="product-shell">
+        <Reveal
+          className="product-shell"
+          data-paused={isStagePaused ? "true" : "false"}
+          onBlurCapture={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+              setIsStagePaused(false);
+            }
+          }}
+          onFocusCapture={() => setIsStagePaused(true)}
+          onPointerEnter={() => setIsStagePaused(true)}
+          onPointerLeave={() => setIsStagePaused(false)}
+          style={{ "--product-cycle-duration": `${PRODUCT_STAGE_INTERVAL_MS}ms` } as CSSProperties}
+        >
           <div className="tab-list" role="tablist" aria-label="Product workflow">
             {productStages.map((stage, index) => (
               <button
@@ -1357,10 +1491,11 @@ function ProductSection() {
                 aria-controls={`stage${index + 1}`}
                 id={`tab${index + 1}`}
                 key={stage.title}
-                onClick={() => setActiveStage(index)}
+                onClick={() => selectStage(index)}
               >
                 <span className="tab-num">{index + 1}</span>
                 <strong className="tab-title">{stage.title}</strong>
+                <span className="tab-progress" aria-hidden="true" />
               </button>
             ))}
           </div>
@@ -1492,38 +1627,142 @@ function TestimonialsSection() {
 }
 
 function SupportSection() {
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [flowRoutes, setFlowRoutes] = useState<SupportFlowRoute[]>([]);
+  const [flowSize, setFlowSize] = useState({ width: 1, height: 1 });
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    let animationFrame = 0;
+
+    const getCards = () =>
+      cardRefs.current
+        .slice(0, supportSteps.length)
+        .filter((card): card is HTMLDivElement => Boolean(card));
+
+    const calculateFlow = () => {
+      const cards = getCards();
+      const board = cards[0]?.parentElement;
+
+      if (!board || cards.length < 2) {
+        setFlowRoutes([]);
+        return;
+      }
+
+      const boardRect = board.getBoundingClientRect();
+      const nextSize = {
+        width: Math.max(1, Math.round(boardRect.width)),
+        height: Math.max(1, Math.round(boardRect.height))
+      };
+
+      const nextRoutes = cards.slice(0, -1).map((card, index) => ({
+        id: `${supportSteps[index].title}-${supportSteps[index + 1].title}`,
+        d: buildSupportFlowPath(card.getBoundingClientRect(), cards[index + 1].getBoundingClientRect(), boardRect)
+      }));
+
+      setFlowSize((currentSize) =>
+        currentSize.width === nextSize.width && currentSize.height === nextSize.height ? currentSize : nextSize
+      );
+      setFlowRoutes((currentRoutes) =>
+        currentRoutes.length === nextRoutes.length &&
+        currentRoutes.every((route, index) => route.d === nextRoutes[index].d)
+          ? currentRoutes
+          : nextRoutes
+      );
+    };
+
+    const scheduleCalculation = () => {
+      window.cancelAnimationFrame(animationFrame);
+      animationFrame = window.requestAnimationFrame(calculateFlow);
+    };
+
+    scheduleCalculation();
+
+    const cards = getCards();
+    const board = cards[0]?.parentElement;
+    const resizeObserver =
+      "ResizeObserver" in window
+        ? new ResizeObserver(scheduleCalculation)
+        : undefined;
+
+    if (resizeObserver) {
+      if (board) {
+        resizeObserver.observe(board);
+      }
+
+      cards.forEach((card) => resizeObserver.observe(card));
+    }
+
+    window.addEventListener("resize", scheduleCalculation, { passive: true });
+    window.addEventListener("orientationchange", scheduleCalculation);
+
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      resizeObserver?.disconnect();
+      window.removeEventListener("resize", scheduleCalculation);
+      window.removeEventListener("orientationchange", scheduleCalculation);
+    };
+  }, []);
+
   return (
     <section className="section" id="support" aria-labelledby="supportTitle">
       <div className="container onboarding-wrap">
         <Reveal className="flow-board" aria-label="Onboarding flow">
-          <svg className="flow-route" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <svg
+            className="flow-route"
+            viewBox={`0 0 ${flowSize.width} ${flowSize.height}`}
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
             <defs>
               <linearGradient id="supportRouteGradient" x1="0" x2="1" y1="0" y2="1">
                 <stop offset="0%" stopColor="#171D1A" />
                 <stop offset="55%" stopColor="#187D9E" />
-                <stop offset="100%" stopColor="#187D9E" />
+                <stop offset="100%" stopColor="#90A668" />
               </linearGradient>
-              <marker id="supportRouteArrow" markerHeight="5.5" markerWidth="5.5" orient="auto" refX="4.8" refY="2.75">
-                <path d="M .6 .6 L 5 2.75 L .6 4.9 Z" fill="#171D1A" />
+              <marker
+                id="supportRouteArrow"
+                markerWidth="12"
+                markerHeight="12"
+                refX="10.5"
+                refY="6"
+                orient="auto"
+                markerUnits="userSpaceOnUse"
+              >
+                <path className="flow-route-arrow-head" d="M 1.5 1.5 L 10.5 6 L 1.5 10.5 Z" />
               </marker>
             </defs>
-            {supportFlowSegments.map((segment, index) => (
-              <g className="flow-route-segment" key={segment}>
-                <path className="flow-route-glow" d={segment} vectorEffect="non-scaling-stroke" />
+            {flowRoutes.map((route, index) => (
+              <g className="flow-route-segment" key={route.id}>
+                <path className="flow-route-glow" d={route.d} vectorEffect="non-scaling-stroke" />
                 <path
                   className="flow-route-track"
-                  d={segment}
+                  d={route.d}
+                  stroke="url(#supportRouteGradient)"
                   markerEnd="url(#supportRouteArrow)"
                   vectorEffect="non-scaling-stroke"
                 />
                 <path
                   className="flow-route-motion"
-                  d={segment}
+                  d={route.d}
+                  pathLength={1}
+                  stroke="url(#supportRouteGradient)"
                   vectorEffect="non-scaling-stroke"
                   style={{ animationDelay: `${index * 0.34}s` }}
                 />
-                <circle className="flow-route-dot" r=".95">
-                  <animateMotion begin={`${index * 0.5}s`} dur="3.8s" path={segment} repeatCount="indefinite" />
+                <circle className="flow-route-dot" r="4">
+                  <animate
+                    attributeName="opacity"
+                    begin={`${index * 0.42}s`}
+                    dur="3.8s"
+                    keyTimes="0;0.14;0.82;1"
+                    repeatCount="indefinite"
+                    values="0;1;1;0"
+                  />
+                  <animateMotion begin={`${index * 0.42}s`} dur="3.8s" path={route.d} repeatCount="indefinite" />
                 </circle>
               </g>
             ))}
@@ -1532,7 +1771,13 @@ function SupportSection() {
             const Icon = step.icon;
 
             return (
-              <div className={`flow-card flow-card-${index + 1}`} key={step.title}>
+              <div
+                className={`flow-card flow-card-${index + 1}`}
+                key={step.title}
+                ref={(element) => {
+                  cardRefs.current[index] = element;
+                }}
+              >
                 <CardIcon icon={Icon} tone={step.tone} />
                 <div>
                   <strong>{step.title}</strong>
@@ -1642,18 +1887,18 @@ function RoiSection() {
                   <th scope="row">
                     Labour Cost <small>at $45 / hr</small>
                   </th>
-                  <td className="col-legacy">$180-270</td>
-                  <td className="col-smart">$67.50</td>
+                  <td className="col-legacy">$90-225</td>
+                  <td className="col-smart">Less than $45</td>
                 </tr>
                 <tr>
-                  <th scope="row">Software / Filing Fees</th>
-                  <td className="col-legacy">$150-400</td>
-                  <td className="col-smart">$79.00</td>
+                  <th scope="row">Software Fees</th>
+                  <td className="col-legacy">$99-$250 + contract and hidden fees</td>
+                  <td className="col-smart">$79.00 no contract, no hidden fees</td>
                 </tr>
                 <tr className="fin-total">
                   <th scope="row">Total Cost / Case</th>
-                  <td className="col-legacy">$333-670</td>
-                  <td className="col-smart">$146.50</td>
+                  <td className="col-legacy">$189-475</td>
+                  <td className="col-smart">$124</td>
                 </tr>
               </tbody>
             </table>
@@ -2049,7 +2294,6 @@ function FaqSection() {
             <p>Reach support directly or book a guided workflow assessment with the SmartConveyance team.</p>
             <div className="faq-summary-actions">
               <a className="btn btn-primary" href="#demo">Book a Demo</a>
-              <a className="btn btn-subtle" href="mailto:support@innobridge.ca">Email support</a>
             </div>
           </div>
         </Reveal>
