@@ -100,7 +100,7 @@ type DemoErrorResponse = {
 };
 
 const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
-const demoFormMode = import.meta.env.VITE_DEMO_FORM_MODE || "api";
+const demoFormMode = import.meta.env.VITE_DEMO_FORM_MODE || (import.meta.env.PROD ? "static" : "api");
 const isStaticDemoMode = demoFormMode === "static";
 const staticDemoStorageKey = "smartconveyance-demo-preview-requests";
 

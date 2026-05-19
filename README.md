@@ -41,6 +41,8 @@ The frontend can be deployed without the backend for colleague review. In static
 
 The workflow in `.github/workflows/deploy-frontend-pages.yml` builds only the frontend and publishes `frontend/dist`.
 
+The published build uses a relative asset base, so it works as a static project page without any additional path configuration. Demo form submissions run in static preview mode on Pages and validate locally instead of calling the backend.
+
 Expected Pages URL after the workflow runs:
 
 ```text
