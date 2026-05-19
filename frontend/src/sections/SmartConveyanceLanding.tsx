@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { CSSProperties, ChangeEvent, FocusEvent, FormEvent } from "react";
+import type { ChangeEvent, FocusEvent, FormEvent } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
@@ -389,6 +389,7 @@ function AnimatedMetric({ end, finalLabel, prefix = "", rangeEnd, suffix = "" }:
 }
 
 const navLinks = [
+  { label: "Home", href: "#top" },
   { label: "Product", href: "#product" },
   { label: "Features", href: "#features" },
   { label: "Pricing", href: "#pricing" },
@@ -431,16 +432,16 @@ const proofPills: IconCard[] = [
 
 const metrics = [
   {
-    value: "$105K/year",
-    label: "Potential savings for typical law firm through reduced software cost and admin time."
+    value: "Save up to $351/case", // Change Save up to to smaller font size
+    label: "Potential savings for typical law firm through reduced software fee, labour cost and admin time."
   },
   {
-    value: "<1h",
-    label: "Estimated staff time per file after workflow automation."
+    value: "Save up to 4 hrs/case",
+    label: "Streamline and simplified conveyancing process through workflow automation."
   },
   {
-    value: "360°",
-    label: "Support across onboarding, training, and daily use."
+    value: "Save Training time",
+    label: "Simple to learn, easy to use, and requires minimal training."
   },
   {
     value: "All case types",
@@ -478,23 +479,22 @@ const productStages: ProductStage[] = [
     status: "Case foundation"
   },
   {
-    title: "Data Import",
+    title: "Auto Data Import",
     headerCopy: "Auto-data import directly populates case details from contract, commission report, tax certificate, and more, eliminating re-keying and errors.",
     status: "AI assisted"
   },
   {
     title: "Review & Adjust",
     headerCopy: "Maintain full control by reviewing key details and updating only as needed. Open files anytime to continue editing or to upload more documents.",
-    status: "Counsel visible"
+    status: "Case customization"
   },
   {
     title: "More Automation",
     headerCopy: "One-click file generation smartly recognizes cases and generates only files needed by the case. Third-party integration further automates title search, insurance ordering, and web filing.",
-    status: "Filing ready"
+    status: "3rd-party integrations"
   }
 ];
 
-const PRODUCT_STAGE_INTERVAL_MS = 6200;
 const matterCoverage = ["Purchase", "Sale", "Refinance", "Family Transfer"];
 
 const integrationLogos: IntegrationLogo[] = [
@@ -721,7 +721,7 @@ const roiBubbles: RoiBubble[] = [
     value: "Save $65-351",
     metric: { end: 65, finalLabel: "Save $65-351", prefix: "Save $", rangeEnd: 351 },
     title: "per case",
-    description: "Save $65-351/case using SmartConveyance compared to others.",
+    description: "Save $65-351/case using SmartConveyance compared to using others.",
     icon: DollarSign,
     tone: "green"
   },
@@ -733,8 +733,8 @@ const roiBubbles: RoiBubble[] = [
     icon: BarChart3
   },
   {
-    value: "Save 4h",
-    metric: { end: 4, finalLabel: "Save 4h", suffix: "h" },
+    value: "Save 4 hrs",
+    metric: { end: 4, finalLabel: "Save 4 hrs", suffix: " hrs", prefix: "Save up to " },
     title: "per case",
     description: "Save up to 4 hours/case operation time, freeing legal professionals for higher-value work.",
     icon: Clock3
@@ -868,7 +868,7 @@ const faqGroups: FaqGroup[] = [
     ]
   },
   {
-    title: "Support And Migration",
+    title: "Support and Migration",
     description: "Customer support, legacy data, and direct contact.",
     items: [
       {
@@ -898,8 +898,8 @@ const faqCount = faqGroups.reduce((count, group) => count + group.items.length, 
 function Brand({ variant = "color" }: { variant?: "color" | "light" }) {
   const logoSrc =
     variant === "light"
-      ? assetPath("/brand/smartconveyance-primary-light.png")
-      : assetPath("/brand/smartconveyance-primary-dark.png");
+      ? assetPath("/brand/innobridge-primary-light.png")
+      : assetPath("/brand/innobridge-primary-dark.png");
 
   return (
     <span className="brand">
@@ -995,7 +995,7 @@ function SiteNav() {
               Sign in
             </a>
             <a className="btn btn-primary" href="#demo">
-              Book a Demo
+              Talk to an Expert
             </a>
             <button
               className="nav-toggle"
@@ -1043,9 +1043,9 @@ function BridgeIllustration() {
 function HeroPortalPreview() {
   const overviewItems = [
     ["Completion Date", "2023-06-21"],
-    ["Buyer", "Nathanael Cormier"],
-    ["Seller", "Annetta Upton"],
-    ["Strata", "267 Maybell Springs\nApt. 136\nVancouver, BC"]
+    ["Buyer", "John Doe"],
+    ["Seller", "Jane Doe"],
+    ["Strata", "267 Maybell Springs\nApt. 136\nSpringfield, BC"]
   ];
 
   const tabs = [
@@ -1059,9 +1059,9 @@ function HeroPortalPreview() {
   ];
 
   const fields = [
-    ["Case Number", "9230375", "input"],
+    ["Case Number", "A512B39", "input"],
     ["Representing", "Buyer", "select"],
-    ["Property ID (PID)", "025-728-857", "input"],
+    ["Property ID (PID)", "123-456-789", "input"],
     ["Property Type", "Strata", "select"],
     ["Completion Date", "2023-06-21", "input"],
     ["Adjustment Date", "2023-06-22", "input"],
@@ -1079,7 +1079,7 @@ function HeroPortalPreview() {
             <span />
           </div>
           <div className="portal-preview-address">
-            smartconveyance.innobridge.ca <span>/</span> matter <span>/</span> 9230375
+            smartconveyance.innobridge.ca <span>/</span> matter <span>/</span> A512B39
           </div>
           <div className="portal-live-pill">
             <i />
@@ -1100,7 +1100,7 @@ function HeroPortalPreview() {
             <div className="portal-avatar">JS</div>
             <div>
               <strong>John Smith</strong>
-              <span>SmartConveyance</span>
+              <span>Smith Law</span>
             </div>
           </div>
 
@@ -1136,7 +1136,7 @@ function HeroPortalPreview() {
               <div className="portal-breadcrumb">
                 <span>Home</span>
                 <em>›</em>
-                <strong>Case 9230375</strong>
+                <strong>Case A512B39</strong>
               </div>
 
               <div className="portal-case-heading">
@@ -1145,7 +1145,7 @@ function HeroPortalPreview() {
                   <h3>Case</h3>
                 </div>
 
-                <div className="portal-case-number">9230375</div>
+                <div className="portal-case-number">A512B39</div>
                 <div className="portal-status-pill">
                   <span>✓</span>
                   In progress
@@ -1204,11 +1204,6 @@ function HeroPortalPreview() {
           <strong>AI import complete</strong>
           <span>Case fields matched from source documents</span>
         </div>
-
-        <div className="portal-floating-card portal-floating-card-two">
-          <strong>Ready for review</strong>
-          <span>Required fields organized by workflow</span>
-        </div>
       </div>
     </section>
   );
@@ -1224,10 +1219,10 @@ function HeroSection() {
             SmartConveyance by Innobridge
           </div>
           <h1 id="heroTitle">
-            <span className="title-word">Technology</span>{" "}
-            <span className="title-word">that</span>{" "}
-            <span className="title-word">Speaks</span>{" "}
-            <span>Legal.</span>
+            <span className="title-word">Spend</span>{" "}
+            <span className="title-word">Less.</span>{" "}
+            <span className="title-word">Conveyance</span>{" "}
+            <span>More.</span>
           </h1>
           <p className="hero-sub">
             Software that adapts to your workflow. SmartConveyance helps law firms streamline real estate conveyancing,
@@ -1235,7 +1230,7 @@ function HeroSection() {
           </p>
           <div className="hero-cta">
             <a className="btn btn-primary" href="#demo">
-              Book a Demo
+              Talk to an Expert
               <ArrowRight className="icon" aria-hidden="true" />
             </a>
             <a className="btn btn-ghost" href="#product">
@@ -1296,7 +1291,7 @@ function ProblemSection() {
           </p>
           <div className="tax-card">
             <strong>Context Tax</strong>
-            <span>The invisible cost of disconnected legal work.</span>
+            <span>The invisible cost of fragmented legal work.</span>
           </div>
         </Reveal>
 
@@ -1313,7 +1308,7 @@ function ProblemSection() {
           ))}
         </div>
 
-        <Reveal className="bridge-card">
+        {/* <Reveal className="bridge-card">
           <BridgeIllustration />
           <div className="bridge-card-copy">
             <h3>The Innobridge Bridge</h3>
@@ -1326,7 +1321,7 @@ function ProblemSection() {
             Explore product
             <ArrowRight className="icon" aria-hidden="true" />
           </a>
-        </Reveal>
+        </Reveal> */}
 
         <div className="why-proof-row" aria-label="SmartConveyance coverage and integrations">
           <Reveal className="context-integration-card why-proof-card">
@@ -1355,12 +1350,40 @@ function ProblemSection() {
 }
 
 function StageOne() {
-  const fields = [
+  type StageOneSelectKey = "representing" | "propertyType";
+
+  const [openDropdown, setOpenDropdown] = useState<StageOneSelectKey | null>(null);
+  const [selectedValues, setSelectedValues] = useState<Record<StageOneSelectKey, string>>({
+    representing: "Buyer",
+    propertyType: "Single Family House"
+  });
+
+  const staticFields = [
     ["Case Number", "Enter firm case number", "empty"],
-    ["Property ID (PID)", "XXX-XXX-XXX"],
-    ["Representing", "Buyer", "select"],
-    ["Property Type", "Single Family House", "select"]
+    ["Property ID (PID)", "XXX-XXX-XXX"]
   ];
+
+  const selectFields: Array<{
+    key: StageOneSelectKey;
+    label: string;
+    options: string[];
+  }> = [
+    {
+      key: "representing",
+      label: "Representing",
+      options: ["Buyer", "Borrower", "Seller", "Transferor", "Transferee"]
+    },
+    {
+      key: "propertyType",
+      label: "Property Type",
+      options: ["Single Family House", "Strata", "Bare Land"]
+    }
+  ];
+
+  const selectOption = (key: StageOneSelectKey, option: string) => {
+    setSelectedValues((currentValues) => ({ ...currentValues, [key]: option }));
+    setOpenDropdown(null);
+  };
 
   return (
     <div className="case-create-preview">
@@ -1369,18 +1392,65 @@ function StageOne() {
         <strong>New conveyance file</strong>
       </div>
       <div className="case-form-stack">
-        {fields.map(([label, value, variant]) => (
+        {staticFields.map(([label, value, variant]) => (
           <div
-            className={`app-field${variant === "empty" ? " app-field-empty" : ""}${variant === "select" ? " app-select" : ""}`}
+            className={`app-field${variant === "empty" ? " app-field-empty" : ""}`}
             key={label}
           >
             <label>
               {label} <b>*</b>
             </label>
-            {variant === "empty" ? <span>{value}</span> : <strong>{value}</strong>}
-            {variant === "select" ? <i aria-hidden="true" /> : null}
+            <span>{value}</span>
           </div>
         ))}
+
+        {selectFields.map((field) => {
+          const isOpen = openDropdown === field.key;
+
+          return (
+            <div
+              className={`app-field app-select stage-select${isOpen ? " open" : ""}`}
+              key={field.key}
+              onBlurCapture={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                  setOpenDropdown((currentOpenDropdown) => (currentOpenDropdown === field.key ? null : currentOpenDropdown));
+                }
+              }}
+            >
+              <label id={`${field.key}Label`}>
+                {field.label} <b>*</b>
+              </label>
+              <button
+                className="stage-select-trigger"
+                type="button"
+                aria-expanded={isOpen}
+                aria-haspopup="listbox"
+                aria-labelledby={`${field.key}Label ${field.key}Value`}
+                onClick={() => setOpenDropdown((currentOpenDropdown) => (currentOpenDropdown === field.key ? null : field.key))}
+              >
+                <strong id={`${field.key}Value`}>{selectedValues[field.key]}</strong>
+                <i aria-hidden="true" />
+              </button>
+
+              {isOpen ? (
+                <div className="stage-select-menu" role="listbox" aria-labelledby={`${field.key}Label`}>
+                  {field.options.map((option) => (
+                    <button
+                      className={option === selectedValues[field.key] ? "selected" : ""}
+                      type="button"
+                      role="option"
+                      aria-selected={option === selectedValues[field.key]}
+                      key={option}
+                      onClick={() => selectOption(field.key, option)}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -1419,7 +1489,6 @@ function StageTwo() {
       </div>
       <div className="import-footer">
         <span>Next step: review extracted fields before they update the case.</span>
-        <button type="button">Next</button>
       </div>
     </div>
   );
@@ -1447,10 +1516,10 @@ function StageThree() {
 
 function StageFour() {
   const rows = [
-    ["Generate closing package", "Only case-required files are generated."],
-    ["Title search integration", "Start from the same matter record."],
-    ["Insurance ordering", "Reusable matter data reduces re-entry."],
-    ["Web filing", "Prepared data moves into the filing workflow."]
+    ["One-click file generation", "Only case-required files are generated."],
+    ["Title search integration", "One-click order from myLTSA."],
+    ["Insurance ordering", "Full integration with FCT and more coming soon."],
+    ["Web filing", "Automatically fills all required Web filing forms."]
   ];
 
   return (
@@ -1477,7 +1546,7 @@ function StageFour() {
 
 function StageContent({ index }: { index: number }) {
   const titles = ["New Case Setup", "Import Sources", "Review Queue", "Automation Center"];
-  const pills = ["Residential Purchase", "4 files matched", "2 items flagged", "One-click package"];
+  const pills = ["Residential Purchase", "4 files matched", "2 items flagged"];
   const content = [<StageOne key="stage-one" />, <StageTwo key="stage-two" />, <StageThree key="stage-three" />, <StageFour key="stage-four" />];
 
   return (
@@ -1499,26 +1568,9 @@ function StageContent({ index }: { index: number }) {
 
 function ProductSection() {
   const [activeStage, setActiveStage] = useState(0);
-  const [cycleNonce, setCycleNonce] = useState(0);
-  const [isStagePaused, setIsStagePaused] = useState(false);
-
-  useEffect(() => {
-    if (isStagePaused) {
-      return;
-    }
-
-    const timer = window.setTimeout(() => {
-      setActiveStage((currentStage) => (currentStage + 1) % productStages.length);
-    }, PRODUCT_STAGE_INTERVAL_MS);
-
-    return () => {
-      window.clearTimeout(timer);
-    };
-  }, [activeStage, cycleNonce, isStagePaused]);
 
   const selectStage = (index: number) => {
     setActiveStage(index);
-    setCycleNonce((currentNonce) => currentNonce + 1);
   };
 
   return (
@@ -1532,19 +1584,7 @@ function ProductSection() {
             generates the right files for the matter.
           </p>
         </Reveal>
-        <Reveal
-          className="product-shell"
-          data-paused={isStagePaused ? "true" : "false"}
-          onBlurCapture={(event) => {
-            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-              setIsStagePaused(false);
-            }
-          }}
-          onFocusCapture={() => setIsStagePaused(true)}
-          onPointerEnter={() => setIsStagePaused(true)}
-          onPointerLeave={() => setIsStagePaused(false)}
-          style={{ "--product-cycle-duration": `${PRODUCT_STAGE_INTERVAL_MS}ms` } as CSSProperties}
-        >
+        <Reveal className="product-shell">
           <div className="tab-list" role="tablist" aria-label="Product workflow">
             {productStages.map((stage, index) => (
               <button
@@ -1559,7 +1599,6 @@ function ProductSection() {
               >
                 <span className="tab-num">{index + 1}</span>
                 <strong className="tab-title">{stage.title}</strong>
-                <span className="tab-progress" aria-hidden="true" />
               </button>
             ))}
           </div>
@@ -1608,7 +1647,7 @@ function FeaturesSection() {
     <section className="section" id="features" aria-labelledby="featuresTitle">
       <div className="container">
         <Reveal className="section-head">
-          <div className="eyebrow">Feature list</div>
+          <div className="eyebrow">Features</div>
           <h2 id="featuresTitle">Specialized tools for conveyancing practitioners.</h2>
           <p className="lead">
             From easy data entry and auto-calculations to title searches, file generation, templates, and productivity
@@ -1638,7 +1677,7 @@ function OutcomesSection() {
       <div className="container">
         <Reveal className="section-head center">
           <div className="eyebrow eyebrow-light">Impact</div>
-          <h2 id="outcomesTitle">Digital conveyancing, re-engineered.</h2>
+          <h2 id="outcomesTitle">Digital conveyancing, <br /> re-engineered.</h2>
         </Reveal>
         <div className="outcome-grid">
           {outcomes.map((outcome, index) => {
@@ -1868,7 +1907,7 @@ function SupportSection() {
             ))}
           </div>
           <a className="btn btn-primary support-panel-cta" href="#demo">
-            Book a Demo
+            Talk to an Expert
             <ArrowRight className="icon" aria-hidden="true" />
           </a>
         </Reveal>
@@ -1944,7 +1983,7 @@ function RoiSection() {
               <tbody>
                 <tr>
                   <th scope="row">Staff Labour / File</th>
-                  <td className="col-legacy">2-5 hrs</td>
+                  <td className="col-legacy">Up to 5 hrs</td>
                   <td className="col-smart">Less than 1 hr</td>
                 </tr>
                 <tr>
@@ -2151,7 +2190,7 @@ function DemoSection() {
     <section className="section" id="demo" aria-labelledby="demoTitle">
       <div className="container demo-grid">
         <Reveal>
-          <div className="eyebrow">Book a demo</div>
+          <div className="eyebrow">Talk to an Expert</div>
           <h2 id="demoTitle">Start with a legal <br></br> workflow fit assessment.</h2>
           <p className="lead">
             A solutions expert can show how SmartConveyance fits your practice, team structure, and current conveyancing
@@ -2337,7 +2376,7 @@ function DemoSection() {
             </label>
             {getFieldError("consent") ? <span className="field-error checkbox-field-error" id="consentError">{getFieldError("consent")}</span> : null}
             <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Submitting..." : "Book your demo today"}
+              {isSubmitting ? "Submitting..." : "Submit"}
             </button>
             <div
               className={`form-note form-note--${submitState.status}${submitState.status !== "idle" ? " show" : ""}`}
@@ -2370,7 +2409,7 @@ function FaqSection() {
             <strong>Need something specific?</strong>
             <p>Book a guided workflow assessment with the SmartConveyance team.</p>
             <div className="faq-summary-actions">
-              <a className="btn btn-primary" href="#demo">Book a Demo</a>
+              <a className="btn btn-primary" href="#demo">Talk to an Expert</a>
             </div>
           </div>
         </Reveal>
@@ -2434,7 +2473,7 @@ function SiteFooter() {
           </div>
           <div>
             <h4>Product</h4>
-            <a href="#problem">Pain points</a>
+            <a href="#problem">Why SmartConveyance</a>
             <a href="#product">Workflow</a>
             <a href="#features">Features</a>
             <a href="#outcomes">Outcomes</a>
@@ -2444,12 +2483,15 @@ function SiteFooter() {
             <a href="#pricing">Pricing</a>
             <a href="#support">Support</a>
             <a href="#story">Our story</a>
-            <a href="#demo">Book a Demo</a>
+            <a href="#demo">Talk to an Expert</a>
           </div>
           <div>
             <h4>360° Support</h4>
             <a href="mailto:support@innobridge.ca">support@innobridge.ca</a>
             <a href="tel:+18882669010">+1 (888) 266-9010</a>
+            <a>Zoom: Schedule video call for walkthrough support</a>
+            <a>How-to: Embedded guide</a>
+            <a>1-on-1: Expert support and training</a>
             <a href="https://smartconveyance.innobridge.ca/">Sign in</a>
           </div>
         </div>

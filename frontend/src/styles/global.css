@@ -1312,13 +1312,13 @@ h4 {
 .portal-floating-card-one {
   right: -18px;
   top: 116px;
-  animation: floatingCardDrift 6.4s ease-in-out infinite;
+  /* animation: floatingCardDrift 6.4s ease-in-out infinite; */
 }
 
 .portal-floating-card-two {
   right: 34px;
   bottom: 34px;
-  animation: floatingCardDrift 7.2s ease-in-out .5s infinite;
+  /* animation: floatingCardDrift 7.2s ease-in-out .5s infinite; */
 }
 
 @media (max-width: 900px) {
@@ -2472,41 +2472,6 @@ h4 {
   color: var(--white);
 }
 
-.tab-progress {
-  position: absolute;
-  left: 24px;
-  right: 24px;
-  bottom: 13px;
-  height: 3px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, .16);
-  opacity: 0;
-  overflow: hidden;
-  transition: opacity .2s var(--ease);
-}
-
-.tab-progress::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(90deg, var(--asparagus), var(--blue-600));
-  transform: scaleX(0);
-  transform-origin: left center;
-}
-
-.product-tab[aria-selected="true"] .tab-progress {
-  opacity: 1;
-}
-
-.product-tab[aria-selected="true"] .tab-progress::before {
-  animation: tabProgress var(--product-cycle-duration, 6200ms) linear forwards;
-}
-
-.product-shell[data-paused="true"] .product-tab[aria-selected="true"] .tab-progress::before {
-  animation-play-state: paused;
-}
-
 .matter-coverage-card {
   position: relative;
   overflow: hidden;
@@ -2636,6 +2601,16 @@ h4 {
   background: rgba(255, 255, 255, .82);
   box-shadow: var(--shadow-md);
   overflow: hidden;
+  transition: min-height .24s var(--ease);
+}
+
+.product-stage:has(.stage-select.open) {
+  z-index: 8;
+  overflow: visible;
+}
+
+.product-stage:has(.stage-select.open)::after {
+  display: none;
 }
 
 .product-stage::before {
@@ -2802,6 +2777,7 @@ h4 {
 }
 
 .case-create-preview {
+  overflow: visible;
   padding: 20px;
 }
 
@@ -2885,6 +2861,36 @@ h4 {
   padding-right: 48px;
 }
 
+.stage-select {
+  z-index: 3;
+  padding: 0;
+}
+
+.stage-select.open {
+  z-index: 24;
+  border-color: rgba(24, 125, 158, .35);
+  box-shadow: 0 14px 30px rgba(26, 35, 50, .08);
+}
+
+.stage-select-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 74px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 17px 48px 13px 18px;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.stage-select-trigger strong {
+  color: var(--charcoal-800);
+}
+
 .app-select i,
 .select-shell i {
   position: absolute;
@@ -2895,6 +2901,52 @@ h4 {
   border-right: 3px solid var(--text-muted);
   border-bottom: 3px solid var(--text-muted);
   transform: translateY(-65%) rotate(45deg);
+}
+
+.stage-select.open i {
+  transform: translateY(-35%) rotate(225deg);
+}
+
+.stage-select-menu {
+  position: absolute;
+  top: calc(100% - 1px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  border-radius: 0 0 16px 16px;
+  background: var(--white);
+  box-shadow: 0 22px 46px rgba(26, 35, 50, .18);
+}
+
+.stage-select-menu button {
+  display: block;
+  width: 100%;
+  min-height: 43px;
+  border: 0;
+  border-bottom: 1px solid rgba(221, 217, 209, .48);
+  background: var(--white);
+  color: var(--charcoal-l);
+  padding: 10px 16px;
+  font: inherit;
+  font-size: .94rem;
+  font-weight: 660;
+  text-align: left;
+  cursor: pointer;
+  transition: background .16s var(--ease), color .16s var(--ease);
+}
+
+.stage-select-menu button:last-child {
+  border-bottom: 0;
+}
+
+.stage-select-menu button:hover,
+.stage-select-menu button:focus-visible,
+.stage-select-menu button.selected {
+  background: var(--blue-075);
+  color: var(--blue);
 }
 
 .case-confirmation {
@@ -3341,7 +3393,7 @@ h4 {
   line-height: 1.4;
 }
 
-.automation-card:first-child {
+/* .automation-card:first-child {
   background: var(--charcoal-800);
   border-color: var(--charcoal-800);
 }
@@ -3352,7 +3404,7 @@ h4 {
 
 .automation-card:first-child span {
   color: rgba(255, 255, 255, .65);
-}
+} */
 
 .stage-panel.active .case-preview-topline,
 .stage-panel.active .modal-topbar,
@@ -3416,16 +3468,6 @@ h4 {
   100% {
     transform: translateX(420%) skewX(-12deg);
     opacity: 0;
-  }
-}
-
-@keyframes tabProgress {
-  from {
-    transform: scaleX(0);
-  }
-
-  to {
-    transform: scaleX(1);
   }
 }
 
