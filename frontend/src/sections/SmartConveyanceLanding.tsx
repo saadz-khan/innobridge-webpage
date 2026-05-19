@@ -533,7 +533,7 @@ const featureCards: IconCard[] = [
     tone: "dark"
   },
   {
-    title: "Law-firm control",
+    title: "Lawfirm control",
     description:
       "Role-aware workflow, audit trails, legal review points, and consistent file state support firm confidence.",
     icon: ShieldCheck,
@@ -542,7 +542,7 @@ const featureCards: IconCard[] = [
 ];
 
 const outcomes: IconCard[] = [
-  { icon: DollarSign, title: "Save $150+ per case", description: "Reduce the cost of repeat administrative work." },
+  { icon: DollarSign, title: "Save $124+ per case", description: "Reduce the cost of repeat administrative work." },
   { icon: Clock3, title: "Save hours per case", description: "Free time from manual entry and status chasing.", tone: "green" },
   { icon: RefreshCw, title: "Workflow consistency", description: "Use repeatable steps for every matter." },
   { icon: BadgeCheck, title: "Precision conveyancing", description: "Review matters with cleaner information.", tone: "green" },
@@ -695,7 +695,7 @@ const pricingPlans = [
     description: "For firms that need deeper configuration, templates, training, and rollout support.",
     price: "Custom",
     suffix: "",
-    features: ["Advanced workflow setup", "Custom firm templates", "Team training plan", "Implementation support", "Priority onboarding"]
+    features: ["Everything in basic","Advanced workflow setup", "Custom firm templates", "Team training plan", "Implementation support", "Priority onboarding"]
   }
 ];
 
@@ -1881,8 +1881,8 @@ function RoiSection() {
     <section className="section section-dark roi-decision-section" id="roi" aria-labelledby="roiTitle">
       <div className="container">
         <Reveal className="section-head center roi-decision-head">
-          <div className="eyebrow eyebrow-light">Impact</div>
-          <h2 id="roiTitle">Smart choice that empower your growth.</h2>
+          <div className="eyebrow eyebrow-light">Return on Investment</div>
+          <h2 id="roiTitle">Smart choice that empowers your growth.</h2>
         </Reveal>
 
         <Reveal className="fin-table-card">
@@ -2111,13 +2111,13 @@ function DemoSection() {
       <div className="container demo-grid">
         <Reveal>
           <div className="eyebrow">Book a demo</div>
-          <h2 id="demoTitle">Start with a legal workflow fit assessment.</h2>
+          <h2 id="demoTitle">Start with a legal <br></br> workflow fit assessment.</h2>
           <p className="lead">
             A solutions expert can show how SmartConveyance fits your practice, team structure, and current conveyancing
             process.
           </p>
           <div className="demo-benefits">
-            {["Personalized 15-minute walkthrough", "No contract, pay per case", "Same-day onboarding path", "Ongoing 360° support from day one"].map((benefit) => (
+            {["Personalized walkthrough", "No contract, pay per case", "Same-day onboarding path", "Ongoing 360° support from day one"].map((benefit) => (
               <div key={benefit}>
                 <i />
                 {benefit}

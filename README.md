@@ -51,6 +51,10 @@ https://saadz-khan.github.io/innobridge-webpage/
 
 In GitHub, set **Settings → Pages → Build and deployment → Source** to **GitHub Actions**. Then push `main` or `smartconveyance-enhanced-implementation`, or run the workflow manually.
 
+If GitHub Pages shows the repository README instead of the site, it usually means Pages is still configured for branch-based publishing. Switch the source to **GitHub Actions** and disable any old branch/folder publish setting.
+
+This repository is currently a Vite/React app, not a Next.js app. If you plan to deploy a separate Next.js site, it needs its own Next.js build setup and deployment strategy.
+
 ### Netlify
 
 The `netlify.toml` file is configured for a free Netlify static deploy. Connect the GitHub repository in Netlify and use the default settings from the file.

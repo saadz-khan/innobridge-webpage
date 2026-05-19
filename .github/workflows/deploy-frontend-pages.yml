@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - smartconveyance-enhanced-implementation
+      - githubPage
   workflow_dispatch:
 
 permissions:
