@@ -1345,6 +1345,47 @@ h3 {
   gap: 12px;
 }
 
+.roi-highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.roi-highlight-card {
+  border: 1px solid rgba(24, 125, 158, 0.2);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(160deg, rgba(24, 125, 158, 0.08), rgba(24, 125, 158, 0)),
+    var(--white);
+  padding: 14px 16px;
+}
+
+.roi-highlight-card__label {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 760;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.roi-highlight-card strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--charcoal-blue);
+  font-size: 2.05rem;
+  line-height: 1;
+}
+
+.roi-highlight-card span {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 680;
+}
+
 .roi-card {
   display: grid;
   grid-template-columns: 42px minmax(0, 1fr);
@@ -1850,6 +1891,7 @@ h3 {
   .feature-grid,
   .pillar-grid,
   .professional-grid,
+  .roi-highlight-grid,
   .ecosystem-grid,
   .support-grid,
   .support-contact,
