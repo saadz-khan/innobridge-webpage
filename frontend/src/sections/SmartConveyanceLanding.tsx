@@ -15,6 +15,7 @@ import {
   LineChart,
   ListChecks,
   LockKeyhole,
+  Mail,
   Menu,
   MessageCircle,
   PenLine,
@@ -25,6 +26,7 @@ import {
   Sparkles,
   TrendingUp,
   UsersRound,
+  Video,
   Workflow,
   X
 } from "lucide-react";
@@ -54,6 +56,7 @@ type ProductStage = {
   title: string;
   headerCopy: string;
   status: string;
+  mobileSummary: string;
 };
 
 type IntegrationLogo = {
@@ -254,7 +257,6 @@ const premiumSurfaceSelector = [
   ".demo-card",
   ".faq-item",
   ".roi-bubble",
-  ".time-compare-block",
   ".fin-table-card",
   ".matter-coverage-card"
 ].join(", ");
@@ -400,7 +402,7 @@ const navSectionTargets = [
   { sectionId: "problem", navId: "" },
   { sectionId: "product", navId: "product" },
   { sectionId: "features", navId: "features" },
-  { sectionId: "outcomes", navId: "" },
+  { sectionId: "impact", navId: "" },
   { sectionId: "testimonials", navId: "" },
   { sectionId: "support", navId: "support" },
   { sectionId: "pricing", navId: "pricing" },
@@ -432,7 +434,7 @@ const proofPills: IconCard[] = [
 
 const metrics = [
   {
-    value: "Save up to $351/case", // Change Save up to to smaller font size
+    value: "Save up to $351/case",
     label: "Potential savings for typical law firm through reduced software fee, labour cost and admin time."
   },
   {
@@ -444,7 +446,7 @@ const metrics = [
     label: "Simple to learn, easy to use, and requires minimal training."
   },
   {
-    value: "All case types",
+    value: "Residential and Commercial|All Case Types",
     label: "Residential and commercial workflows for purchase, sale, refinance, and family transfer matters."
   }
 ];
@@ -476,22 +478,26 @@ const productStages: ProductStage[] = [
   {
     title: "Create New Case",
     headerCopy: "Simplified file automation offers only case-relevant details, allowing for a concise and focused layout that offers feasibility with simplified design and minimal setup.",
-    status: "Case foundation"
+    status: "Case foundation",
+    mobileSummary: "Only case-relevant fields appear, keeping it simple and focused."
   },
   {
     title: "Auto Data Import",
     headerCopy: "Auto-data import directly populates case details from contract, commission report, tax certificate, and more, eliminating re-keying and errors.",
-    status: "AI assisted"
+    status: "AI assisted",
+    mobileSummary: "Eliminate errors due to manual data entry with AI-powered document import."
   },
   {
     title: "Review & Adjust",
     headerCopy: "Maintain full control by reviewing key details and updating only as needed. Open files anytime to continue editing or to upload more documents.",
-    status: "Case customization"
+    status: "Case customization",
+    mobileSummary: "Review key details and adjust only as needed — full control at every step."
   },
   {
     title: "More Automation",
     headerCopy: "One-click file generation smartly recognizes cases and generates only files needed by the case. Third-party integration further automates title search, insurance ordering, and web filing.",
-    status: "3rd-party integrations"
+    status: "3rd-party integrations",
+    mobileSummary: "Title search, insurance ordering, web filing, and one-click file generation."
   }
 ];
 
@@ -664,7 +670,7 @@ function getRoundedPolylinePath(points: FlowPoint[], cornerRadius: number) {
 
 function buildSupportFlowPath(previousRect: DOMRect, nextRect: DOMRect, boardRect: DOMRect) {
   const portGap = 14;
-  const edgeLane = clampNumber(boardRect.width * 0.032, 16, 24);
+  const edgeLane = clampNumber(boardRect.width * 0.062, 34, 50);
   const start: FlowPoint = {
     x: clampNumber(previousRect.right - boardRect.left + portGap, 22, boardRect.width - 22),
     y: previousRect.top - boardRect.top + previousRect.height / 2
@@ -676,7 +682,7 @@ function buildSupportFlowPath(previousRect: DOMRect, nextRect: DOMRect, boardRec
   const rightLane = clampNumber(Math.max(boardRect.width - edgeLane, start.x + 10), 22, boardRect.width - 12);
   const leftLane = clampNumber(Math.min(edgeLane, end.x - 10), 12, boardRect.width - 22);
   const bridgeY = start.y + (end.y - start.y) / 2;
-  const cornerRadius = clampNumber(Math.abs(end.y - start.y) * 0.18, 18, 28);
+  const cornerRadius = clampNumber(Math.abs(end.y - start.y) * 0.38, 54, 84);
 
   return getRoundedPolylinePath(
     [
@@ -1079,7 +1085,7 @@ function HeroPortalPreview() {
             <span />
           </div>
           <div className="portal-preview-address">
-            smartconveyance.innobridge.ca <span>/</span> matter <span>/</span> A512B39
+            smartconveyance.innobridge.ca <span>/</span> case <span>/</span> A512B39
           </div>
           <div className="portal-live-pill">
             <i />
@@ -1200,7 +1206,7 @@ function HeroPortalPreview() {
           </section>
         </main>
 
-        <div className="portal-floating-card portal-floating-card-one">
+        <div className="portal-floating-card portal-floating-card-one" aria-hidden="true">
           <strong>AI import complete</strong>
           <span>Case fields matched from source documents</span>
         </div>
@@ -1264,12 +1270,65 @@ function HeroSection() {
 }
 
 function MetricStrip() {
+  function renderMetricValue(value: string) {
+    // 1) Pipe-separated: explicit "Prefix|Bold value" split
+    const pipeMatch = value.match(/^(.+)\|(.+)$/);
+
+    if (pipeMatch) {
+      const [, prefix, rest] = pipeMatch;
+
+      return (
+        <>
+          <span className="metric-prefix">{prefix.trim()}</span>
+          <strong className="metric-number metric-number--text">{rest.trim()}</strong>
+        </>
+      );
+    }
+
+    // 2) Numeric values: capture prefix / number / suffix
+    const numericMatch = value.match(/^(.*?)\s*([\$£€]?\d[\d,\.\-\s]*\w*)(.*)$/);
+
+    if (numericMatch) {
+      const [, prefix, number, suffix] = numericMatch;
+
+      return (
+        <>
+          <span className="metric-prefix">{prefix ? prefix.trim() : ""}</span>
+          <strong className="metric-number">{number.trim()}</strong>
+          {suffix ? <span className="metric-suffix">{suffix.trim()}</span> : null}
+        </>
+      );
+    }
+
+    // 3) Values that start with 'Save' — make 'Save' the small prefix
+    const saveMatch = value.match(/^(Save(?: up to)?)(?:\s+)(.+)$/i);
+
+    if (saveMatch) {
+      const [, prefix, rest] = saveMatch;
+
+      return (
+        <>
+          <span className="metric-prefix">{prefix}</span>
+          <strong className="metric-number metric-number--text">{rest}</strong>
+        </>
+      );
+    }
+
+    // 4) Fallback: render the whole value as the emphasized metric text
+    return (
+      <>
+        <span className="metric-prefix"></span>
+        <strong className="metric-number metric-number--text">{value}</strong>
+      </>
+    );
+  }
+
   return (
     <div className="metric-strip">
       <Reveal className="container metric-inner">
         {metrics.map((metric) => (
           <div className="metric" key={metric.value}>
-            <strong>{metric.value}</strong>
+            {renderMetricValue(metric.value)}
             <span>{metric.label}</span>
           </div>
         ))}
@@ -1284,7 +1343,7 @@ function ProblemSection() {
       <div className="container problem-layout">
         <Reveal className="sticky-note">
           <div className="eyebrow">WHY SMARTCONVEYANCE</div>
-          <h2 id="problemTitle">Faster conveyancing. Fewer errors.</h2>
+          <h2 id="problemTitle">Faster conveyancing Fewer errors.</h2>
           <p className="lead">
             The real problem is not a lack of software. It is fragmented work: re-keying, switching tools, and checking
             the same file across multiple places.
@@ -1352,105 +1411,118 @@ function ProblemSection() {
 function StageOne() {
   type StageOneSelectKey = "representing" | "propertyType";
 
-  const [openDropdown, setOpenDropdown] = useState<StageOneSelectKey | null>(null);
   const [selectedValues, setSelectedValues] = useState<Record<StageOneSelectKey, string>>({
     representing: "Buyer",
     propertyType: "Single Family House"
   });
 
-  const staticFields = [
-    ["Case Number", "Enter firm case number", "empty"],
-    ["Property ID (PID)", "XXX-XXX-XXX"]
-  ];
-
-  const selectFields: Array<{
-    key: StageOneSelectKey;
-    label: string;
-    options: string[];
-  }> = [
+  const representingOptions = ["Buyer", "Seller", "Borrower", "Transferor", "Transferee"];
+  const propertyTypeOptions = [
     {
-      key: "representing",
-      label: "Representing",
-      options: ["Buyer", "Borrower", "Seller", "Transferor", "Transferee"]
+      value: "Single Family House",
+      label: "Single Family",
+      helper: "Detached residential purchase"
     },
     {
-      key: "propertyType",
-      label: "Property Type",
-      options: ["Single Family House", "Strata", "Bare Land"]
+      value: "Strata",
+      label: "Strata",
+      helper: "Condo or strata property"
+    },
+    {
+      value: "Bare Land",
+      label: "Bare Land",
+      helper: "Land-only conveyance"
     }
   ];
 
-  const selectOption = (key: StageOneSelectKey, option: string) => {
-    setSelectedValues((currentValues) => ({ ...currentValues, [key]: option }));
-    setOpenDropdown(null);
-  };
-
   return (
-    <div className="case-create-preview">
+    <div className="case-create-preview case-create-preview-refined">
       <div className="case-preview-topline">
         <span>Required setup</span>
         <strong>New conveyance file</strong>
       </div>
-      <div className="case-form-stack">
-        {staticFields.map(([label, value, variant]) => (
-          <div
-            className={`app-field${variant === "empty" ? " app-field-empty" : ""}`}
-            key={label}
-          >
-            <label>
-              {label} <b>*</b>
-            </label>
-            <span>{value}</span>
+
+      <div className="case-form-stack case-form-stack-refined">
+        <div className="app-field app-field-empty">
+          <label>
+            Case Number <b>*</b>
+          </label>
+          <span>Enter firm case number</span>
+        </div>
+
+        <div className="app-field">
+          <label>
+            Property ID (PID) <b>*</b>
+          </label>
+          <span>XXX-XXX-XXX</span>
+        </div>
+
+        <div className="case-choice-block">
+          <div className="case-choice-head">
+            <span>
+              Representing <b>*</b>
+            </span>
+            <em>{selectedValues.representing}</em>
           </div>
-        ))}
 
-        {selectFields.map((field) => {
-          const isOpen = openDropdown === field.key;
-
-          return (
-            <div
-              className={`app-field app-select stage-select${isOpen ? " open" : ""}`}
-              key={field.key}
-              onBlurCapture={(event) => {
-                if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-                  setOpenDropdown((currentOpenDropdown) => (currentOpenDropdown === field.key ? null : currentOpenDropdown));
-                }
-              }}
-            >
-              <label id={`${field.key}Label`}>
-                {field.label} <b>*</b>
-              </label>
+          <div className="case-pill-options" role="listbox" aria-label="Representing">
+            {representingOptions.map((option) => (
               <button
-                className="stage-select-trigger"
+                className={selectedValues.representing === option ? "selected" : ""}
                 type="button"
-                aria-expanded={isOpen}
-                aria-haspopup="listbox"
-                aria-labelledby={`${field.key}Label ${field.key}Value`}
-                onClick={() => setOpenDropdown((currentOpenDropdown) => (currentOpenDropdown === field.key ? null : field.key))}
+                role="option"
+                aria-selected={selectedValues.representing === option}
+                key={option}
+                onClick={() =>
+                  setSelectedValues((currentValues) => ({
+                    ...currentValues,
+                    representing: option
+                  }))
+                }
               >
-                <strong id={`${field.key}Value`}>{selectedValues[field.key]}</strong>
-                <i aria-hidden="true" />
+                {option}
               </button>
+            ))}
+          </div>
+        </div>
 
-              {isOpen ? (
-                <div className="stage-select-menu" role="listbox" aria-labelledby={`${field.key}Label`}>
-                  {field.options.map((option) => (
-                    <button
-                      className={option === selectedValues[field.key] ? "selected" : ""}
-                      type="button"
-                      role="option"
-                      aria-selected={option === selectedValues[field.key]}
-                      key={option}
-                      onClick={() => selectOption(field.key, option)}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-          );
-        })}
+        <div className="case-choice-block case-property-block">
+          <div className="case-choice-head">
+            <span>
+              Property Type <b>*</b>
+            </span>
+            <em>{selectedValues.propertyType}</em>
+          </div>
+
+          <div className="case-property-options" role="listbox" aria-label="Property type">
+            {propertyTypeOptions.map((option) => (
+              <button
+                className={selectedValues.propertyType === option.value ? "selected" : ""}
+                type="button"
+                role="option"
+                aria-selected={selectedValues.propertyType === option.value}
+                key={option.value}
+                onClick={() =>
+                  setSelectedValues((currentValues) => ({
+                    ...currentValues,
+                    propertyType: option.value
+                  }))
+                }
+              >
+                <strong>{option.label}</strong>
+                <span>{option.helper}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="case-preview-footer">
+          <div>
+            <strong>Only case-relevant fields shown</strong>
+            <span>SmartConveyance adapts the setup based on matter type and representation.</span>
+          </div>
+          <button type="button">Continue</button>
+        </div>
       </div>
     </div>
   );
@@ -1495,21 +1567,176 @@ function StageTwo() {
 }
 
 function StageThree() {
-  const rows = [
-    ["Buyer names", "Verified", "ok"],
-    ["Tax adjustment", "Needs review", "flag"],
-    ["Lender reference", "Verified", "ok"],
-    ["Possession terms", "Counsel check", "flag"]
+  const caseFiles = [
+    ["CPS", "Contract of Purchase and Sale", "Verified"],
+    ["MTG", "Mortgage Instructions", "Needs review"],
+    ["TAX", "Property Tax Notice", "Needs review"],
+    ["ID", "ID Verification", "Verified"],
+    ["LTR", "Engagement Letter", "Editing"]
   ];
 
   return (
-    <div className="review-list">
-      {rows.map(([title, state, className]) => (
-        <div className="review-card" key={title}>
-          <strong>{title}</strong>
-          <span className={className}>{state}</span>
+    <div className="review-editor-focused">
+      <aside className="review-editor-files" aria-label="Case files">
+        <div className="review-files-head">
+          <strong>Case files</strong>
+          <span>5 files</span>
         </div>
-      ))}
+
+        {caseFiles.map(([type, name, status]) => (
+          <div className={`review-file-row${name === "Engagement Letter" ? " active" : ""}`} key={name}>
+            <div className="review-file-icon">{type}</div>
+            <div>
+              <strong>{name}</strong>
+              <span>{status}</span>
+            </div>
+          </div>
+        ))}
+
+        <div className="review-ai-summary">
+          <b>✦</b>
+          <div>
+            <strong>AI import summary</strong>
+            <span>18 fields auto-filled</span>
+          </div>
+        </div>
+      </aside>
+
+      <main className="review-editor-workspace">
+        <div className="review-editor-topbar">
+          <div>
+            <strong>Engagement Letter</strong>
+            <span>Purchase Case · A512B39 · Draft document</span>
+          </div>
+
+          <div className="review-editor-tabs">
+            <button>Preview</button>
+            <button className="active">Edit</button>
+            <button>Comments</button>
+          </div>
+        </div>
+
+        <div className="review-editor-toolbar" aria-hidden="true">
+          <button>↶</button>
+          <button>↷</button>
+          <span>Normal text</span>
+          <button>B</button>
+          <button><i>I</i></button>
+          <button><u>U</u></button>
+          <button>• List</button>
+          <button>Link</button>
+
+          <em>Saved 2m ago</em>
+          <button className="review-save">Save draft</button>
+          <button className="review-generate">Generate final</button>
+        </div>
+
+        <div className="review-document-wrap">
+          <article className="review-letter-page">
+            <header className="review-letterhead-real">
+              <div className="review-law-logo">
+                <div className="review-law-mark">SL</div>
+                <div>
+                  <h4 contentEditable suppressContentEditableWarning>
+                    Smith Law
+                  </h4>
+                  <span contentEditable suppressContentEditableWarning>
+                    Conveyancing & Real Estate Law
+                  </span>
+                </div>
+              </div>
+
+              <div className="review-law-address" contentEditable suppressContentEditableWarning>
+                <p>200 – 123 Legal Avenue</p>
+                <p>Springfield, BC V5V 5V5</p>
+                <p>Phone: 604-555-0182</p>
+                <p>Fax: 604-555-0183</p>
+              </div>
+            </header>
+
+            <div className="review-letter-rule" />
+
+            <div className="review-letter-meta">
+              <div>
+                <p>
+                  <strong>Our File No:</strong>{" "}
+                  <span contentEditable suppressContentEditableWarning>A512B39</span>
+                </p>
+                <p contentEditable suppressContentEditableWarning>June 21, 2023</p>
+              </div>
+            </div>
+
+            <div className="review-letter-address">
+              <p>
+                <strong contentEditable suppressContentEditableWarning>John Doe</strong>
+              </p>
+              <p contentEditable suppressContentEditableWarning>267 Maybell Springs, Apt. 136</p>
+              <p contentEditable suppressContentEditableWarning>Springfield, BC V5V 5V5 Canada</p>
+            </div>
+
+            <p className="review-greeting" contentEditable suppressContentEditableWarning>
+              Dear Sirs/Mesdames:
+            </p>
+
+            <div className="review-letter-re">
+              <strong>Re:</strong>
+              <p>
+                Purchase of{" "}
+                <span className="review-chip warning" contentEditable suppressContentEditableWarning>
+                  267 Maybell Springs, Apt. 136
+                </span>
+                , Springfield, BC V5V 5V5 from{" "}
+                <span className="review-chip" contentEditable suppressContentEditableWarning>
+                  Jane Doe
+                </span>{" "}
+                (the "Seller")
+              </p>
+            </div>
+
+            <p className="review-letter-body" contentEditable suppressContentEditableWarning>
+              Thank you for selecting Smith Law to act as your representative in the above matter. The purpose of this
+              engagement letter is to outline the nature of the engagement and our respective responsibilities and
+              expectations.
+            </p>
+
+            <section className="review-letter-section">
+              <h5 contentEditable suppressContentEditableWarning>1. Scope of Engagement</h5>
+              <p>We will act for you in connection with the purchase of the Property, including:</p>
+
+              <ul>
+                <li>
+                  <span contentEditable suppressContentEditableWarning>
+                    Reviewing the Contract of Purchase and Sale and related documents
+                  </span>
+                </li>
+                <li>
+                  <span className="needs-check" contentEditable suppressContentEditableWarning>
+                    Confirming title, tax, lender, and possession information
+                  </span>
+                </li>
+                <li>
+                  <span className="soft-highlight" contentEditable suppressContentEditableWarning>
+                    Preparing case-specific closing documents
+                  </span>
+                </li>
+              </ul>
+            </section>
+
+            <section className="review-letter-section">
+              <h5 contentEditable suppressContentEditableWarning>2. Fees and Disbursements</h5>
+              <p>
+                Legal fees:{" "}
+                <span className="review-chip success" contentEditable suppressContentEditableWarning>
+                  $1,450.00
+                </span>{" "}
+                plus applicable taxes.
+              </p>
+            </section>
+
+            <div className="review-cursor-line" aria-hidden="true" />
+          </article>
+        </div>
+      </main>
     </div>
   );
 }
@@ -1545,12 +1772,26 @@ function StageFour() {
 }
 
 function StageContent({ index }: { index: number }) {
-  const titles = ["New Case Setup", "Import Sources", "Review Queue", "Automation Center"];
-  const pills = ["Residential Purchase", "4 files matched", "2 items flagged"];
-  const content = [<StageOne key="stage-one" />, <StageTwo key="stage-two" />, <StageThree key="stage-three" />, <StageFour key="stage-four" />];
+  const titles = ["New Case Setup", "Import Sources", "", "Automation Center"];
+  const pills = ["Residential Purchase", "4 files matched", "", "3rd-party integrations"];
+
+  const content = [
+    <StageOne key="stage-one" />,
+    <StageTwo key="stage-two" />,
+    <StageThree key="stage-three" />,
+    <StageFour key="stage-four" />
+  ];
+
+  if (index === 2) {
+    return (
+      <div className="screen-preview screen-preview-review">
+        {content[index]}
+      </div>
+    );
+  }
 
   return (
-    <div className="screen-preview">
+    <div className={`screen-preview${index === 0 ? " screen-preview-scroll" : ""}`}>
       {index < 2 ? (
         content[index]
       ) : (
@@ -1637,6 +1878,21 @@ function ProductSection() {
             ))}
           </div>
         </Reveal>
+
+        <div className="product-mobile-steps" aria-label="Product workflow">
+          {productStages.map((stage, index) => (
+            <div
+              className={`product-mobile-card product-mobile-card-${index % 2 === 0 ? "dark" : "green"}`}
+              key={stage.title}
+            >
+              <span className="product-mobile-num">{index + 1}</span>
+              <div className="product-mobile-body">
+                <strong>{stage.title}</strong>
+                <p>{stage.mobileSummary}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -2057,8 +2313,6 @@ function StorySection() {
           <p>
             Our vision is to shape a future where intelligent legal technology makes legal practice more efficient, accessible, and empowering. We strive to equip legal professionals with tools that streamline work, strengthen accuracy, and support sustainable growth, enabling them to serve clients with confidence and redefine what excellent legal service can look like in a modern world.
           </p>
-          <div className="story-facts" aria-label="Company highlights">
-          </div>
         </Reveal>
         <div className="values-grid">
           {values.map((value, index) => {
@@ -2474,9 +2728,9 @@ function SiteFooter() {
           <div>
             <h4>Product</h4>
             <a href="#problem">Why SmartConveyance</a>
-            <a href="#product">Workflow</a>
+            <a href="#product">Product</a>
             <a href="#features">Features</a>
-            <a href="#outcomes">Outcomes</a>
+            <a href="#impact">Impact</a>
           </div>
           <div>
             <h4>Company</h4>
@@ -2486,13 +2740,36 @@ function SiteFooter() {
             <a href="#demo">Talk to an Expert</a>
           </div>
           <div>
-            <h4>360° Support</h4>
-            <a href="mailto:support@innobridge.ca">support@innobridge.ca</a>
-            <a href="tel:+18882669010">+1 (888) 266-9010</a>
-            <a>Zoom: Schedule video call for walkthrough support</a>
-            <a>How-to: Embedded guide</a>
-            <a>1-on-1: Expert support and training</a>
-            <a href="https://smartconveyance.innobridge.ca/">Sign in</a>
+            <div className="footer-support-card">
+              <div className="footer-support-header">
+                <h4>360° Support</h4>
+                <span className="footer-support-live">Live</span>
+              </div>
+              <a href="mailto:support@innobridge.ca" className="footer-support-item">
+                <Mail className="icon" size={13} aria-hidden="true" />
+                support@innobridge.ca
+              </a>
+              <a href="tel:+18882669010" className="footer-support-item">
+                <Phone className="icon" size={13} aria-hidden="true" />
+                +1 (888) 266-9010
+              </a>
+              <div className="footer-support-item">
+                <Video className="icon" size={13} aria-hidden="true" />
+                Live Zoom walkthroughs
+              </div>
+              <div className="footer-support-item">
+                <BookOpen className="icon" size={13} aria-hidden="true" />
+                Embedded how-to guides
+              </div>
+              <div className="footer-support-item">
+                <UsersRound className="icon" size={13} aria-hidden="true" />
+                One-on-one expert training
+              </div>
+              <a href="https://smartconveyance.innobridge.ca/" className="footer-support-signin">
+                Sign in to portal
+                <ArrowRight size={13} aria-hidden="true" />
+              </a>
+            </div>
           </div>
         </div>
         <div className="footer-bottom">
@@ -2523,7 +2800,7 @@ export function SmartConveyanceLanding() {
         <TestimonialsSection />
         <SupportSection />
         <PricingSection />
-        <RoiSection />
+        {/* <RoiSection /> */}
         <StorySection />
         <DemoSection />
         <FaqSection />
