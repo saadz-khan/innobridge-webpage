@@ -2,6 +2,19 @@ import { roiOutcomes } from "../data/siteContent";
 import { Reveal } from "../components/Reveal";
 import { SectionHeader } from "../components/SectionHeader";
 
+const savingsHighlights = [
+  {
+    label: "Save upto",
+    value: "40%",
+    context: "on repetitive admin effort"
+  },
+  {
+    label: "Save",
+    value: "8+ hrs",
+    context: "per week in routine matter workflows"
+  }
+];
+
 export function RoiSection() {
   return (
     <section className="section section--roi" id="roi" aria-labelledby="roi-title">
@@ -12,6 +25,16 @@ export function RoiSection() {
           title="Enterprise-Grade Efficiency Without Enterprise-Level Cost."
           description="SmartConveyance is designed to make operational gains visible without asking firms to accept enterprise complexity."
         />
+
+        <div className="roi-highlight-grid" aria-label="Savings highlights">
+          {savingsHighlights.map((highlight, index) => (
+            <Reveal className="roi-highlight-card" delay={index * 70} key={highlight.label}>
+              <p className="roi-highlight-card__label">{highlight.label}</p>
+              <strong>{highlight.value}</strong>
+              <span>{highlight.context}</span>
+            </Reveal>
+          ))}
+        </div>
 
         <div className="roi-grid">
           {roiOutcomes.map((outcome, index) => {
