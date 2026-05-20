@@ -4,7 +4,7 @@ import { SectionHeader } from "../components/SectionHeader";
 
 const savingsHighlights = [
   {
-    label: "Save upto",
+    label: "Save up to",
     value: "40%",
     context: "on repetitive admin effort"
   },
