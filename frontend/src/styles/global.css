@@ -428,6 +428,26 @@ h4 {
   flex: 0 0 auto;
 }
 
+.svg-icon {
+  display: inline-block;
+  background: currentColor;
+  mask: var(--icon-url) center / contain no-repeat;
+  -webkit-mask: var(--icon-url) center / contain no-repeat;
+}
+
+.card-icon .svg-icon,
+.roi-bubble-icon .svg-icon,
+.value-card .value-card-icon .svg-icon,
+.flow-card .card-icon .svg-icon {
+  color: inherit;
+  margin-top: 0;
+}
+
+.hero-proof .proof-pill>.svg-icon {
+  color: var(--blue-250);
+  margin-top: 1px;
+}
+
 .skip-link {
   position: fixed;
   top: 14px;
@@ -1827,6 +1847,10 @@ h4 {
 .pain-card .icon {
   width: 30px;
   height: 30px;
+}
+
+.pain-card .svg-icon {
+  filter: drop-shadow(0 10px 16px rgba(23, 29, 26, .08));
 }
 
 .pain-card h3 {
@@ -3457,7 +3481,8 @@ h4 {
   color: var(--green-250);
 }
 
-.outcome-card .card-icon svg {
+.outcome-card .card-icon svg,
+.outcome-card .card-icon .svg-icon {
   width: 22px;
   height: 22px;
   stroke-width: 2.2;
@@ -4413,7 +4438,8 @@ h4 {
   color: var(--green-700);
 }
 
-.value-card-icon svg {
+.value-card-icon svg,
+.value-card-icon .svg-icon {
   width: 20px;
   height: 20px;
   stroke-width: 2.2;

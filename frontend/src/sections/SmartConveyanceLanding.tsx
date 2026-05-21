@@ -1,41 +1,51 @@
 import { useEffect, useRef, useState } from "react";
-import type { ChangeEvent, FocusEvent, FormEvent } from "react";
+import type { CSSProperties, ChangeEvent, FocusEvent, FormEvent } from "react";
 import type { LucideIcon } from "lucide-react";
+import barChartBlueIcon from "../assets/icons/bar-chart-187D93.svg";
+import barChartCharcoalIcon from "../assets/icons/bar-chart-CharcoalBlue.svg";
+import barChartLightBlueIcon from "../assets/icons/bar-chart-LightBlue.svg";
+import bookCharcoalIcon from "../assets/icons/book-CharcoalBlue.svg";
+import badgeCheckGreenIcon from "../assets/icons/noun-badge-check-2804255-LightGreen.svg";
+import checkCircleBlueIcon from "../assets/icons/check-circle-CGBlue.svg";
+import checkCircleGreenIcon from "../assets/icons/check-circle-AsparagusGreen.svg";
+import checklistBlueIcon from "../assets/icons/checklist-LightBlue.svg";
+import clockLightBlueIcon from "../assets/icons/clock-LightBlue.svg";
+import clockGreenIcon from "../assets/icons/clock-LightGreen.svg";
+import documentBlueIcon from "../assets/icons/document-CGBlue.svg";
+import folderCharcoalIcon from "../assets/icons/folder-open-CharcoalBlue.svg";
+import gearBlueIcon from "../assets/icons/noun-gear-8381225-LightBlue.svg";
+import handshakeGreenIcon from "../assets/icons/handshake-AsparagusGreen.svg";
+import linkGreenIcon from "../assets/icons/link-AsparagusGreen.svg";
+import lockGreenIcon from "../assets/icons/lock-LightGreen.svg";
+import penGreenIcon from "../assets/icons/pen-AsparagusGreen.svg";
+import phoneBlueIcon from "../assets/icons/phone-CGBlue.svg";
+import savingsBlueIcon from "../assets/icons/savings-LightBlue.svg";
+import savingsGreenIcon from "../assets/icons/savings-LightGreen.svg";
+import scalesBlueIcon from "../assets/icons/scales-LightBlue.svg";
+import shieldCharcoalIcon from "../assets/icons/shield-check-CharcoalBlue.svg";
+import shieldGreenIcon from "../assets/icons/shield-check-AsparagusGreen.svg";
+import sparkleBlueIcon from "../assets/icons/sparkle-CGBlue.svg";
+import sparkleLightBlueIcon from "../assets/icons/sparkle-LightBlue.svg";
+import speechBubbleBlueIcon from "../assets/icons/speech-bubble-LightBlue.svg";
+import usersGreenIcon from "../assets/icons/users-LightGreen.svg";
 import {
   ArrowRight,
-  BadgeCheck,
-  BarChart3,
   BookOpen,
-  ChevronRight,
-  CheckCircle2,
-  Clock3,
-  DollarSign,
-  FileText,
-  FolderOpen,
-  LineChart,
-  ListChecks,
-  LockKeyhole,
   Mail,
   Menu,
-  MessageCircle,
-  PenLine,
   Phone,
-  RefreshCw,
-  Scale,
-  ShieldCheck,
-  Sparkles,
-  TrendingUp,
   UsersRound,
   Video,
-  Workflow,
   X
 } from "lucide-react";
 import { Reveal } from "../components/Reveal";
 
+type IconGraphic = LucideIcon | string;
+
 type IconCard = {
   title: string;
   description: string;
-  icon: LucideIcon;
+  icon: IconGraphic;
   tone?: "blue" | "green" | "dark";
 };
 
@@ -418,17 +428,17 @@ const proofPills: IconCard[] = [
   {
     title: "Legal-first design",
     description: "Built with legal professionals",
-    icon: Scale
+    icon: scalesBlueIcon
   },
   {
     title: "AI-assisted workflow",
     description: "From intake to filing",
-    icon: Sparkles
+    icon: sparkleLightBlueIcon
   },
   {
     title: "360° support",
     description: "Phone, Email, Zoom, How-to, 1-on-1",
-    icon: MessageCircle
+    icon: speechBubbleBlueIcon
   }
 ];
 
@@ -456,20 +466,20 @@ const painCards: IconCard[] = [
     title: "AI-powered features",
     description:
       "Smart automation supports accurate conveyancing, reduces manual errors, minimizes re-keying, and helps generate case-specific files.",
-    icon: Sparkles
+    icon: sparkleBlueIcon
   },
   {
     title: "Make complex conveyancing simple",
     description:
       "A legal-first interface keeps the workflow simple to learn, easy to use, and tailored to your practice",
-    icon: LineChart,
+    icon: barChartBlueIcon,
     tone: "green"
   },
   {
     title: "Streamlined workflow",
     description:
       "All-in-one form and one-click file generation that greatly simplify the conveyancing process from intake to filing.",
-    icon: FolderOpen,
+    icon: folderCharcoalIcon,
     tone: "dark"
   }
 ];
@@ -526,77 +536,77 @@ const featureCards: IconCard[] = [
     title: "All conveyancing files",
     description:
       "Residential and commercial matters for purchase, sales, refinance, and family transfer.",
-    icon: CheckCircle2
+    icon: checkCircleBlueIcon
   },
   {
     title: "AI-assisted workflow",
     description:
       "Auto calculation, auto data import, and one-click file generation, within the All-in-One form.",
-    icon: FileText
+    icon: documentBlueIcon
   },
   {
     title: "Third-party integrations",
     description:
       "Support for title search, webfiling and title insurance.",
-    icon: Workflow,
+    icon: linkGreenIcon,
     tone: "green"
   },
   {
     title: "Smart templates",
     description:
       "Customizable firm templates and consistent document generation.",
-    icon: PenLine,
+    icon: penGreenIcon,
     tone: "green"
   },
   {
     title: "Case progress tracking",
     description:
       "Track matter state, review checkpoints, status updates, and audit activity.",
-    icon: BarChart3,
+    icon: barChartCharcoalIcon,
     tone: "dark"
   },
   {
     title: "Law firm control",
     description:
       "Role-aware workflow, audit trails, legal review points, and consistent file state support firm confidence.",
-    icon: ShieldCheck,
+    icon: shieldCharcoalIcon,
     tone: "dark"
   }
 ];
 
 const outcomes: IconCard[] = [
-  { icon: DollarSign, title: "Save on every case", description: "Fair, transparent pricing with no hidden fees for tools supporting firm's needs." },
-  { icon: Clock3, title: "Save hours", description: "AI-driven for instant imports, one-click features, and smooth case completion.", tone: "green" },
-  { icon: RefreshCw, title: "Workflow consistency", description: "Facilitate consistent practice among cases with automation and activity tracking." },
-  { icon: BadgeCheck, title: "Precision conveyancing", description: "From PDF imports to financial statements, automated precision ensures accuracy in every step.", tone: "green" },
-  { icon: TrendingUp, title: "Productivity", description: "Simplify training, streamline workflows, and empower your firm to do more with less." },
-  { icon: UsersRound, title: "Confidence", description: "Fewer errors, smoother workflows, and 360° support, enabling firms to grow and scale with confidence.", tone: "green" },
-  { icon: ListChecks, title: "In-control", description: "From user permissions to activity tracking to case progress, have complete control." },
-  { icon: LockKeyhole, title: "Security", description: "Keep sensitive legal information secure, private, protected. Safeguarding your clients’ trust.", tone: "green" }
+  { icon: savingsBlueIcon, title: "Save on every case", description: "Fair, transparent pricing with no hidden fees for tools supporting firm's needs." },
+  { icon: clockGreenIcon, title: "Save hours", description: "AI-driven for instant imports, one-click features, and smooth case completion.", tone: "green" },
+  { icon: gearBlueIcon, title: "Workflow consistency", description: "Facilitate consistent practice among cases with automation and activity tracking." },
+  { icon: badgeCheckGreenIcon, title: "Precision conveyancing", description: "From PDF imports to financial statements, automated precision ensures accuracy in every step.", tone: "green" },
+  { icon: barChartLightBlueIcon, title: "Productivity", description: "Simplify training, streamline workflows, and empower your firm to do more with less." },
+  { icon: usersGreenIcon, title: "Confidence", description: "Fewer errors, smoother workflows, and 360° support, enabling firms to grow and scale with confidence.", tone: "green" },
+  { icon: checklistBlueIcon, title: "In-control", description: "From user permissions to activity tracking to case progress, have complete control." },
+  { icon: lockGreenIcon, title: "Security", description: "Keep sensitive legal information secure, private, protected. Safeguarding your clients’ trust.", tone: "green" }
 ];
 
 const supportSteps: IconCard[] = [
   {
     title: "Discovery Call",
     description: "Learn and map our AI-driven solutions to your workflow.",
-    icon: Phone
+    icon: phoneBlueIcon
   },
   {
     title: "Quick onboarding",
     description: "Fast-track setup built for your team's immediate transition.",
-    icon: ArrowRight,
+    icon: handshakeGreenIcon,
     tone: "green"
   },
   {
     title: "Seamless training",
     description: "Embedded guidance and hands-on training help your team move with confidence.",
-    icon: BookOpen,
+    icon: bookCharcoalIcon,
     tone: "dark"
   },
   {
     title: "Conveyancing",
     description: "Automation, AI features, third-party integrations, and 360° support.",
-    icon: LineChart
+    icon: barChartBlueIcon
   }
 ];
 
@@ -679,7 +689,7 @@ const roiBubbles: RoiBubble[] = [
     metric: { end: 65, finalLabel: "Save $65-351", prefix: "Save $", rangeEnd: 351 },
     title: "per case",
     description: "Save $65-351/case using SmartConveyance compared to using others.",
-    icon: DollarSign,
+    icon: savingsGreenIcon,
     tone: "green"
   },
   {
@@ -687,14 +697,14 @@ const roiBubbles: RoiBubble[] = [
     metric: { end: 105300, finalLabel: "Save $105,300", prefix: "Save $" },
     title: "per year",
     description: "Save up to $105,300/year for a typical firm processing 300+ cases per year.",
-    icon: BarChart3
+    icon: barChartLightBlueIcon
   },
   {
     value: "Save 4 hrs",
     metric: { end: 4, finalLabel: "Save 4 hrs", suffix: " hrs", prefix: "Save up to " },
     title: "per case",
     description: "Save up to 4 hours/case operation time, freeing legal professionals for higher-value work.",
-    icon: Clock3
+    icon: clockLightBlueIcon
   }
 ];
 
@@ -726,24 +736,24 @@ const values: IconCard[] = [
   {
     title: "Simplicity",
     description: "Creating user-friendly systems that are easy to adopt and practical for daily legal work.",
-    icon: CheckCircle2,
+    icon: checkCircleGreenIcon,
     tone: "green"
   },
   {
     title: "Quality",
     description: "Delivering dependable solutions and responsive support that legal professionals can trust.",
-    icon: ShieldCheck,
+    icon: shieldGreenIcon,
     tone: "green"
   },
   {
     title: "Productivity",
     description: "Driving automation, integration, and workflow optimization that save time and reduce repetitive effort.",
-    icon: LineChart
+    icon: barChartBlueIcon
   },
   {
     title: "Innovation",
     description: "Advancing our platforms with intelligent capabilities that improve user experience and enable firms to grow with confidence.",
-    icon: Sparkles
+    icon: sparkleBlueIcon
   },
 ];
 
@@ -970,10 +980,26 @@ function SiteNav() {
   );
 }
 
-function CardIcon({ icon: Icon, tone }: { icon: LucideIcon; tone?: IconCard["tone"] }) {
+function IconArtwork({ icon, className = "icon" }: { icon: IconGraphic; className?: string }) {
+  if (typeof icon === "string") {
+    return (
+      <span
+        className={`${className} svg-icon`}
+        style={{ "--icon-url": `url("${icon}")` } as CSSProperties}
+        aria-hidden="true"
+      />
+    );
+  }
+
+  const Icon = icon;
+
+  return <Icon className={className} aria-hidden="true" />;
+}
+
+function CardIcon({ icon, tone }: { icon: IconGraphic; tone?: IconCard["tone"] }) {
   return (
     <div className={`card-icon${tone === "green" ? " green" : ""}${tone === "dark" ? " dark" : ""}`}>
-      <Icon className="icon" aria-hidden="true" />
+      <IconArtwork icon={icon} />
     </div>
   );
 }
@@ -1199,19 +1225,15 @@ function HeroSection() {
             </a>
           </div>
           <div className="hero-proof" aria-label="Product strengths">
-            {proofPills.map((pill) => {
-              const Icon = pill.icon;
-
-              return (
-                <div className="proof-pill" key={pill.title}>
-                  <Icon className="icon" aria-hidden="true" />
-                  <div>
-                    <span>{pill.title}</span>
-                    <em>{pill.description}</em>
-                  </div>
+            {proofPills.map((pill) => (
+              <div className="proof-pill" key={pill.title}>
+                <IconArtwork icon={pill.icon} />
+                <div>
+                  <span>{pill.title}</span>
+                  <em>{pill.description}</em>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </Reveal>
 
@@ -1821,19 +1843,15 @@ function OutcomesSection() {
           <h2 id="outcomesTitle">Digital conveyancing, <br /> re-engineered.</h2>
         </Reveal>
         <div className="outcome-grid">
-          {outcomes.map((outcome, index) => {
-            const Icon = outcome.icon;
-
-            return (
+          {outcomes.map((outcome, index) => (
             <Reveal className={`outcome-card${outcome.tone === "green" ? " outcome-card--green" : ""}`} delay={(index % 4) * 70} key={outcome.title}>
-              <div className="card-icon">
-                <Icon className="icon" aria-hidden="true" />
+              <div className={`card-icon${outcome.tone === "green" ? " green" : ""}`}>
+                <IconArtwork icon={outcome.icon} />
               </div>
               <strong>{outcome.title}</strong>
               <span>{outcome.description}</span>
             </Reveal>
-            );
-          })}
+          ))}
         </div>
       </div>
     </section>
@@ -2154,10 +2172,7 @@ function RoiSection() {
         </Reveal>
 
         <div className="roi-bubble-grid">
-          {roiBubbles.map((bubble, index) => {
-            const Icon = bubble.icon;
-
-            return (
+          {roiBubbles.map((bubble, index) => (
               <Reveal
                 className={`roi-bubble${bubble.tone === "green" ? " roi-bubble-primary" : ""}`}
                 delay={index * 90}
@@ -2169,13 +2184,12 @@ function RoiSection() {
                     <span className="roi-count-label">{bubble.title}</span>
                   </strong>
                   <span className="roi-bubble-icon">
-                    <Icon className="icon" aria-hidden="true" />
+                    <IconArtwork icon={bubble.icon} />
                   </span>
                 </div>
                 <p>{bubble.description}</p>
               </Reveal>
-            );
-          })}
+          ))}
         </div>
       </div>
     </section>
@@ -2200,19 +2214,15 @@ function StorySection() {
           </p>
         </Reveal>
         <div className="values-grid">
-          {values.map((value, index) => {
-            const Icon = value.icon;
-
-            return (
+          {values.map((value, index) => (
             <Reveal className={`value-card${value.tone === "green" ? " value-card--green" : ""}`} delay={(index % 2) * 80} key={value.title}>
               <div className="value-card-icon">
-                <Icon className="icon" aria-hidden="true" />
+                <IconArtwork icon={value.icon} />
               </div>
               <strong>{value.title}</strong>
               <span>{value.description}</span>
             </Reveal>
-            );
-          })}
+          ))}
         </div>
       </div>
     </section>
