@@ -1553,13 +1553,30 @@ function StageThree() {
         <div className="review-editor-topbar">
           <div>
             <strong>Engagement Letter</strong>
-            <span>Purchase Case · A512B39 · Generated document</span>
+            <span>Purchase Case · A512B39 · Draft document</span>
           </div>
 
           <div className="review-editor-tabs">
-            <button className="active">Preview</button>
+            <button>Preview</button>
+            <button className="active">Edit</button>
             <button>Comments</button>
           </div>
+        </div>
+
+        <div className="review-editor-toolbar" aria-hidden="true">
+          <button>↶</button>
+          <button>↷</button>
+          <span className="review-toolbar-dropdown">Normal text</span>
+          <div className="toolbar-sep" />
+          <button>B</button>
+          <button><i>I</i></button>
+          <button><u>U</u></button>
+          <div className="toolbar-sep" />
+          <button>¶</button>
+          <button className="review-toolbar-link">Link</button>
+          <em>Saved 2m ago</em>
+          <button className="review-save">Save draft</button>
+          <button className="review-generate">Generate final</button>
         </div>
 
         <div className="review-document-wrap">
@@ -1568,12 +1585,12 @@ function StageThree() {
               <div className="review-law-logo">
                 <div className="review-law-mark">SL</div>
                 <div>
-                  <h4>Smith Law</h4>
-                  <span>Conveyancing & Real Estate Law</span>
+                  <h4 className="review-editable">Smith Law</h4>
+                  <span className="review-editable">Conveyancing & Real Estate Law</span>
                 </div>
               </div>
 
-              <div className="review-law-address">
+              <div className="review-law-address review-editable-block">
                 <p>200 – 123 Legal Avenue</p>
                 <p>Springfield, BC V5V 5V5</p>
                 <p>Phone: 604-555-0182</p>
@@ -1587,50 +1604,54 @@ function StageThree() {
               <div>
                 <p>
                   <strong>Our File No:</strong>{" "}
-                  <span>A512B39</span>
+                  <span className="review-editable-inline">A512B39</span>
                 </p>
-                <p>June 21, 2023</p>
+                <p className="review-editable-inline">June 21, 2023</p>
               </div>
             </div>
 
             <div className="review-letter-address">
-              <p><strong>John Doe</strong></p>
-              <p>267 Maybell Springs, Apt. 136</p>
-              <p>Springfield, BC V5V 5V5 Canada</p>
+              <p>
+                <strong className="review-editable-inline">John Doe</strong>
+              </p>
+              <p className="review-editable-inline">267 Maybell Springs, Apt. 136</p>
+              <p className="review-editable-inline">Springfield, BC V5V 5V5 Canada</p>
             </div>
 
-            <p className="review-greeting">Dear Sirs/Mesdames:</p>
+            <p className="review-greeting review-editable-inline">Dear Sirs/Mesdames:</p>
 
             <div className="review-letter-re">
               <strong>Re:</strong>
               <p>
                 Purchase of{" "}
-                <span className="review-chip warning">267 Maybell Springs, Apt. 136</span>
+                <span className="review-chip warning review-editable-inline">267 Maybell Springs, Apt. 136</span>
                 , Springfield, BC V5V 5V5 from{" "}
-                <span className="review-chip">Jane Doe</span>{" "}
+                <span className="review-chip review-editable-inline">Jane Doe</span>{" "}
                 (the "Seller")
               </p>
             </div>
 
-            <p className="review-letter-body">
+            <p className="review-letter-body review-editable-paragraph">
               Thank you for selecting Smith Law to act as your representative in the above matter. The purpose of this
               engagement letter is to outline the nature of the engagement and our respective responsibilities and
               expectations.
             </p>
 
             <section className="review-letter-section">
-              <h5>1. Scope of Engagement</h5>
+              <h5 className="review-editable-inline">1. Scope of Engagement</h5>
               <p>We will act for you in connection with the purchase of the Property, including:</p>
 
               <ul>
                 <li>
-                  <span>Reviewing the Contract of Purchase and Sale and related documents</span>
+                  <span className="review-editable-inline">Reviewing the Contract of Purchase and Sale and related documents</span>
                 </li>
                 <li>
-                  <span className="needs-check">Confirming title, tax, lender, and possession information</span>
+                  <span className="needs-check review-editable-inline review-editing-selection">
+                    Confirming title, tax, lender, and possession information
+                  </span>
                 </li>
                 <li>
-                  <span className="soft-highlight">Preparing case-specific closing documents</span>
+                  <span className="soft-highlight review-editable-inline">Preparing case-specific closing documents</span>
                 </li>
               </ul>
             </section>
@@ -1639,10 +1660,12 @@ function StageThree() {
               <h5>2. Fees and Disbursements</h5>
               <p>
                 Legal fees:{" "}
-                <span className="review-chip success">$1,450.00</span>{" "}
+                <span className="review-chip success review-editable-inline">$1,450.00</span>{" "}
                 plus applicable taxes.
               </p>
             </section>
+
+            <span className="review-cursor-line" aria-hidden="true" />
           </article>
         </div>
       </main>
