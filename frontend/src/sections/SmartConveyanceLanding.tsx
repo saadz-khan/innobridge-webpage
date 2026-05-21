@@ -1348,7 +1348,10 @@ function ProblemSection() {
           </Reveal>
           <Reveal className="matter-coverage-card problem-coverage-card" delay={90}>
             <span className="coverage-kicker">Matter coverage</span>
-            <strong>Residential & Commercial</strong>
+            <strong>
+              <span>Residential &</span>
+              <span>Commercial</span>
+            </strong>
             <div className="matter-coverage-list">
               {matterCoverage.map((matterType) => (
                 <span key={matterType}>{matterType}</span>

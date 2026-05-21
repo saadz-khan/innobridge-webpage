@@ -1763,6 +1763,7 @@ h4 {
 }
 
 .why-proof-card {
+  height: 100%;
   box-shadow: var(--shadow-sm);
 }
 
@@ -2123,13 +2124,21 @@ h4 {
 
 .problem-coverage-card {
   margin-top: 0;
-  min-height: 0;
+  min-height: 164px;
   padding: 24px;
   box-shadow: 0 16px 38px rgba(23, 29, 26, .13);
 }
 
 .problem-coverage-card strong {
-  max-width: 11.2ch;
+  max-width: none;
+  font-size: var(--fs-h3);
+  letter-spacing: -.025em;
+  line-height: 1.08;
+}
+
+.problem-coverage-card strong span {
+  display: block;
+  white-space: nowrap;
 }
 
 .problem-coverage-card .matter-coverage-list {
