@@ -394,15 +394,15 @@ const navLinks = [
   { label: "Home", href: "#top" },
   { label: "Product", href: "#product" },
   { label: "Features", href: "#features" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "Support", href: "#support" }
+  { label: "Support", href: "#support" },
+  { label: "Pricing", href: "#pricing" }
 ];
 
 const navSectionTargets = [
   { sectionId: "problem", navId: "" },
   { sectionId: "product", navId: "product" },
   { sectionId: "features", navId: "features" },
-  { sectionId: "impact", navId: "" },
+  { sectionId: "impact", navId: "impact" },
   { sectionId: "testimonials", navId: "" },
   { sectionId: "support", navId: "support" },
   { sectionId: "pricing", navId: "pricing" },
@@ -434,7 +434,7 @@ const proofPills: IconCard[] = [
 
 const metrics = [
   {
-    value: "Save up to $351/case",
+    value: "Save on|Every case",
     label: "Potential savings for typical law firm through reduced software fee, labour cost and admin time."
   },
   {
@@ -446,7 +446,7 @@ const metrics = [
     label: "Simple to learn, easy to use, and requires minimal training."
   },
   {
-    value: "Residential and Commercial|All Case Types",
+    value: "Residential and Commercial|All case types",
     label: "Residential and commercial workflows for purchase, sale, refinance, and family transfer matters."
   }
 ];
@@ -455,13 +455,13 @@ const painCards: IconCard[] = [
   {
     title: "AI-powered features",
     description:
-      "Deep automation supports accurate conveyancing, reduces manual errors, minimizes re-keying, and helps generate case-specific files.",
+      "Smart automation supports accurate conveyancing, reduces manual errors, minimizes re-keying, and helps generate case-specific files.",
     icon: Sparkles
   },
   {
     title: "Make complex conveyancing simple",
     description:
-      "A calm, legal-first interface keeps the workflow simple to learn, easy to use, and tailored to your practice",
+      "A legal-first interface keeps the workflow simple to learn, easy to use, and tailored to your practice",
     icon: LineChart,
     tone: "green"
   },
@@ -537,7 +537,7 @@ const featureCards: IconCard[] = [
   {
     title: "Third-party integrations",
     description:
-      "Support for title search, webfiling, title insurance ordering.",
+      "Support for title search, webfiling and title insurance.",
     icon: Workflow,
     tone: "green"
   },
@@ -556,7 +556,7 @@ const featureCards: IconCard[] = [
     tone: "dark"
   },
   {
-    title: "Lawfirm control",
+    title: "Law firm control",
     description:
       "Role-aware workflow, audit trails, legal review points, and consistent file state support firm confidence.",
     icon: ShieldCheck,
@@ -565,14 +565,14 @@ const featureCards: IconCard[] = [
 ];
 
 const outcomes: IconCard[] = [
-  { icon: DollarSign, title: "Save $124+ per case", description: "Reduce the cost of repeat administrative work." },
-  { icon: Clock3, title: "Save hours per case", description: "Free time from manual entry and status chasing.", tone: "green" },
-  { icon: RefreshCw, title: "Workflow consistency", description: "Use repeatable steps for every matter." },
-  { icon: BadgeCheck, title: "Precision conveyancing", description: "Review matters with cleaner information.", tone: "green" },
-  { icon: TrendingUp, title: "Productivity", description: "Increase case capacity without adding complexity." },
-  { icon: UsersRound, title: "Confidence", description: "Give lawyers and conveyancers a shared state of truth.", tone: "green" },
-  { icon: ListChecks, title: "In-control", description: "See what is done, what is flagged, and what is next." },
-  { icon: LockKeyhole, title: "Security", description: "Support legal workflows with structured controls.", tone: "green" }
+  { icon: DollarSign, title: "Save on every case", description: "Fair, transparent pricing with no hidden fees for tools supporting firm's needs." },
+  { icon: Clock3, title: "Save hours", description: "AI-driven for instant imports, one-click features, and smooth case completion.", tone: "green" },
+  { icon: RefreshCw, title: "Workflow consistency", description: "Facilitate consistent practice among cases with automation and activity tracking." },
+  { icon: BadgeCheck, title: "Precision conveyancing", description: "From PDF imports to financial statements, automated precision ensures accuracy in every step.", tone: "green" },
+  { icon: TrendingUp, title: "Productivity", description: "Simplify training, streamline workflows, and empower your firm to do more with less." },
+  { icon: UsersRound, title: "Confidence", description: "Fewer errors, smoother workflows, and 360° support, enabling firms to grow and scale with confidence.", tone: "green" },
+  { icon: ListChecks, title: "In-control", description: "From user permissions to activity tracking to case progress, have complete control." },
+  { icon: LockKeyhole, title: "Security", description: "Keep sensitive legal information secure, private, protected. Safeguarding your clients’ trust.", tone: "green" }
 ];
 
 const supportSteps: IconCard[] = [
@@ -600,11 +600,6 @@ const supportSteps: IconCard[] = [
   }
 ];
 
-type FlowPoint = {
-  x: number;
-  y: number;
-};
-
 type SupportFlowRoute = {
   id: string;
   d: string;
@@ -614,86 +609,42 @@ function clampNumber(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
-function formatRouteNumber(value: number) {
-  return Number(value.toFixed(1));
-}
-
-function getPointDistance(a: FlowPoint, b: FlowPoint) {
-  return Math.hypot(a.x - b.x, a.y - b.y);
-}
-
-function getRoundedPolylinePath(points: FlowPoint[], cornerRadius: number) {
-  const routePoints = points.filter((point, index) => {
-    const previousPoint = points[index - 1];
-
-    return !previousPoint || getPointDistance(point, previousPoint) > 0.5;
-  });
-
-  if (routePoints.length < 2) {
-    return "";
-  }
-
-  let d = `M ${formatRouteNumber(routePoints[0].x)} ${formatRouteNumber(routePoints[0].y)}`;
-
-  for (let index = 1; index < routePoints.length - 1; index += 1) {
-    const previousPoint = routePoints[index - 1];
-    const currentPoint = routePoints[index];
-    const nextPoint = routePoints[index + 1];
-    const previousDistance = getPointDistance(currentPoint, previousPoint);
-    const nextDistance = getPointDistance(currentPoint, nextPoint);
-    const radius = Math.min(cornerRadius, previousDistance / 2, nextDistance / 2);
-
-    if (radius < 1) {
-      d += ` L ${formatRouteNumber(currentPoint.x)} ${formatRouteNumber(currentPoint.y)}`;
-      continue;
-    }
-
-    const beforeCorner: FlowPoint = {
-      x: currentPoint.x + ((previousPoint.x - currentPoint.x) / previousDistance) * radius,
-      y: currentPoint.y + ((previousPoint.y - currentPoint.y) / previousDistance) * radius
-    };
-
-    const afterCorner: FlowPoint = {
-      x: currentPoint.x + ((nextPoint.x - currentPoint.x) / nextDistance) * radius,
-      y: currentPoint.y + ((nextPoint.y - currentPoint.y) / nextDistance) * radius
-    };
-
-    d += ` L ${formatRouteNumber(beforeCorner.x)} ${formatRouteNumber(beforeCorner.y)}`;
-    d += ` Q ${formatRouteNumber(currentPoint.x)} ${formatRouteNumber(currentPoint.y)} ${formatRouteNumber(afterCorner.x)} ${formatRouteNumber(afterCorner.y)}`;
-  }
-
-  const lastPoint = routePoints[routePoints.length - 1];
-  d += ` L ${formatRouteNumber(lastPoint.x)} ${formatRouteNumber(lastPoint.y)}`;
-
-  return d;
-}
-
+/**
+ * Builds an organic S-curve SVG path between two cards using cubic bezier segments.
+ *
+ * Uses two chained cubics (C … S …) so the path always exits each card horizontally,
+ * sweeps to the board's outer edges, crosses at the vertical midpoint, and arrives
+ * at the next card horizontally. The SVG S command auto-reflects the prior CP,
+ * guaranteeing C1 continuity at the crossing point.
+ *
+ * Fixed board-edge routing lanes (rather than card-relative offsets) ensure every
+ * path gets a generous, symmetric sweep regardless of which side the card sits on.
+ */
 function buildSupportFlowPath(previousRect: DOMRect, nextRect: DOMRect, boardRect: DOMRect) {
-  const portGap = 14;
-  const edgeLane = clampNumber(boardRect.width * 0.062, 34, 50);
-  const start: FlowPoint = {
-    x: clampNumber(previousRect.right - boardRect.left + portGap, 22, boardRect.width - 22),
-    y: previousRect.top - boardRect.top + previousRect.height / 2
-  };
-  const end: FlowPoint = {
-    x: clampNumber(nextRect.left - boardRect.left - portGap, 22, boardRect.width - 22),
-    y: nextRect.top - boardRect.top + nextRect.height / 2
-  };
-  const rightLane = clampNumber(Math.max(boardRect.width - edgeLane, start.x + 10), 22, boardRect.width - 12);
-  const leftLane = clampNumber(Math.min(edgeLane, end.x - 10), 12, boardRect.width - 22);
-  const bridgeY = start.y + (end.y - start.y) / 2;
-  const cornerRadius = clampNumber(Math.abs(end.y - start.y) * 0.38, 54, 84);
+  const portGap = 12;
+  const n = (v: number) => Number(v.toFixed(1));
 
-  return getRoundedPolylinePath(
-    [
-      start,
-      { x: rightLane, y: start.y },
-      { x: rightLane, y: bridgeY },
-      { x: leftLane, y: bridgeY },
-      { x: leftLane, y: end.y },
-      end
-    ],
-    cornerRadius
+  // Connection points: mid-height of each card's outer edge
+  const startX = clampNumber(previousRect.right - boardRect.left + portGap, 10, boardRect.width - 10);
+  const startY = previousRect.top - boardRect.top + previousRect.height / 2;
+  const endX   = clampNumber(nextRect.left  - boardRect.left - portGap, 10, boardRect.width - 10);
+  const endY   = nextRect.top  - boardRect.top  + nextRect.height  / 2;
+
+  // Fixed routing lanes at the board edges — gives maximum arc regardless of card position
+  const margin    = clampNumber(boardRect.width * 0.04, 10, 22);
+  const rightLane = boardRect.width - margin;   // always near the right wall
+  const leftLane  = margin;                      // always near the left wall
+  const centerX   = boardRect.width / 2;
+
+  // Vertical crossing point (40% of the way down keeps the first arc shorter & tighter)
+  const bridgeY = startY + (endY - startY) * 0.5;
+
+  // Cubic 1: exit startX horizontally → rightLane arc → center crossing
+  // Cubic 2 (smooth S): mirror CP → leftLane arc → arrive endX horizontally
+  return (
+    `M ${n(startX)} ${n(startY)} ` +
+    `C ${n(rightLane)} ${n(startY)} ${n(rightLane)} ${n(bridgeY)} ${n(centerX)} ${n(bridgeY)} ` +
+    `S ${n(leftLane)} ${n(endY)} ${n(endX)} ${n(endY)}`
   );
 }
 
@@ -847,7 +798,7 @@ const faqGroups: FaqGroup[] = [
     ]
   },
   {
-    title: "Data And Security",
+    title: "Data and Security",
     description: "Protection, third-party data handling, residency, and retention.",
     items: [
       {
@@ -880,7 +831,7 @@ const faqGroups: FaqGroup[] = [
       {
         question: "What level of customer support does SmartConveyance provide?",
         answer: [
-          "SmartConveyance offers 360-degree support, including phone, email, Zoom assistance, embedded how-to guides, webinars, and one-on-one expert training."
+          "SmartConveyance offers  360º support, including phone, email, Zoom assistance, embedded how-to guides, webinars, and one-on-one expert training."
         ]
       },
       {
@@ -1089,7 +1040,7 @@ function HeroPortalPreview() {
           </div>
           <div className="portal-live-pill">
             <i />
-            Live matter
+            Live case
           </div>
         </div>
 
@@ -1218,6 +1169,9 @@ function HeroPortalPreview() {
 function HeroSection() {
   return (
     <section className="hero" id="top" aria-labelledby="heroTitle">
+      <div className="hero-orb hero-orb-1" aria-hidden="true" />
+      <div className="hero-orb hero-orb-2" aria-hidden="true" />
+      <div className="hero-orb hero-orb-3" aria-hidden="true" />
       <div className="container hero-grid">
         <Reveal className="hero-copy">
           <div className="hero-kicker">
@@ -1343,9 +1297,9 @@ function ProblemSection() {
       <div className="container problem-layout">
         <Reveal className="sticky-note">
           <div className="eyebrow">WHY SMARTCONVEYANCE</div>
-          <h2 id="problemTitle">Faster conveyancing Fewer errors.</h2>
+          <h2 id="problemTitle">Faster conveyancing. Fewer errors.</h2>
           <p className="lead">
-            The real problem is not a lack of software. It is fragmented work: re-keying, switching tools, and checking
+            The real challenge is not a lack of software. It is fragmented work: re-keying, switching tools, and checking
             the same file across multiple places.
           </p>
           <div className="tax-card">
@@ -1362,7 +1316,6 @@ function ProblemSection() {
                 <h3>{card.title}</h3>
                 <p>{card.description}</p>
               </div>
-              <ChevronRight className="pain-card-arrow" aria-hidden="true" />
             </Reveal>
           ))}
         </div>
@@ -1413,7 +1366,7 @@ function StageOne() {
 
   const [selectedValues, setSelectedValues] = useState<Record<StageOneSelectKey, string>>({
     representing: "Buyer",
-    propertyType: "Single Family House"
+    propertyType: ""
   });
 
   const representingOptions = ["Buyer", "Seller", "Borrower", "Transferor", "Transferee"];
@@ -1567,68 +1520,19 @@ function StageTwo() {
 }
 
 function StageThree() {
-  const caseFiles = [
-    ["CPS", "Contract of Purchase and Sale", "Verified"],
-    ["MTG", "Mortgage Instructions", "Needs review"],
-    ["TAX", "Property Tax Notice", "Needs review"],
-    ["ID", "ID Verification", "Verified"],
-    ["LTR", "Engagement Letter", "Editing"]
-  ];
-
   return (
-    <div className="review-editor-focused">
-      <aside className="review-editor-files" aria-label="Case files">
-        <div className="review-files-head">
-          <strong>Case files</strong>
-          <span>5 files</span>
-        </div>
-
-        {caseFiles.map(([type, name, status]) => (
-          <div className={`review-file-row${name === "Engagement Letter" ? " active" : ""}`} key={name}>
-            <div className="review-file-icon">{type}</div>
-            <div>
-              <strong>{name}</strong>
-              <span>{status}</span>
-            </div>
-          </div>
-        ))}
-
-        <div className="review-ai-summary">
-          <b>✦</b>
-          <div>
-            <strong>AI import summary</strong>
-            <span>18 fields auto-filled</span>
-          </div>
-        </div>
-      </aside>
-
+    <div className="review-editor-focused review-editor-no-sidebar">
       <main className="review-editor-workspace">
         <div className="review-editor-topbar">
           <div>
             <strong>Engagement Letter</strong>
-            <span>Purchase Case · A512B39 · Draft document</span>
+            <span>Purchase Case · A512B39 · Generated document</span>
           </div>
 
           <div className="review-editor-tabs">
-            <button>Preview</button>
-            <button className="active">Edit</button>
+            <button className="active">Preview</button>
             <button>Comments</button>
           </div>
-        </div>
-
-        <div className="review-editor-toolbar" aria-hidden="true">
-          <button>↶</button>
-          <button>↷</button>
-          <span>Normal text</span>
-          <button>B</button>
-          <button><i>I</i></button>
-          <button><u>U</u></button>
-          <button>• List</button>
-          <button>Link</button>
-
-          <em>Saved 2m ago</em>
-          <button className="review-save">Save draft</button>
-          <button className="review-generate">Generate final</button>
         </div>
 
         <div className="review-document-wrap">
@@ -1637,16 +1541,12 @@ function StageThree() {
               <div className="review-law-logo">
                 <div className="review-law-mark">SL</div>
                 <div>
-                  <h4 contentEditable suppressContentEditableWarning>
-                    Smith Law
-                  </h4>
-                  <span contentEditable suppressContentEditableWarning>
-                    Conveyancing & Real Estate Law
-                  </span>
+                  <h4>Smith Law</h4>
+                  <span>Conveyancing & Real Estate Law</span>
                 </div>
               </div>
 
-              <div className="review-law-address" contentEditable suppressContentEditableWarning>
+              <div className="review-law-address">
                 <p>200 – 123 Legal Avenue</p>
                 <p>Springfield, BC V5V 5V5</p>
                 <p>Phone: 604-555-0182</p>
@@ -1660,80 +1560,62 @@ function StageThree() {
               <div>
                 <p>
                   <strong>Our File No:</strong>{" "}
-                  <span contentEditable suppressContentEditableWarning>A512B39</span>
+                  <span>A512B39</span>
                 </p>
-                <p contentEditable suppressContentEditableWarning>June 21, 2023</p>
+                <p>June 21, 2023</p>
               </div>
             </div>
 
             <div className="review-letter-address">
-              <p>
-                <strong contentEditable suppressContentEditableWarning>John Doe</strong>
-              </p>
-              <p contentEditable suppressContentEditableWarning>267 Maybell Springs, Apt. 136</p>
-              <p contentEditable suppressContentEditableWarning>Springfield, BC V5V 5V5 Canada</p>
+              <p><strong>John Doe</strong></p>
+              <p>267 Maybell Springs, Apt. 136</p>
+              <p>Springfield, BC V5V 5V5 Canada</p>
             </div>
 
-            <p className="review-greeting" contentEditable suppressContentEditableWarning>
-              Dear Sirs/Mesdames:
-            </p>
+            <p className="review-greeting">Dear Sirs/Mesdames:</p>
 
             <div className="review-letter-re">
               <strong>Re:</strong>
               <p>
                 Purchase of{" "}
-                <span className="review-chip warning" contentEditable suppressContentEditableWarning>
-                  267 Maybell Springs, Apt. 136
-                </span>
+                <span className="review-chip warning">267 Maybell Springs, Apt. 136</span>
                 , Springfield, BC V5V 5V5 from{" "}
-                <span className="review-chip" contentEditable suppressContentEditableWarning>
-                  Jane Doe
-                </span>{" "}
+                <span className="review-chip">Jane Doe</span>{" "}
                 (the "Seller")
               </p>
             </div>
 
-            <p className="review-letter-body" contentEditable suppressContentEditableWarning>
+            <p className="review-letter-body">
               Thank you for selecting Smith Law to act as your representative in the above matter. The purpose of this
               engagement letter is to outline the nature of the engagement and our respective responsibilities and
               expectations.
             </p>
 
             <section className="review-letter-section">
-              <h5 contentEditable suppressContentEditableWarning>1. Scope of Engagement</h5>
+              <h5>1. Scope of Engagement</h5>
               <p>We will act for you in connection with the purchase of the Property, including:</p>
 
               <ul>
                 <li>
-                  <span contentEditable suppressContentEditableWarning>
-                    Reviewing the Contract of Purchase and Sale and related documents
-                  </span>
+                  <span>Reviewing the Contract of Purchase and Sale and related documents</span>
                 </li>
                 <li>
-                  <span className="needs-check" contentEditable suppressContentEditableWarning>
-                    Confirming title, tax, lender, and possession information
-                  </span>
+                  <span className="needs-check">Confirming title, tax, lender, and possession information</span>
                 </li>
                 <li>
-                  <span className="soft-highlight" contentEditable suppressContentEditableWarning>
-                    Preparing case-specific closing documents
-                  </span>
+                  <span className="soft-highlight">Preparing case-specific closing documents</span>
                 </li>
               </ul>
             </section>
 
             <section className="review-letter-section">
-              <h5 contentEditable suppressContentEditableWarning>2. Fees and Disbursements</h5>
+              <h5>2. Fees and Disbursements</h5>
               <p>
                 Legal fees:{" "}
-                <span className="review-chip success" contentEditable suppressContentEditableWarning>
-                  $1,450.00
-                </span>{" "}
+                <span className="review-chip success">$1,450.00</span>{" "}
                 plus applicable taxes.
               </p>
             </section>
-
-            <div className="review-cursor-line" aria-hidden="true" />
           </article>
         </div>
       </main>
@@ -2179,7 +2061,7 @@ function PricingSection() {
         <Reveal className="section-head center">
           <div className="eyebrow">Pricing plan</div>
           <h2 id="pricingTitle">Enterprise-grade efficiency without enterprise-level cost.</h2>
-          <p className="lead">Simple pricing <b>no contract or hidden fees</b>, that makes operational gains visible without long-term lock-in.</p>
+          <p className="lead">Simple pricing with <b>no contract or hidden fees</b>, that makes operational gains visible without long-term lock-in.</p>
         </Reveal>
         <div className="pricing-grid">
           {pricingPlans.map((plan, index) => (
@@ -2309,7 +2191,7 @@ function StorySection() {
             decoding="async"
           />
           <div className="eyebrow eyebrow-light">Our story</div>
-          <h2 id="storyTitle">Legal DNA, engineered into the product.</h2>
+          <h2 id="storyTitle">Where Legal Wisdom Meets Technical Excellence.</h2>
           <p>
             Our vision is to shape a future where intelligent legal technology makes legal practice more efficient, accessible, and empowering. We strive to equip legal professionals with tools that streamline work, strengthen accuracy, and support sustainable growth, enabling them to serve clients with confidence and redefine what excellent legal service can look like in a modern world.
           </p>
@@ -2692,8 +2574,8 @@ function FaqSection() {
                         aria-controls={panelId}
                         onClick={() => setOpenFaqId(isOpen ? "" : faqId)}
                       >
-                        {faq.question}
-                        <span aria-hidden="true">+</span>
+                        <span className="faq-q-text">{faq.question}</span>
+                        <span aria-hidden="true" className="faq-q-icon">+</span>
                       </button>
                       <div className="faq-a" id={panelId}>
                         <div>
@@ -2731,24 +2613,23 @@ function SiteFooter() {
             <a href="#product">Product</a>
             <a href="#features">Features</a>
             <a href="#impact">Impact</a>
+            <a href="https://smartconveyance.innobridge.ca/">Sign in to Portal</a>
           </div>
           <div>
             <h4>Company</h4>
             <a href="#pricing">Pricing</a>
             <a href="#support">Support</a>
             <a href="#story">Our story</a>
-            <a href="#demo">Talk to an Expert</a>
           </div>
           <div>
             <div className="footer-support-card">
               <div className="footer-support-header">
                 <h4>360° Support</h4>
-                <span className="footer-support-live">Live</span>
               </div>
-              <a href="mailto:support@innobridge.ca" className="footer-support-item">
+              <div className="footer-support-item">
                 <Mail className="icon" size={13} aria-hidden="true" />
-                support@innobridge.ca
-              </a>
+                Available to clients only
+              </div>
               <a href="tel:+18882669010" className="footer-support-item">
                 <Phone className="icon" size={13} aria-hidden="true" />
                 +1 (888) 266-9010
@@ -2766,7 +2647,7 @@ function SiteFooter() {
                 One-on-one expert training
               </div>
               <a href="https://smartconveyance.innobridge.ca/" className="footer-support-signin">
-                Sign in to portal
+                Talk to an Expert
                 <ArrowRight size={13} aria-hidden="true" />
               </a>
             </div>
