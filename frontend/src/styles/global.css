@@ -443,9 +443,9 @@ h4 {
   margin-top: 0;
 }
 
-.hero-proof .proof-pill>.svg-icon {
+.hero-proof .proof-icon>.svg-icon {
   color: var(--blue-250);
-  margin-top: 1px;
+  margin-top: 0;
 }
 
 .skip-link {
@@ -778,14 +778,24 @@ h4 {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 28px;
+  margin-bottom: 22px;
 }
 
 .hero-proof {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  max-width: 610px;
+  gap: 0;
+  max-width: 660px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .105), rgba(255, 255, 255, .04)),
+    linear-gradient(90deg, rgba(144, 166, 104, .08), rgba(24, 125, 158, .08));
+  box-shadow:
+    0 18px 46px rgba(0, 0, 0, .12),
+    inset 0 1px 0 rgba(255, 255, 255, .13);
+  overflow: hidden;
+  backdrop-filter: blur(18px);
 }
 
 .hero-copy .hero-kicker,
@@ -1423,40 +1433,75 @@ h4 {
 }
 
 .proof-pill {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  min-height: 78px;
-  border: 1px solid rgba(255, 255, 255, .12);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, .055);
-  padding: 12px;
-  backdrop-filter: blur(12px);
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 9px;
+  align-items: start;
+  min-height: 116px;
+  padding: 14px 17px 15px;
 }
 
-.proof-pill svg {
+.proof-pill:not(:first-child)::before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  left: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, .20), transparent);
+}
+
+.proof-pill::after {
+  content: "";
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(144, 166, 104, .76), rgba(24, 125, 158, .62));
+  opacity: .46;
+}
+
+.proof-icon {
+  display: grid;
+  place-items: center;
+  align-self: center;
+  justify-self: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .045));
   color: var(--blue-250);
-  flex: 0 0 auto;
-  margin-top: 1px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12);
+}
+
+.proof-icon>.icon {
+  width: 20px;
+  height: 20px;
+  margin: auto;
+  transform: translateY(6px);
 }
 
 .proof-pill span {
   display: block;
   color: var(--white);
-  font-size: var(--fs-sm);
-  font-weight: 760;
-  line-height: 1.25;
+  font-size: .88rem;
+  font-weight: 820;
+  line-height: 1.18;
   letter-spacing: -.01em;
 }
 
 .proof-pill em {
   display: block;
-  margin-top: 3px;
-  color: rgba(255, 255, 255, .53);
-  font-size: var(--fs-xs);
+  margin-top: 5px;
+  color: rgba(255, 255, 255, .58);
+  font-size: .72rem;
   font-style: normal;
-  font-weight: 560;
-  line-height: 1.35;
+  font-weight: 620;
+  line-height: 1.42;
 }
 
 .hero-visual {
@@ -1763,14 +1808,17 @@ h4 {
   max-width: 92px;
   max-height: 30px;
   object-fit: contain;
+  margin: auto;
 }
 
 .context-logo-pill.ltsa img {
-  width: 118px;
-  height: 42px;
+  width: 124px;
+  height: 44px;
   max-width: none;
   max-height: none;
-  transform: scale(1.08);
+  object-fit: contain;
+  object-position: center;
+  transform: translate(-14px, 1px);
 }
 
 .why-proof-row {
@@ -3223,14 +3271,17 @@ h4 {
   max-width: 92px;
   max-height: 28px;
   object-fit: contain;
+  margin: auto;
 }
 
 .integration-logo-card.ltsa img {
   width: 118px;
-  height: 42px;
+  height: 40px;
   max-width: none;
   max-height: none;
-  transform: scale(1.08);
+  object-fit: contain;
+  object-position: center;
+  transform: translateY(10px);
 }
 
 .integration-logo-card span {
@@ -5263,6 +5314,28 @@ a.footer-support-item:hover {
     grid-template-columns: 1fr;
   }
 
+  .proof-pill {
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 14px;
+    min-height: auto;
+    padding: 16px 18px;
+  }
+
+  .proof-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .proof-pill:not(:first-child)::before {
+    top: 0;
+    right: 18px;
+    bottom: auto;
+    left: 18px;
+    width: auto;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .18), transparent);
+  }
+
   .portal-app {
     grid-template-columns: 1fr;
     min-height: auto;
@@ -5296,8 +5369,16 @@ a.footer-support-item:hover {
 
   .context-logo-pill.ltsa img,
   .integration-logo-card.ltsa img {
-    width: 108px;
+    width: 112px;
     height: 38px;
+  }
+
+  .context-logo-pill.ltsa img {
+    transform: translate(-10px, 1px);
+  }
+
+  .integration-logo-card.ltsa img {
+    transform: translateY(8px);
   }
 
   .pain-card {

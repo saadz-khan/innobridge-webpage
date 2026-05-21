@@ -1227,7 +1227,9 @@ function HeroSection() {
           <div className="hero-proof" aria-label="Product strengths">
             {proofPills.map((pill) => (
               <div className="proof-pill" key={pill.title}>
-                <IconArtwork icon={pill.icon} />
+                <span className="proof-icon">
+                  <IconArtwork icon={pill.icon} />
+                </span>
                 <div>
                   <span>{pill.title}</span>
                   <em>{pill.description}</em>
