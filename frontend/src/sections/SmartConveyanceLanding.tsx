@@ -1826,10 +1826,12 @@ function FeaturesSection() {
           {featureCards.map((card, index) => (
             <Reveal className="feature-card" delay={(index % 3) * 80} key={card.title}>
               <div className="feature-top">
-                <CardIcon icon={card.icon} tone={card.tone} />
+                <div className="feature-title-row">
+                  <CardIcon icon={card.icon} tone={card.tone} />
+                  <h3>{card.title}</h3>
+                </div>
                 <span className="feature-index">{String(index + 1).padStart(2, "0")}</span>
               </div>
-              <h3>{card.title}</h3>
               <p>{card.description}</p>
             </Reveal>
           ))}
@@ -1850,10 +1852,12 @@ function OutcomesSection() {
         <div className="outcome-grid">
           {outcomes.map((outcome, index) => (
             <Reveal className={`outcome-card${outcome.tone === "green" ? " outcome-card--green" : ""}`} delay={(index % 4) * 70} key={outcome.title}>
-              <div className={`card-icon${outcome.tone === "green" ? " green" : ""}`}>
-                <IconArtwork icon={outcome.icon} />
+              <div className="outcome-title-row">
+                <div className={`card-icon${outcome.tone === "green" ? " green" : ""}`}>
+                  <IconArtwork icon={outcome.icon} />
+                </div>
+                <strong>{outcome.title}</strong>
               </div>
-              <strong>{outcome.title}</strong>
               <span>{outcome.description}</span>
             </Reveal>
           ))}
@@ -2674,7 +2678,7 @@ function SiteFooter() {
                 <UsersRound className="icon" size={13} aria-hidden="true" />
                 One-on-one expert training
               </div>
-              <a href="https://smartconveyance.innobridge.ca/" className="footer-support-signin">
+              <a href="#demo" className="footer-support-signin">
                 Talk to an Expert
                 <ArrowRight size={13} aria-hidden="true" />
               </a>
