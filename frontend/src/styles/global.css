@@ -838,8 +838,8 @@ h4 {
   max-width: 500px;
   margin-inline: auto;
   perspective: 1400px;
-  mask-image: linear-gradient(180deg, black 0%, black 38%, rgba(0,0,0,.12) 62%, transparent 100%);
-  -webkit-mask-image: linear-gradient(180deg, black 0%, black 38%, rgba(0,0,0,.12) 62%, transparent 100%);
+  mask-image: linear-gradient(180deg, black 0%, black 82%, rgba(0, 0, 0, .42) 94%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, black 0%, black 82%, rgba(0, 0, 0, .42) 94%, transparent 100%);
 }
 
 .portal-preview-shell {
@@ -3026,7 +3026,7 @@ h4 {
 }
 
 .review-editor-no-sidebar .review-editor-workspace {
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
 }
 
 /* All sidebar rules (review-editor-files, review-files-head, review-file-row,
@@ -3286,6 +3286,11 @@ h4 {
   width: 43%;
 }
 
+.review-redacted-paragraph {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
 .review-letter-rule {
   height: 1px;
   margin: 12px 0 18px;
@@ -3336,6 +3341,7 @@ h4 {
 .review-struck {
   background: rgba(181, 71, 8, .12);
   color: #b54708;
+  font: inherit;
   text-decoration: line-through;
   text-decoration-thickness: 1.5px;
   text-decoration-color: #b54708;
@@ -3343,7 +3349,7 @@ h4 {
 
 .review-green-edit {
   color: var(--green-700);
-  font-weight: 850;
+  font: inherit;
 }
 
 .review-chip {
@@ -3468,17 +3474,12 @@ h4 {
   }
 }
 
-.stage-panel.active .review-editor-topbar,
 .stage-panel.active .review-letter-page {
   animation: panelItemIn .46s var(--ease) both;
 }
 
-.stage-panel.active .review-editor-topbar {
-  animation-delay: .04s;
-}
-
 .stage-panel.active .review-letter-page {
-  animation-delay: .08s;
+  animation-delay: .04s;
 }
 
 @media (max-width: 900px) {

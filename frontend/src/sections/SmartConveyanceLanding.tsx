@@ -1556,19 +1556,6 @@ function StageThree() {
   return (
     <div className="review-editor-focused review-editor-no-sidebar">
       <main className="review-editor-workspace">
-        <div className="review-editor-topbar">
-          <div>
-            <strong>Engagement Letter</strong>
-            <span>Purchase Case · {redact("review-redaction-xs")} · Draft document</span>
-          </div>
-
-          <div className="review-editor-tabs">
-            <button>Preview</button>
-            <button className="active">Edit</button>
-            <button>Comments</button>
-          </div>
-        </div>
-
         <div className="review-document-wrap">
           <article className="review-letter-page">
             <header className="review-letterhead-real">
@@ -1626,19 +1613,10 @@ function StageThree() {
               of the engagement and our respective responsibilities and expectations.
             </p>
 
-            <section className="review-letter-section review-redacted-section" aria-label="Redacted scope of engagement">
-              <h5>1. Scope of Engagement</h5>
+            <p className="review-letter-body review-redacted-paragraph" aria-label="Redacted paragraph">
               {redact("review-redaction-line review-redaction-line-wide")}
-              {redact("review-redaction-line")}
-              {redact("review-redaction-line review-redaction-line-short")}
               {redact("review-redaction-line review-redaction-line-mid")}
-            </section>
-
-            <section className="review-letter-section review-redacted-section" aria-label="Redacted fees and disbursements">
-              <h5>2. Fees and Disbursements</h5>
-              {redact("review-redaction-line review-redaction-line-mid")}
-              {redact("review-redaction-line review-redaction-line-short")}
-            </section>
+            </p>
 
             <footer className="review-letter-signature">
               <p>Yours truly,</p>
