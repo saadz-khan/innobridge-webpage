@@ -277,6 +277,10 @@ h1 .title-word {
   letter-spacing: inherit;
 }
 
+h1 .title-word-accent {
+  color: var(--blue-250);
+}
+
 h2 {
   margin-bottom: 18px;
   color: var(--ink);
@@ -703,10 +707,7 @@ h4 {
   inset: 0;
   background:
     radial-gradient(circle at 80% 18%, rgba(24, 125, 158, .25), transparent 34%),
-    radial-gradient(circle at 40% 78%, rgba(144, 166, 104, .18), transparent 32%),
-    linear-gradient(90deg, rgba(255, 255, 255, .04) 1px, transparent 1px),
-    linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px);
-  background-size: auto, auto, 58px 58px, 58px 58px;
+    radial-gradient(circle at 40% 78%, rgba(144, 166, 104, .18), transparent 32%);
   pointer-events: none;
 }
 
@@ -2014,19 +2015,23 @@ h4 {
 
 .tax-card {
   margin-top: auto;
-  min-height: 124px;
+  min-height: 148px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 26px;
   background:
-    radial-gradient(circle at 84% 20%, rgba(var(--brand-blue-rgb), .24), transparent 34%),
-    linear-gradient(135deg, var(--charcoal-900), color-mix(in srgb, var(--charcoal-900) 72%, var(--cg-blue)));
+    radial-gradient(ellipse at 88% 12%, rgba(var(--brand-blue-rgb), .42), transparent 45%),
+    radial-gradient(ellipse at 22% 100%, rgba(var(--brand-green-rgb), .13), transparent 48%),
+    linear-gradient(135deg, #14201d 0%, #142522 48%, #114f61 100%);
   color: var(--white);
-  padding: 24px 26px;
+  padding: clamp(28px, 4vw, 42px) clamp(30px, 4.8vw, 54px);
   overflow: hidden;
   position: relative;
-  box-shadow: 0 18px 44px rgba(23, 29, 26, .16);
+  box-shadow:
+    0 22px 50px rgba(23, 29, 26, .18),
+    inset 0 1px 0 rgba(255, 255, 255, .08);
 }
 
 .tax-card::before {
@@ -2036,16 +2041,20 @@ h4 {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 92% 115%, rgba(24, 125, 158, .42) 0%, transparent 52%);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, .045), transparent 42%),
+    radial-gradient(ellipse at 90% 112%, rgba(24, 125, 158, .34) 0%, transparent 54%);
   pointer-events: none;
 }
 
 .tax-card strong {
   display: block;
   position: relative;
-  font-size: 2.7rem;
-  line-height: 1;
-  letter-spacing: -.07em;
+  max-width: 32ch;
+  font-size: 1.03rem;
+  font-weight: 850;
+  line-height: 1.58;
+  letter-spacing: 0;
 }
 
 .tax-card span {
@@ -3016,8 +3025,9 @@ h4 {
   grid-template-columns: 1fr;
 }
 
-/* No workspace override needed — base grid-template-rows: auto auto minmax(0,1fr)
-   correctly handles topbar / toolbar / document for the no-sidebar layout. */
+.review-editor-no-sidebar .review-editor-workspace {
+  grid-template-rows: auto minmax(0, 1fr);
+}
 
 /* All sidebar rules (review-editor-files, review-files-head, review-file-row,
    review-file-icon, review-ai-summary) removed — sidebar deleted from StageThree. */
@@ -3049,7 +3059,7 @@ h4 {
   font-weight: 850;
 }
 
-.review-editor-topbar span {
+.review-editor-topbar>div>span {
   display: block;
   margin-top: 2px;
   color: var(--muted);
@@ -3077,83 +3087,6 @@ h4 {
 .review-editor-tabs button.active {
   background: var(--blue-075);
   color: var(--blue);
-}
-
-.review-editor-toolbar {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  gap: 5px;
-  min-width: 0;
-  padding: 8px 14px;
-  border-bottom: 1px solid var(--line-soft);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(247, 246, 243, .82));
-  flex-shrink: 0;
-  overflow: hidden;
-}
-
-.review-editor-toolbar button,
-.review-editor-toolbar span {
-  min-height: 24px;
-  border-radius: 7px;
-  color: var(--ink);
-  font-size: .62rem;
-  font-weight: 800;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.review-editor-toolbar button {
-  padding: 0 6px;
-  border: 1px solid transparent;
-  background: rgba(255, 255, 255, .52);
-}
-
-.review-editor-toolbar button:nth-of-type(3),
-.review-editor-toolbar button:nth-of-type(4),
-.review-editor-toolbar button:nth-of-type(5) {
-  border-color: rgba(var(--brand-blue-rgb), .14);
-  background: var(--blue-050);
-}
-
-.review-editor-toolbar span {
-  display: inline-flex;
-  align-items: center;
-  border: 1px solid var(--line-soft);
-  background: var(--surface);
-  padding: 0 8px;
-}
-
-.review-editor-toolbar em {
-  margin-left: auto;
-  flex-shrink: 0;
-  color: var(--muted);
-  font-size: .58rem;
-  font-style: normal;
-  white-space: nowrap;
-}
-
-.review-editor-toolbar .review-save {
-  border: 1px solid var(--line-soft);
-  background: var(--surface);
-  padding-inline: 9px;
-}
-
-.review-editor-toolbar .review-generate {
-  background: var(--blue);
-  color: var(--white);
-  padding-inline: 10px;
-  box-shadow: 0 8px 18px rgba(var(--brand-blue-rgb), .22);
-}
-
-.review-editor-toolbar .toolbar-sep {
-  flex: 0 0 1px;
-  width: 1px;
-  height: 16px;
-  background: var(--line-soft);
-  border-radius: 1px;
-  margin-inline: 2px;
 }
 
 .review-document-wrap {
@@ -3296,6 +3229,63 @@ h4 {
   line-height: 1.38;
 }
 
+.review-redaction {
+  display: inline-block;
+  width: 8.8em;
+  height: .82em;
+  border-radius: 3px;
+  background: #d1d5db;
+  vertical-align: -.08em;
+}
+
+.review-redaction-xs {
+  width: 4.4em;
+}
+
+.review-redaction-name {
+  width: 7.2em;
+}
+
+.review-redaction-date {
+  width: 6.8em;
+}
+
+.review-redaction-address {
+  width: 11.8em;
+}
+
+.review-redaction-address-wide {
+  width: 16.8em;
+  max-width: 100%;
+}
+
+.review-redaction-phone {
+  width: 7.6em;
+}
+
+.review-redaction-fee {
+  width: 5.4em;
+}
+
+.review-redaction-line {
+  display: block;
+  width: 72%;
+  height: .72em;
+  margin: .48em 0;
+}
+
+.review-redaction-line-wide {
+  width: 92%;
+}
+
+.review-redaction-line-mid {
+  width: 62%;
+}
+
+.review-redaction-line-short {
+  width: 43%;
+}
+
 .review-letter-rule {
   height: 1px;
   margin: 12px 0 18px;
@@ -3343,6 +3333,19 @@ h4 {
   font-weight: 700;
 }
 
+.review-struck {
+  background: rgba(181, 71, 8, .12);
+  color: #b54708;
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+  text-decoration-color: #b54708;
+}
+
+.review-green-edit {
+  color: var(--green-700);
+  font-weight: 850;
+}
+
 .review-chip {
   display: inline-flex;
   align-items: center;
@@ -3374,6 +3377,10 @@ h4 {
   margin-top: 13px;
 }
 
+.review-redacted-section {
+  margin-top: 18px;
+}
+
 .review-letter-section h5 {
   margin: 0 0 5px;
   color: #111827;
@@ -3397,6 +3404,41 @@ h4 {
   text-decoration-color: #b54708;
   text-decoration-style: wavy;
   text-underline-offset: 3px;
+}
+
+.review-letter-signature {
+  margin-top: 30px;
+  color: #1f2630;
+}
+
+.review-letter-signature p {
+  margin: 0 0 12px;
+  color: #1f2630;
+  font-size: .78rem;
+  font-weight: 400;
+  line-height: 1.52;
+}
+
+.review-letter-signature strong {
+  display: block;
+  color: #1f2630;
+  font-size: .78rem;
+  font-weight: 900;
+  line-height: 1.52;
+}
+
+.review-letter-signature span,
+.review-letter-signature em {
+  display: block;
+  color: #1f2630;
+  font-size: .78rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.52;
+}
+
+.review-letter-signature span {
+  margin-top: 12px;
 }
 
 .review-cursor-line {
@@ -3427,7 +3469,6 @@ h4 {
 }
 
 .stage-panel.active .review-editor-topbar,
-.stage-panel.active .review-editor-toolbar,
 .stage-panel.active .review-letter-page {
   animation: panelItemIn .46s var(--ease) both;
 }
@@ -3436,25 +3477,13 @@ h4 {
   animation-delay: .04s;
 }
 
-.stage-panel.active .review-editor-toolbar {
-  animation-delay: .08s;
-}
-
 .stage-panel.active .review-letter-page {
-  animation-delay: .12s;
+  animation-delay: .08s;
 }
 
 @media (max-width: 900px) {
   .review-editor-focused {
     grid-template-columns: 1fr;
-  }
-
-  .review-editor-toolbar em,
-  .review-editor-toolbar .review-save,
-  .review-editor-toolbar .toolbar-sep,
-  .review-toolbar-link,
-  .review-toolbar-dropdown {
-    display: none;
   }
 
   .review-letter-page {
@@ -4579,6 +4608,21 @@ h4 {
   font-size: .78rem;
 }
 
+.testimonial-credentials {
+  display: grid;
+  gap: 3px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.testimonial-credentials li {
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
 .story-wrap {
   display: grid;
   grid-template-columns: .82fr 1.18fr;
@@ -5176,6 +5220,37 @@ h4 {
 
 .footer a:hover {
   color: var(--white);
+}
+
+.footer a.footer-signin-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: fit-content;
+  min-height: 44px;
+  margin-top: 6px;
+  margin-bottom: 0;
+  padding: 12px 24px;
+  border: 1px solid rgba(24, 125, 158, .3);
+  border-radius: 11px;
+  background: rgba(24, 125, 158, .14);
+  color: rgba(255, 255, 255, .86);
+  font-size: .82rem;
+  font-weight: 750;
+  letter-spacing: .01em;
+  transition: background .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease);
+}
+
+.footer a.footer-signin-cta:hover {
+  background: rgba(24, 125, 158, .26);
+  border-color: rgba(24, 125, 158, .5);
+  color: var(--white);
+}
+
+.footer-signin-cta .icon {
+  width: 13px;
+  height: 13px;
 }
 
 .support-footer-box {

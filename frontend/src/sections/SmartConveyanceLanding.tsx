@@ -714,21 +714,24 @@ const testimonials = [
       "SmartConveyance focuses on what is truly essential. Training new staff was straightforward, and the workflow is easy to learn without disrupting the team.",
     name: "Jeremy",
     role: "Lawyer",
-    initial: "J"
+    initial: "J",
+    credentials: ["20 years of experience in estate law"]
   },
   {
     quote:
       "Tasks that used to take hours are now done in minutes. Smart data entry, auto-completion, and document generation have streamlined my work.",
     name: "Amber",
     role: "Paralegal",
-    initial: "A"
+    initial: "A",
+    credentials: ["2 years experience in conveyancing"]
   },
   {
     quote:
       "Adopting SmartConveyance has been transformative. We can manage more cases with the same team and give lawyers more time to focus on clients.",
     name: "Richard",
     role: "Firm Owner",
-    initial: "R"
+    initial: "R",
+    credentials: ["Owner of firm with 3 lawyers"]
   }
 ];
 
@@ -1207,7 +1210,7 @@ function HeroSection() {
           <h1 id="heroTitle">
             <span className="title-word">Spend</span>{" "}
             <span className="title-word">Less.</span>{" "}
-            <span className="title-word">Conveyance</span>{" "}
+            <span className="title-word title-word-accent">Conveyance</span>{" "}
             <span>More.</span>
           </h1>
           <p className="hero-sub">
@@ -1327,8 +1330,7 @@ function ProblemSection() {
             the same file across multiple places.
           </p>
           <div className="tax-card">
-            <strong>Context Tax</strong>
-            <span>The invisible cost of fragmented legal work.</span>
+            <strong>Save time and reduce cost of fragmented legal work.</strong>
           </div>
         </Reveal>
 
@@ -1547,13 +1549,17 @@ function StageTwo() {
 }
 
 function StageThree() {
+  const redact = (className = "") => (
+    <span className={`review-redaction ${className}`.trim()} aria-label="Redacted information" />
+  );
+
   return (
     <div className="review-editor-focused review-editor-no-sidebar">
       <main className="review-editor-workspace">
         <div className="review-editor-topbar">
           <div>
             <strong>Engagement Letter</strong>
-            <span>Purchase Case · A512B39 · Draft document</span>
+            <span>Purchase Case · {redact("review-redaction-xs")} · Draft document</span>
           </div>
 
           <div className="review-editor-tabs">
@@ -1563,38 +1569,22 @@ function StageThree() {
           </div>
         </div>
 
-        <div className="review-editor-toolbar" aria-hidden="true">
-          <button>↶</button>
-          <button>↷</button>
-          <span className="review-toolbar-dropdown">Normal text</span>
-          <div className="toolbar-sep" />
-          <button>B</button>
-          <button><i>I</i></button>
-          <button><u>U</u></button>
-          <div className="toolbar-sep" />
-          <button>¶</button>
-          <button className="review-toolbar-link">Link</button>
-          <em>Saved 2m ago</em>
-          <button className="review-save">Save draft</button>
-          <button className="review-generate">Generate final</button>
-        </div>
-
         <div className="review-document-wrap">
           <article className="review-letter-page">
             <header className="review-letterhead-real">
               <div className="review-law-logo">
                 <div className="review-law-mark">SL</div>
                 <div>
-                  <h4 className="review-editable">Smith Law</h4>
-                  <span className="review-editable">Conveyancing & Real Estate Law</span>
+                  <h4>SmithLaw</h4>
+                  <span>Conveyancing & Real Estate Law</span>
                 </div>
               </div>
 
-              <div className="review-law-address review-editable-block">
-                <p>200 – 123 Legal Avenue</p>
-                <p>Springfield, BC V5V 5V5</p>
-                <p>Phone: 604-555-0182</p>
-                <p>Fax: 604-555-0183</p>
+              <div className="review-law-address">
+                <p>{redact("review-redaction-address")}</p>
+                <p>{redact("review-redaction-address-wide")}</p>
+                <p>Phone: {redact("review-redaction-phone")}</p>
+                <p>Fax: {redact("review-redaction-phone")}</p>
               </div>
             </header>
 
@@ -1604,68 +1594,58 @@ function StageThree() {
               <div>
                 <p>
                   <strong>Our File No:</strong>{" "}
-                  <span className="review-editable-inline">A512B39</span>
+                  {redact("review-redaction-xs")}
                 </p>
-                <p className="review-editable-inline">June 21, 2023</p>
+                <p>{redact("review-redaction-date")}</p>
               </div>
             </div>
 
             <div className="review-letter-address">
               <p>
-                <strong className="review-editable-inline">John Doe</strong>
+                <strong>{redact("review-redaction-name")}</strong>
               </p>
-              <p className="review-editable-inline">267 Maybell Springs, Apt. 136</p>
-              <p className="review-editable-inline">Springfield, BC V5V 5V5 Canada</p>
+              <p>{redact("review-redaction-address-wide")}</p>
+              <p>{redact("review-redaction-address")}</p>
             </div>
 
-            <p className="review-greeting review-editable-inline">Dear Sirs/Mesdames:</p>
+            <p className="review-greeting">Dear Sirs/Mesdames:</p>
 
             <div className="review-letter-re">
               <strong>Re:</strong>
               <p>
-                Purchase of{" "}
-                <span className="review-chip warning review-editable-inline">267 Maybell Springs, Apt. 136</span>
-                , Springfield, BC V5V 5V5 from{" "}
-                <span className="review-chip review-editable-inline">Jane Doe</span>{" "}
+                Purchase of {redact("review-redaction-address-wide")} from {redact("review-redaction-name")}{" "}
                 (the "Seller")
               </p>
             </div>
 
-            <p className="review-letter-body review-editable-paragraph">
-              Thank you for selecting Smith Law to act as your representative in the above matter. The purpose of this
-              engagement letter is to outline the nature of the engagement and our respective responsibilities and
-              expectations.
+            <p className="review-letter-body">
+              Thank you for selecting SmithLaw to act as your representative in the{" "}
+              <span className="review-struck">above matter</span>{" "}
+              <span className="review-green-edit">for the purchase of</span>{" "}
+              {redact("review-redaction-address-wide")}. The purpose of this engagement letter is to outline the nature
+              of the engagement and our respective responsibilities and expectations.
             </p>
 
-            <section className="review-letter-section">
-              <h5 className="review-editable-inline">1. Scope of Engagement</h5>
-              <p>We will act for you in connection with the purchase of the Property, including:</p>
-
-              <ul>
-                <li>
-                  <span className="review-editable-inline">Reviewing the Contract of Purchase and Sale and related documents</span>
-                </li>
-                <li>
-                  <span className="needs-check review-editable-inline review-editing-selection">
-                    Confirming title, tax, lender, and possession information
-                  </span>
-                </li>
-                <li>
-                  <span className="soft-highlight review-editable-inline">Preparing case-specific closing documents</span>
-                </li>
-              </ul>
+            <section className="review-letter-section review-redacted-section" aria-label="Redacted scope of engagement">
+              <h5>1. Scope of Engagement</h5>
+              {redact("review-redaction-line review-redaction-line-wide")}
+              {redact("review-redaction-line")}
+              {redact("review-redaction-line review-redaction-line-short")}
+              {redact("review-redaction-line review-redaction-line-mid")}
             </section>
 
-            <section className="review-letter-section">
+            <section className="review-letter-section review-redacted-section" aria-label="Redacted fees and disbursements">
               <h5>2. Fees and Disbursements</h5>
-              <p>
-                Legal fees:{" "}
-                <span className="review-chip success review-editable-inline">$1,450.00</span>{" "}
-                plus applicable taxes.
-              </p>
+              {redact("review-redaction-line review-redaction-line-mid")}
+              {redact("review-redaction-line review-redaction-line-short")}
             </section>
 
-            <span className="review-cursor-line" aria-hidden="true" />
+            <footer className="review-letter-signature">
+              <p>Yours truly,</p>
+              <strong>SmithLaw</strong>
+              <span>John Smith</span>
+              <em>P/JS</em>
+            </footer>
           </article>
         </div>
       </main>
@@ -1903,6 +1883,13 @@ function TestimonialsSection() {
                 <div>
                   <strong>{testimonial.name}</strong>
                   <span>{testimonial.role}</span>
+                  {testimonial.credentials ? (
+                    <ul className="testimonial-credentials">
+                      {testimonial.credentials.map((credential) => (
+                        <li key={credential}>{credential}</li>
+                      ))}
+                    </ul>
+                  ) : null}
                 </div>
               </div>
             </Reveal>
@@ -2233,7 +2220,7 @@ function StorySection() {
             decoding="async"
           />
           <div className="eyebrow eyebrow-light">Our story</div>
-          <h2 id="storyTitle">Where Legal Wisdom Meets Technical Excellence.</h2>
+          <h2 id="storyTitle">Where Legal Insights Meets Technical Excellence.</h2>
           <p>
             Our vision is to shape a future where intelligent legal technology makes legal practice more efficient, accessible, and empowering. We strive to equip legal professionals with tools that streamline work, strengthen accuracy, and support sustainable growth, enabling them to serve clients with confidence and redefine what excellent legal service can look like in a modern world.
           </p>
@@ -2651,7 +2638,10 @@ function SiteFooter() {
             <a href="#product">Product</a>
             <a href="#features">Features</a>
             <a href="#impact">Impact</a>
-            <a href="https://smartconveyance.innobridge.ca/">Sign in to Portal</a>
+            <a className="footer-signin-cta" href="https://smartconveyance.innobridge.ca/">
+              Sign in
+              <ArrowRight className="icon" aria-hidden="true" />
+            </a>
           </div>
           <div>
             <h4>Company</h4>
