@@ -622,38 +622,35 @@ function clampNumber(value: number, min: number, max: number) {
 /**
  * Builds an organic S-curve SVG path between two cards using cubic bezier segments.
  *
- * Uses two chained cubics (C … S …) so the path always exits each card horizontally,
- * sweeps to the board's outer edges, crosses at the vertical midpoint, and arrives
- * at the next card horizontally. The SVG S command auto-reflects the prior CP,
- * guaranteeing C1 continuity at the crossing point.
- *
- * Fixed board-edge routing lanes (rather than card-relative offsets) ensure every
- * path gets a generous, symmetric sweep regardless of which side the card sits on.
+ * All paths exit the previous card's RIGHT edge and arrive at the next card's LEFT edge.
+ * Both even and odd paths use the same S-curve shape (right-wall lane → center crossing
+ * → left-wall lane). For odd paths the first control point is pushed at least 24 px
+ * beyond startX so the rightward arc stays visible even when the card's right edge is
+ * already close to the board wall.
  */
-function buildSupportFlowPath(previousRect: DOMRect, nextRect: DOMRect, boardRect: DOMRect) {
-  const portGap = 12;
+function buildSupportFlowPath(previousRect: DOMRect, nextRect: DOMRect, boardRect: DOMRect, index: number) {
+  const portGap = 14;
   const n = (v: number) => Number(v.toFixed(1));
 
-  // Connection points: mid-height of each card's outer edge
   const startX = clampNumber(previousRect.right - boardRect.left + portGap, 10, boardRect.width - 10);
   const startY = previousRect.top - boardRect.top + previousRect.height / 2;
-  const endX   = clampNumber(nextRect.left  - boardRect.left - portGap, 10, boardRect.width - 10);
-  const endY   = nextRect.top  - boardRect.top  + nextRect.height  / 2;
-
-  // Fixed routing lanes at the board edges — gives maximum arc regardless of card position
-  const margin    = clampNumber(boardRect.width * 0.04, 10, 22);
-  const rightLane = boardRect.width - margin;   // always near the right wall
-  const leftLane  = margin;                      // always near the left wall
-  const centerX   = boardRect.width / 2;
-
-  // Vertical crossing point (40% of the way down keeps the first arc shorter & tighter)
+  const endX   = clampNumber(nextRect.left      - boardRect.left - portGap, 10, boardRect.width - 10);
+  const endY   = nextRect.top   - boardRect.top  + nextRect.height  / 2;
   const bridgeY = startY + (endY - startY) * 0.5;
 
-  // Cubic 1: exit startX horizontally → rightLane arc → center crossing
-  // Cubic 2 (smooth S): mirror CP → leftLane arc → arrive endX horizontally
+  const margin    = clampNumber(boardRect.width * 0.045, 12, 26);
+  const rightLane = boardRect.width - margin;
+  const leftLane  = margin;
+  const centerX   = boardRect.width / 2;
+
+  // For the odd path (card 2 → card 3) startX is near the right wall, so rightLane
+  // may equal startX and the arc collapses. Push CP1 at least 28 px beyond startX
+  // to guarantee a visible outward sweep.
+  const cp1X = Math.min(boardRect.width - 4, Math.max(rightLane, startX + 28));
+
   return (
     `M ${n(startX)} ${n(startY)} ` +
-    `C ${n(rightLane)} ${n(startY)} ${n(rightLane)} ${n(bridgeY)} ${n(centerX)} ${n(bridgeY)} ` +
+    `C ${n(cp1X)} ${n(startY)} ${n(cp1X)} ${n(bridgeY)} ${n(centerX)} ${n(bridgeY)} ` +
     `S ${n(leftLane)} ${n(endY)} ${n(endX)} ${n(endY)}`
   );
 }
@@ -1916,7 +1913,7 @@ function SupportSection() {
 
       const nextRoutes = cards.slice(0, -1).map((card, index) => ({
         id: `${supportSteps[index].title}-${supportSteps[index + 1].title}`,
-        d: buildSupportFlowPath(card.getBoundingClientRect(), cards[index + 1].getBoundingClientRect(), boardRect)
+        d: buildSupportFlowPath(card.getBoundingClientRect(), cards[index + 1].getBoundingClientRect(), boardRect, index)
       }));
 
       setFlowSize((currentSize) =>
@@ -1985,7 +1982,7 @@ function SupportSection() {
                 markerHeight="12"
                 refX="10.5"
                 refY="6"
-                orient="auto"
+                orient="0"
                 markerUnits="userSpaceOnUse"
               >
                 <path className="flow-route-arrow-head" d="M 1.5 1.5 L 10.5 6 L 1.5 10.5 Z" />
