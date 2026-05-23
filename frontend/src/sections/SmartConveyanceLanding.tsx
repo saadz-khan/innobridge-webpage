@@ -2210,8 +2210,10 @@ function StorySection() {
               <div className="value-card-icon">
                 <IconArtwork icon={value.icon} />
               </div>
-              <strong>{value.title}</strong>
-              <span>{value.description}</span>
+              <div>
+                <strong>{value.title}</strong>
+                <span>{value.description}</span>
+              </div>
             </Reveal>
           ))}
         </div>
