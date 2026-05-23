@@ -5844,6 +5844,104 @@ a.footer-support-item:hover {
     margin-top: 0;
   }
 
+  .features-grid {
+    gap: 14px;
+  }
+
+  .feature-card {
+    min-height: auto;
+    border-radius: 22px;
+    padding: 18px;
+  }
+
+  .feature-card::after {
+    right: -36px;
+    bottom: -44px;
+    width: 98px;
+    height: 98px;
+    opacity: .82;
+  }
+
+  .feature-top {
+    align-items: center;
+    gap: 12px;
+  }
+
+  .feature-title-row {
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .feature-title-row .card-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+  }
+
+  .feature-title-row .card-icon svg,
+  .feature-title-row .card-icon .svg-icon {
+    width: 39px;
+    height: 39px;
+    stroke-width: 2.45;
+  }
+
+  .feature-card h3 {
+    font-size: 1.08rem;
+    line-height: 1.14;
+  }
+
+  .feature-card p {
+    margin-top: 14px;
+    font-size: .96rem;
+    line-height: 1.48;
+  }
+
+  .feature-index {
+    font-size: 1.58rem;
+  }
+
+  .values-grid {
+    gap: 12px;
+  }
+
+  .value-card {
+    min-height: auto;
+    height: auto;
+    grid-template-columns: 58px minmax(0, 1fr);
+    gap: 14px;
+    align-items: start;
+    border-radius: 22px;
+    padding: 18px;
+  }
+
+  .value-card::after {
+    inset: auto 18px 0;
+  }
+
+  .value-card-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 17px;
+  }
+
+  .value-card-icon svg,
+  .value-card-icon .svg-icon {
+    width: 41px;
+    height: 41px;
+    stroke-width: 2.45;
+  }
+
+  .value-card strong {
+    margin: 2px 0 6px;
+    font-size: 1.06rem;
+    line-height: 1.16;
+  }
+
+  .value-card span {
+    font-size: .94rem;
+    line-height: 1.45;
+  }
+
   .product-tab {
     grid-template-columns: 58px 1fr;
     min-height: 94px;
