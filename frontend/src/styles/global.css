@@ -5848,6 +5848,10 @@ a.footer-support-item:hover {
     gap: 14px;
   }
 
+  #features .section-head {
+    margin-bottom: 30px;
+  }
+
   .feature-card {
     min-height: auto;
     border-radius: 22px;
@@ -5902,6 +5906,40 @@ a.footer-support-item:hover {
 
   .values-grid {
     gap: 12px;
+  }
+
+  .story-wrap {
+    gap: 18px;
+  }
+
+  .story-card {
+    border-radius: 28px;
+    padding: 24px 22px;
+  }
+
+  .story-card::before {
+    inset: 14px;
+    border-radius: 22px;
+  }
+
+  .story-logo {
+    width: 136px;
+    margin-bottom: 24px;
+  }
+
+  .story-card .eyebrow {
+    margin-bottom: 16px;
+  }
+
+  .story-card h2 {
+    font-size: clamp(1.85rem, 8.5vw, 2.45rem);
+    line-height: 1.03;
+    letter-spacing: -.058em;
+  }
+
+  .story-card p {
+    font-size: .94rem;
+    line-height: 1.58;
   }
 
   .value-card {
